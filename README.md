@@ -8,8 +8,9 @@ No backend, no build step, no dependencies to install. Everything runs client-si
 
 ## Live features
 
-- **Financial profile.** Enter income, hours worked and savings to get your hourly rate. The formula is shown under the result.
-- **Your Life Cost.** Monthly expenses by category, with the total broken down per year, per day and per hour.
+- **The receipt.** The opening screen prints your month as a till receipt: your biggest expenses, each priced in money and in hours of work. Before you enter anything it shows an example month, clearly labelled as such.
+- **Financial profile.** Enter income, hours worked and savings to get your hourly rate. The formula is shown under the result, together with what you earn in a working day and a working week.
+- **Your Life Cost.** Monthly expenses by category, with the total broken down per year, per day and per hour. A donut chart and a share bar under each category show where the money goes.
 - **The Time Price.** Type the price of anything and watch it convert instantly into hours and working days of your life. Keep a list to compare purchases.
 - **Dreams.** Goals with a price, shown as hours of work, working days and how long they take to afford at the amount you can save each month.
 - **What If.** Drag each category down to a new target and see what you'd get back per month, per year and over ten years, in money and in hours.

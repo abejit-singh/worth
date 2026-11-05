@@ -59,37 +59,56 @@
     --border:rgba(24,20,15,0.12);
     --border-strong:rgba(24,20,15,0.22);
     --ink:#18140F;
+    --ink-soft:#26201A;                  /* a lighter layer on the dark ink panels */
     --ink-dim:rgba(24,20,15,0.64);
     --ink-dimmer:rgba(24,20,15,0.46);
     --paper-on-ink:#FBF9F4;              /* text on the dark ink panels */
     --paper-on-ink-dim:rgba(251,249,244,0.66);
+    --paper-on-ink-faint:rgba(251,249,244,0.14);
     --accent:#7A2733;
     --accent-soft:rgba(122,39,51,0.1);
     --accent-strong:#5C1D26;
+    --accent-glow:rgba(122,39,51,0.28);
     --gain:#3E6B52;
     --gain-soft:rgba(62,107,82,0.14);
+    --gain-track:rgba(62,107,82,0.42);
     --gain-on-ink:#B7E2C8;               /* green that stays readable on ink */
+    /* Expense categories (donut, swatches, share bars): earthy tones around the bordeaux. */
+    --c1:#7A2733; --c2:#B4533A; --c3:#D08C3A; --c4:#8A8F3C; --c5:#3E6B52;
+    --c6:#3F7C85; --c7:#4D5D8C; --c8:#7A4F7D; --c9:#A3876A;
+    --shadow:0 1px 0 rgba(255,255,255,0.7) inset,0 22px 44px -30px rgba(24,20,15,0.45);
+    --shadow-lift:0 1px 0 rgba(255,255,255,0.7) inset,0 30px 60px -30px rgba(24,20,15,0.5);
     --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     --font-display:'Space Grotesk',var(--font-sans);
     --font-mono:'IBM Plex Mono','SF Mono',Menlo,Consolas,monospace;
     --ease:cubic-bezier(.16,1,.3,1);
   }
+  /* Lets the score ring's fill animate (browsers without @property simply jump to the value). */
+  @property --score{syntax:'<number>';inherits:false;initial-value:0;}
 
   /* ============================= RESET & BASE ============================= */
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  /* `hidden` must win over layout rules such as .section{display:flex}, or the results would show before the profile is filled in. */
+  [hidden]{display:none !important;}
   html{scroll-behavior:smooth;}
   body{
     background-color:var(--bg);
-    /* faint dot grid, like ledger paper */
-    background-image:radial-gradient(rgba(24,20,15,0.05) 1px, transparent 1px);
-    background-size:18px 18px;
+    /* faint dot grid, like ledger paper, under a soft pool of light */
+    background-image:radial-gradient(70rem 45rem at 0% 0%,rgba(255,255,255,0.38),transparent 60%),radial-gradient(rgba(24,20,15,0.05) 1px,transparent 1px);
+    background-size:auto,18px 18px;
+    background-attachment:fixed,scroll;
     color:var(--ink);font-family:var(--font-sans);font-weight:300;line-height:1.5;
     overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  /* Paper grain: a tiny tiled SVG noise, barely visible. */
+  body::after{
+    content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   ::selection{background:var(--accent);color:var(--paper-on-ink);}
   button,input,select{font:inherit;color:inherit;}
   h1,h2,h3{font-family:var(--font-display);font-weight:600;letter-spacing:-0.02em;line-height:1.05;}
-  h2{font-size:clamp(1.9rem,5vw,3.2rem);margin-bottom:1rem;}
+  h2{font-size:clamp(1.9rem,5vw,3.2rem);margin-bottom:1rem;text-wrap:balance;}
   p{max-width:62ch;}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
   .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
@@ -99,15 +118,27 @@
     html{scroll-behavior:auto;}
   }
 
-  /* ============================= CHROME (progress bar, reset) ============================= */
+  /* ============================= CHROME (progress bar, reset, rail) ============================= */
   .progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:999;}
   .reset-btn{
-    position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:20px;width:42px;height:42px;border-radius:50%;
-    background:var(--bg-card);border:1px solid var(--border);color:var(--ink-dimmer);
+    position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:20px;width:44px;height:44px;border-radius:50%;
+    background:rgba(251,249,244,0.85);border:1px solid var(--border-strong);color:var(--ink-dim);
     font-size:1.05rem;cursor:pointer;z-index:900;display:flex;align-items:center;justify-content:center;
-    transition:all .35s var(--ease);
+    transition:all .35s var(--ease);box-shadow:var(--shadow);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   }
   .reset-btn:hover{border-color:var(--accent);color:var(--accent);transform:rotate(-70deg);}
+
+  /* Section rail: a dot per section on the right edge (wide screens only). */
+  .rail{position:fixed;right:clamp(14px,1.8vw,30px);top:50%;transform:translateY(-50%);z-index:800;display:none;flex-direction:column;align-items:flex-end;}
+  @media (min-width:1100px) and (min-height:640px){ .rail{display:flex;} }
+  .rail a{display:flex;align-items:center;gap:.75rem;padding:.36rem 0 .36rem .75rem;text-decoration:none;color:var(--ink-dimmer);font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;transition:color .3s;}
+  .rail-label{opacity:0;transform:translateX(6px);transition:opacity .3s var(--ease),transform .3s var(--ease);white-space:nowrap;}
+  .rail-dot{width:6px;height:6px;border-radius:50%;background:currentColor;transition:transform .3s var(--ease);}
+  .rail a:hover,.rail a:focus-visible{color:var(--ink);}
+  .rail a:hover .rail-label,.rail a:focus-visible .rail-label{opacity:1;transform:none;}
+  .rail a.is-active{color:var(--accent);}
+  .rail a.is-active .rail-dot{transform:scale(1.6);}
+  @media (min-width:1420px){ .rail a.is-active .rail-label{opacity:1;transform:none;} }
 
   /* ============================= LAYOUT ============================= */
   .section{
@@ -118,141 +149,266 @@
   /* Sections fade up the first time they scroll into view (see setupReveal). */
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
   .reveal.is-visible{opacity:1;transform:none;}
-  .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:1.1rem;}
-  .lede{color:var(--ink-dim);margin-bottom:2.1rem;font-size:1.02rem;}
-  .help-text{font-size:.82rem;color:var(--ink-dimmer);margin-top:.6rem;max-width:520px;line-height:1.55;}
-  .list-empty{color:var(--ink-dimmer);font-size:.9rem;padding:.5rem 0;}
+  .eyebrow{display:inline-flex;align-items:center;gap:.7rem;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:1.1rem;}
+  .eyebrow::before{content:'';width:22px;height:1px;background:currentColor;opacity:.7;flex-shrink:0;}
+  .lede{color:var(--ink-dim);margin-bottom:2.1rem;font-size:1.04rem;}
+  .help-text{font-size:.82rem;color:var(--ink-dimmer);margin-top:.7rem;max-width:560px;line-height:1.55;}
+  .list-empty{color:var(--ink-dimmer);font-size:.9rem;padding:1rem 1.2rem;border:1px dashed var(--border-strong);border-radius:12px;}
+  /* Two-column layouts on wide screens; one column below 900px. minmax(0,…) keeps text inputs from stretching a column. */
+  .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem clamp(2rem,5vw,4rem);align-items:start;}
+  .split.wide-left{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);}
+  .sticky{position:sticky;top:2rem;}
+  @media (max-width:900px){
+    .split,.split.wide-left{grid-template-columns:minmax(0,1fr);}
+    .sticky{position:static;}
+  }
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);}
 
   /* ============================= BUTTONS & FIELDS ============================= */
-  .btn{font-family:var(--font-sans);font-weight:600;font-size:.97rem;padding:.95rem 1.6rem;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .3s var(--ease);display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;}
-  .btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none;}
-  .btn-primary{background:var(--accent);color:var(--paper-on-ink);}
-  .btn-primary:hover:not(:disabled){background:var(--accent-strong);transform:translateY(-2px);box-shadow:0 10px 26px rgba(122,39,51,0.28);}
-  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border-strong);}
-  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .btn{font-family:var(--font-sans);font-weight:600;font-size:.97rem;padding:.95rem 1.6rem;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s,border-color .3s,color .3s;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;}
+  .btn:disabled{opacity:.42;cursor:default;transform:none;box-shadow:none;}
+  .btn-primary{background:var(--accent);color:var(--paper-on-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 10px 24px -14px var(--accent-glow);}
+  .btn-primary:hover:not(:disabled){background:var(--accent-strong);transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 16px 30px -12px var(--accent-glow);}
+  .btn-ghost{background:rgba(251,249,244,0.6);color:var(--ink);border-color:var(--border-strong);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--bg-card);}
   .arrow{transition:transform .3s var(--ease);}
   .btn:hover .arrow{transform:translateX(4px);}
 
   /* Inputs use 1rem (16px) text: anything smaller makes iOS Safari zoom the page on focus. */
-  input[type="text"],input[type="number"],select{width:100%;background:var(--bg-card);border:1px solid var(--border);color:var(--ink);padding:.85rem 1rem;border-radius:8px;font-size:1rem;font-family:var(--font-sans);transition:border-color .25s;}
-  input:focus,select:focus{outline:none;border-color:var(--accent);}
+  input[type="text"],input[type="number"],select{width:100%;background-color:var(--bg-card);border:1px solid var(--border-strong);color:var(--ink);padding:.85rem 1rem;border-radius:10px;font-size:1rem;font-family:var(--font-sans);transition:border-color .25s,box-shadow .25s;}
+  input::placeholder{color:var(--ink-dimmer);}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);}
   input[aria-invalid="true"]{border-color:var(--accent);background:var(--accent-soft);}
+  /* Native select with its arrow redrawn as a small chevron (two CSS triangles). */
+  select{
+    -webkit-appearance:none;appearance:none;cursor:pointer;padding-right:2.6rem;
+    background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 52%,calc(100% - 15px) 52%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+  }
 
-  input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border-strong);border-radius:2px;outline:none;margin:.9rem 0;touch-action:pan-y;}
-  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--bg-card);box-shadow:0 0 0 1px var(--accent);transition:transform .2s;}
+  /* Range sliders: the part left of the thumb is painted from --fill, kept in sync by paintRange(). */
+  input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:99px;outline:none;margin:.9rem 0;touch-action:pan-y;cursor:pointer;
+    background:linear-gradient(90deg,var(--accent) var(--fill,0%),var(--border-strong) var(--fill,0%));}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:4px solid var(--bg-card);box-shadow:0 0 0 1px var(--accent),0 4px 10px -2px var(--accent-glow);transition:transform .2s;}
   input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
-  input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--bg-card);cursor:pointer;}
+  input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);border:4px solid var(--bg-card);box-shadow:0 0 0 1px var(--accent);cursor:pointer;}
+  input[type="range"]::-moz-range-track{background:transparent;}
   input[type="range"]:focus-visible{outline-offset:6px;}
 
-  .field{margin:1.4rem 0;max-width:440px;}
+  .field{margin:1.2rem 0;max-width:440px;}
   .field label{display:block;font-size:.85rem;color:var(--ink-dim);margin-bottom:.55rem;}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:480px;}
-  @media (max-width:480px){.field-row{grid-template-columns:1fr;gap:0;}}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:520px;}
+  @media (max-width:359px){.field-row{grid-template-columns:1fr;gap:0;}}
+  @media (max-width:480px){.field-row{gap:.75rem;} .field{margin:.9rem 0;}}
   .error-msg{color:var(--accent);font-size:.88rem;margin-top:1rem;font-weight:500;}
 
   /* ============================= HERO ============================= */
-  .hero{align-items:flex-start;text-align:left;}
-  .hero-content{max-width:880px;opacity:0;animation:heroIn 1s var(--ease) forwards;animation-delay:.1s;}
+  .hero{text-align:left;}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:3rem;align-items:center;}
+  .hero-content{max-width:680px;opacity:0;animation:heroIn 1s var(--ease) forwards;animation-delay:.1s;}
   .hero-logo{font-family:var(--font-display);font-size:1.3rem;font-weight:700;letter-spacing:-.02em;margin-bottom:2.4rem;color:var(--accent);}
-  .hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,7.5vw,4.6rem);font-weight:600;letter-spacing:-.02em;line-height:1.05;}
-  .hero-tagline{font-size:clamp(1.1rem,2.6vw,1.35rem);color:var(--ink-dim);margin-top:1.1rem;font-style:italic;}
-  .hero-content .btn{margin-top:2.3rem;}
+  .hero-title{font-family:var(--font-display);font-size:clamp(2.6rem,7.5vw,5rem);font-weight:600;letter-spacing:-.03em;line-height:1;}
+  .hero-title .hl{color:var(--accent);font-style:italic;font-weight:500;}
+  .hero-tagline{font-size:clamp(1.1rem,2.6vw,1.35rem);color:var(--ink-dim);margin-top:1.2rem;font-style:italic;}
+  .hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:1rem 1.5rem;margin-top:2.3rem;}
+  .hero-note{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink-dimmer);}
   /* The scroll hint sits to the right of the fixed reset button so they never overlap. */
   .scroll-hint{position:absolute;bottom:calc(2.4rem + env(safe-area-inset-bottom));left:max(clamp(1.5rem,7vw,5rem),84px);font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;color:var(--ink-dimmer);opacity:0;animation:heroIn 1s var(--ease) forwards;animation-delay:.6s;}
   @keyframes heroIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+  @keyframes receiptIn{from{opacity:0;transform:translateY(-24px) rotate(1deg);}}
+
+  /* The receipt: the month's spending, in money and in hours (see renderHeroReceipt). */
+  .hero-visual{justify-self:end;width:100%;max-width:360px;filter:drop-shadow(0 26px 30px rgba(24,20,15,0.16));animation:receiptIn 1.2s var(--ease) .3s both;}
+  .receipt{
+    position:relative;background:var(--bg-card);padding:1.6rem 1.5rem 1.4rem;transform:rotate(2.2deg);
+    font-family:var(--font-mono);font-size:.78rem;color:var(--ink);
+  }
+  /* Torn, zig-zag bottom edge: down-pointing triangles drawn with a conic gradient. */
+  .receipt::after{content:'';position:absolute;left:0;right:0;top:100%;height:10px;background:conic-gradient(from 135deg at top,transparent 90deg,var(--bg-card) 0) 0 0/20px 100%;}
+  .rc-head{text-align:center;padding-bottom:1rem;border-bottom:1px dashed var(--border-strong);}
+  .rc-brand{font-family:var(--font-display);font-weight:700;font-size:1.35rem;letter-spacing:-.02em;color:var(--accent);}
+  .rc-sub{margin-top:.3rem;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dimmer);}
+  .rc-cols,.rc-line,.rc-total{display:grid;grid-template-columns:minmax(0,1fr) auto 4.6rem;gap:.75rem;align-items:baseline;}
+  .rc-cols{padding:.8rem 0 .3rem;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dimmer);}
+  .rc-cols span:not(:first-child),.rc-line span:not(:first-child),.rc-total span:not(:first-child){text-align:right;}
+  .rc-line{padding:.32rem 0;}
+  .rc-line span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rc-line .h,.rc-total .h{color:var(--accent);font-weight:600;}
+  .rc-more{padding:.3rem 0;color:var(--ink-dimmer);}
+  .rc-total{margin-top:.6rem;padding-top:.8rem;border-top:1px dashed var(--border-strong);font-weight:600;font-size:.86rem;}
+  .rc-rate{margin-top:.5rem;font-size:.68rem;color:var(--ink-dim);text-align:right;}
+  .rc-bars{height:38px;margin:1.1rem 0 .5rem;opacity:.85;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px),repeating-linear-gradient(90deg,transparent 0 7px,var(--ink) 7px 8px,transparent 8px 13px);}
+  .rc-foot{text-align:center;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dimmer);}
+  @media (max-width:899px){
+    .hero-grid{display:block;}
+    .hero-visual{width:min(340px,100%);margin:3.2rem auto 0;}
+    .receipt{transform:rotate(1.5deg);}
+  }
 
   /* ============================= PROFILE ============================= */
-  .hourly-preview{margin-top:2rem;padding:1.6rem 1.8rem;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;max-width:440px;}
-  .hourly-preview .label{font-size:.78rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.08em;}
-  .hourly-preview .value{font-family:var(--font-mono);font-size:2.1rem;font-weight:600;color:var(--accent);margin-top:.3rem;}
-  .hourly-preview .formula{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-dimmer);margin-top:.35rem;}
+  .profile-grid{align-items:center;}
+  /* Hourly income: a dark "price tag" that updates while the user types. */
+  .hourly-preview{position:relative;overflow:hidden;padding:2rem 2rem 1.8rem;background:var(--ink);color:var(--paper-on-ink);border-radius:20px;box-shadow:var(--shadow-lift);}
+  .hourly-preview::before{content:'';position:absolute;inset:0;background-image:radial-gradient(var(--paper-on-ink-faint) 1px,transparent 1px);background-size:16px 16px;opacity:.5;pointer-events:none;}
+  .hourly-preview > *{position:relative;}
+  .hourly-preview .label{font-family:var(--font-mono);font-size:.66rem;color:var(--paper-on-ink-dim);text-transform:uppercase;letter-spacing:.16em;}
+  .hourly-preview .value{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,3.6rem);font-weight:700;letter-spacing:-.02em;line-height:1;margin-top:.8rem;}
+  .hourly-preview .value small{font-size:.38em;font-weight:500;color:var(--paper-on-ink-dim);letter-spacing:0;}
+  .hourly-preview .formula{font-family:var(--font-mono);font-size:.74rem;color:var(--paper-on-ink-dim);margin-top:.9rem;}
+  .hourly-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--paper-on-ink-faint);}
+  .hourly-chips span{font-family:var(--font-mono);font-size:.72rem;padding:.35rem .7rem;border-radius:99px;background:var(--ink-soft);color:var(--paper-on-ink-dim);}
+  .hourly-chips b{color:var(--paper-on-ink);font-weight:600;}
+  .profile-cta{margin-top:1.8rem;}
 
   /* ============================= STAT GRID ============================= */
-  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:1.5rem;}
-  .stat-card{background:var(--bg-card);padding:1.4rem 1.5rem;display:flex;flex-direction:column;gap:.4rem;}
-  .stat-label{font-size:.74rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em;}
-  .stat-value{font-family:var(--font-mono);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums;}
+  .stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);}
+  .stat-card{background:var(--bg-card);padding:1.15rem 1.3rem;display:flex;flex-direction:column;gap:.35rem;}
+  .stat-label{font-family:var(--font-mono);font-size:.62rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.12em;}
+  .stat-value{font-family:var(--font-mono);font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums;}
 
   /* ============================= EXPENSE ROWS ============================= */
-  .item-list{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.1rem;}
-  .item-row{display:flex;align-items:center;gap:.6rem;background:var(--bg-card);border:1px solid var(--border);padding:.65rem .9rem;border-radius:10px;}
+  .item-list{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.1rem;}
+  .item-row{position:relative;overflow:hidden;display:flex;align-items:center;gap:.65rem;background:var(--bg-card);border:1px solid var(--border);padding:.6rem .7rem .7rem 1rem;border-radius:12px;transition:border-color .25s,box-shadow .25s;}
+  .item-row:hover{box-shadow:var(--shadow);}
+  .item-row:focus-within{border-color:var(--accent);}
+  .item-swatch{width:9px;height:9px;border-radius:3px;flex-shrink:0;background:var(--c,var(--accent));}
   .item-row input.item-name{flex:1 1 auto;min-width:0;width:auto;background:transparent;border:none;padding:.3rem 0;}
+  .item-row input.item-name:focus{box-shadow:none;}
+  .item-share{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dimmer);min-width:2.6rem;text-align:right;flex-shrink:0;}
   .item-amount-wrap{display:flex;align-items:center;gap:.4rem;flex-shrink:0;}
   .item-amount-wrap .curr{color:var(--ink-dimmer);font-size:.85rem;}
-  .item-row input.item-amount{width:92px;background:rgba(24,20,15,0.03);border:1px solid var(--border);border-radius:7px;padding:.4rem .5rem;font-family:var(--font-mono);text-align:right;}
+  .item-row input.item-amount{width:92px;background:var(--bg-card-alt);border:1px solid var(--border);border-radius:8px;padding:.4rem .5rem;font-family:var(--font-mono);text-align:right;}
+  /* Each row's share of the monthly total, as a hairline along its bottom edge. */
+  .item-bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--c,var(--accent));opacity:.75;transition:width .7s var(--ease);}
   .item-remove{background:none;border:none;color:var(--ink-dimmer);font-size:1.15rem;cursor:pointer;width:32px;height:32px;border-radius:50%;transition:all .2s;flex-shrink:0;}
   .item-remove:hover{color:var(--accent);background:var(--accent-soft);}
+  @media (max-width:420px){ .item-share{display:none;} }
+
+  /* The spending donut: a conic gradient built by renderExpenseTotals(). */
+  .cost-side{display:flex;flex-direction:column;gap:1rem;}
+  .donut-card{display:flex;align-items:center;gap:1.6rem;padding:1.5rem;}
+  .donut{position:relative;flex-shrink:0;width:170px;aspect-ratio:1;border-radius:50%;background:var(--bg-card-alt);transition:background .4s;}
+  .donut::after{content:'';position:absolute;inset:22%;border-radius:50%;background:var(--bg-card);box-shadow:inset 0 2px 6px rgba(24,20,15,0.08);}
+  .donut-center{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .donut-num{font-family:var(--font-display);font-weight:700;font-size:1.35rem;letter-spacing:-.02em;}
+  .donut-cap{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dimmer);margin-top:.2rem;}
+  .donut-legend{display:flex;flex-direction:column;gap:.45rem;min-width:0;flex:1;font-size:.8rem;}
+  .donut-legend div{display:flex;align-items:center;gap:.5rem;min-width:0;}
+  .donut-legend i{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+  .donut-legend span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-dim);}
+  .donut-legend b{font-family:var(--font-mono);font-weight:500;font-size:.74rem;}
+  @media (max-width:420px){ .donut-card{flex-direction:column;align-items:stretch;} .donut{align-self:center;} }
 
   /* ============================= TIME PRICE (signature) ============================= */
   .price-input-row{display:flex;gap:.8rem;flex-wrap:wrap;max-width:560px;margin-bottom:.5rem;}
   .price-input-row input[type="text"]{flex:2;min-width:160px;}
   .price-input-row input[type="number"]{flex:1;min-width:120px;}
-  .time-price-readout{margin-top:2.2rem;padding:2.4rem clamp(1.5rem,5vw,3rem);background:var(--ink);color:var(--paper-on-ink);border-radius:20px;text-align:center;max-width:640px;position:relative;overflow:hidden;}
-  .time-price-readout::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(251,249,244,0.04) 1px, transparent 1px);background-size:16px 16px;pointer-events:none;}
-  .tpr-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-on-ink-dim);}
-  .tpr-price{font-family:var(--font-mono);font-size:clamp(1.3rem,5vw,2.2rem);font-weight:500;margin-top:.5rem;color:var(--paper-on-ink-dim);overflow-wrap:anywhere;}
-  .tpr-hours{font-family:var(--font-display);font-size:clamp(3rem,11vw,5.5rem);font-weight:700;line-height:1;margin-top:.6rem;}
-  .tpr-hours .unit{display:block;font-size:.2em;font-family:var(--font-mono);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-on-ink-dim);margin-top:.8rem;}
-  .tpr-days{font-family:var(--font-mono);font-size:1rem;color:var(--paper-on-ink-dim);margin-top:.8rem;}
-  .price-actions{display:flex;justify-content:center;margin-top:1.6rem;max-width:640px;}
-  .purchase-list{margin-top:2.6rem;max-width:760px;}
-  .purchase-head{display:grid;grid-template-columns:1fr auto auto auto;gap:1rem;padding:0 1rem .4rem;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink-dimmer);text-transform:uppercase;}
-  .purchase-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:.6rem;}
+  .time-price-readout{position:relative;overflow:hidden;padding:2.4rem clamp(1.5rem,5vw,2.6rem) 2rem;background:var(--ink);color:var(--paper-on-ink);border-radius:22px;text-align:center;box-shadow:var(--shadow-lift);}
+  .time-price-readout::before{content:'';position:absolute;inset:0;background-image:radial-gradient(var(--paper-on-ink-faint) 1px,transparent 1px);background-size:16px 16px;opacity:.5;pointer-events:none;}
+  .time-price-readout > *{position:relative;}
+  .tpr-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-on-ink-dim);}
+  .tpr-price{font-family:var(--font-mono);font-size:clamp(1.1rem,4vw,1.6rem);font-weight:500;margin-top:.6rem;color:var(--paper-on-ink-dim);overflow-wrap:anywhere;}
+  .tpr-hours{font-family:var(--font-display);font-size:clamp(3.4rem,11vw,6rem);font-weight:700;line-height:1;margin-top:.7rem;letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+  .tpr-hours .unit{display:block;font-size:.17em;font-family:var(--font-mono);font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-on-ink-dim);margin-top:.9rem;}
+  .tpr-days{font-family:var(--font-mono);font-size:.95rem;color:var(--paper-on-ink);margin-top:1.3rem;}
+  /* One cell per working day the price costs (up to ten). */
+  .tpr-cells{display:flex;justify-content:center;gap:5px;margin-top:.8rem;min-height:14px;}
+  .tpr-cell{width:20px;height:14px;border-radius:3px;background:var(--paper-on-ink-faint);overflow:hidden;}
+  .tpr-cell i{display:block;height:100%;background:var(--gain-on-ink);transition:width .4s var(--ease);}
+  .tpr-more{font-family:var(--font-mono);font-size:.7rem;color:var(--paper-on-ink-dim);align-self:center;margin-left:.3rem;}
+  .price-actions{display:flex;margin-top:1.2rem;}
+  .purchase-list{margin-top:2rem;}
+  .tp-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto 1fr;grid-template-areas:"a r" "b r" "c r" "d r";column-gap:clamp(2rem,5vw,4rem);align-items:start;}
+  .tp-a{grid-area:a;} .tp-b{grid-area:b;} .tp-c{grid-area:c;} .tp-d{grid-area:d;}
+  .tp-r{grid-area:r;position:sticky;top:2rem;}
+  @media (max-width:900px){
+    .tp-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"a" "r" "b" "c" "d";}
+    .tp-r{position:relative;top:auto;margin:1rem 0 .4rem;}
+  }
+  .purchase-head{display:grid;grid-template-columns:1fr auto auto auto;gap:1rem;padding:0 1rem .5rem;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.12em;color:var(--ink-dimmer);text-transform:uppercase;}
+  .purchase-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.55rem;transition:box-shadow .25s;}
+  .purchase-row:hover{box-shadow:var(--shadow);}
   .purchase-head span:not(:first-child),.purchase-metric{text-align:right;min-width:72px;}
   .purchase-name{font-weight:500;overflow-wrap:anywhere;}
   .purchase-name small{display:block;font-family:var(--font-mono);font-weight:400;color:var(--ink-dim);font-size:.8rem;}
   .purchase-metric{font-family:var(--font-mono);font-size:.85rem;color:var(--ink-dim);white-space:nowrap;}
+  .purchase-metric:first-of-type{color:var(--accent);font-weight:600;}
   @media (max-width:600px){
     .purchase-head{display:none;}
-    .purchase-row{grid-template-columns:1fr auto;}
-    .purchase-row .item-remove{grid-row:1;grid-column:2;}
-    .purchase-metric{text-align:left;}
+    .purchase-row{grid-template-columns:minmax(0,1fr) auto auto;row-gap:.2rem;}
+    .purchase-name{grid-column:1 / -1;grid-row:1;padding-right:2.4rem;}
+    .purchase-row{position:relative;}
+    .purchase-row .item-remove{position:absolute;top:.45rem;right:.45rem;}
+    .purchase-metric{text-align:left;min-width:0;}
   }
 
   /* ============================= DREAMS ============================= */
-  .dream-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1rem;max-width:760px;}
-  .dream-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
-  .dream-name{font-family:var(--font-display);font-weight:600;font-size:1.15rem;overflow-wrap:anywhere;}
-  .dream-price{font-family:var(--font-mono);color:var(--accent);font-size:1.1rem;white-space:nowrap;}
-  .dream-metrics{display:flex;gap:1.8rem;flex-wrap:wrap;align-items:flex-end;margin-top:.9rem;font-size:.85rem;color:var(--ink-dim);}
-  .dream-metrics b{font-family:var(--font-mono);color:var(--ink);display:block;font-size:1rem;font-weight:600;}
-  .dream-metrics .item-remove{margin-left:auto;}
-  .dream-progress{height:5px;border-radius:3px;background:var(--bg-card-alt);border:1px solid var(--border);margin-top:1rem;overflow:hidden;}
-  .dream-progress div{height:100%;background:var(--gain);}
-  .savings-rate-field{max-width:340px;margin:1.6rem 0 1.8rem;}
+  .dreams-form{display:flex;flex-direction:column;gap:1.4rem;margin-bottom:1.8rem;}
+  .dreams-form .price-input-row{margin-bottom:0;}
+  .savings-rate-field{max-width:440px;margin:0;}
+  .savings-rate-field .help-text{margin-top:.5rem;}
+  .dreams-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:1rem;}
+  .dreams-list .list-empty{grid-column:1 / -1;}
+  .dream-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.5rem 1.3rem;box-shadow:var(--shadow);transition:transform .3s var(--ease),box-shadow .3s var(--ease);}
+  .dream-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);}
+  .dream-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding-right:2rem;}
+  .dream-name{font-family:var(--font-display);font-weight:600;font-size:1.2rem;overflow-wrap:anywhere;}
+  .dream-price{font-family:var(--font-mono);color:var(--accent);font-size:.9rem;font-weight:600;white-space:nowrap;padding:.25rem .6rem;border-radius:99px;background:var(--accent-soft);}
+  .dream-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin-top:1.1rem;font-size:.72rem;color:var(--ink-dim);}
+  .dream-metrics > span{background:var(--bg-card-alt);border-radius:10px;padding:.6rem .7rem;}
+  .dream-metrics b{font-family:var(--font-mono);color:var(--ink);display:block;font-size:.95rem;font-weight:600;margin-top:.15rem;}
+  .dream-metrics .item-remove{position:absolute;top:.9rem;right:.8rem;}
+  .dream-metrics > span:last-of-type b{color:var(--gain);}
 
   /* ============================= WHAT IF ============================= */
-  .whatif-row{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem .4rem;margin-bottom:.8rem;max-width:640px;}
+  .whatif-row{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem .35rem;margin-bottom:.6rem;transition:box-shadow .25s;}
+  .whatif-row:hover{box-shadow:var(--shadow);}
   .whatif-top{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;}
   .whatif-name{font-weight:500;overflow-wrap:anywhere;}
   .whatif-values{font-family:var(--font-mono);color:var(--ink-dim);white-space:nowrap;}
   .whatif-values .to{color:var(--gain);font-weight:600;}
-  .whatif-summary{margin-top:2.4rem;padding:2rem;background:var(--ink);color:var(--paper-on-ink);border-radius:18px;text-align:center;max-width:640px;}
-  .whatif-summary .eyebrow{color:var(--paper-on-ink-dim);margin-bottom:.4rem;}
-  .whatif-summary .big{font-family:var(--font-mono);font-size:clamp(2.2rem,7vw,3.4rem);font-weight:700;color:var(--gain-on-ink);}
-  .whatif-summary .row{margin-top:.7rem;font-family:var(--font-mono);font-size:.9rem;color:var(--paper-on-ink-dim);}
-  .whatif-summary .decade{margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid rgba(251,249,244,.14);font-family:var(--font-display);font-size:clamp(1.2rem,3.5vw,1.6rem);font-weight:600;color:var(--paper-on-ink);}
+  /* Track: what you'd still spend (bordeaux) up to the thumb, what you'd keep (green) after it. */
+  input[type="range"].whatif-slider{background:linear-gradient(90deg,var(--accent) var(--fill,100%),var(--gain-track) var(--fill,100%));}
+  .whatif-summary{position:relative;overflow:hidden;padding:2.2rem 2rem;background:var(--ink);color:var(--paper-on-ink);border-radius:22px;text-align:center;box-shadow:var(--shadow-lift);}
+  .whatif-summary::before{content:'';position:absolute;inset:0;background-image:radial-gradient(var(--paper-on-ink-faint) 1px,transparent 1px);background-size:16px 16px;opacity:.5;pointer-events:none;}
+  .whatif-summary > *{position:relative;}
+  .whatif-summary .eyebrow{color:var(--paper-on-ink-dim);margin-bottom:.6rem;}
+  .whatif-summary .big{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,3.4rem);font-weight:700;letter-spacing:-.02em;color:var(--gain-on-ink);font-variant-numeric:tabular-nums;}
+  .whatif-summary .row{margin-top:.6rem;font-family:var(--font-mono);font-size:.86rem;color:var(--paper-on-ink-dim);}
+  .whatif-summary .decade{margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--paper-on-ink-faint);font-family:var(--font-display);font-size:clamp(1.1rem,2.6vw,1.35rem);font-weight:600;color:var(--paper-on-ink);text-wrap:balance;}
   .whatif-reset{margin-top:1rem;}
 
   /* ============================= LIFESTYLE MODES ============================= */
   .lifestyle-sentence{font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.6rem);font-weight:500;max-width:30ch;margin-bottom:.5rem;}
   .lifestyle-sentence b{color:var(--accent);font-weight:600;}
-  .lifestyle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;}
-  .lifestyle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.6rem;}
-  .lifestyle-card.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
-  .lifestyle-mode{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
+  .lifestyle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:1.5rem;align-items:stretch;}
+  .lifestyle-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:1.6rem;box-shadow:var(--shadow);transition:transform .3s var(--ease),box-shadow .3s var(--ease);}
+  .lifestyle-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);}
+  .lifestyle-card.current{background:var(--ink);color:var(--paper-on-ink);border-color:var(--ink);}
+  .lifestyle-mode{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
   .lifestyle-mode small{letter-spacing:.04em;text-transform:none;color:var(--ink-dimmer);}
-  .lifestyle-card.current .lifestyle-mode{color:var(--accent);}
-  .lifestyle-monthly{font-family:var(--font-display);font-size:1.9rem;font-weight:600;margin-top:.5rem;}
-  .lifestyle-monthly span{font-size:.5em;color:var(--ink-dim);}
+  .lifestyle-card.current .lifestyle-mode{color:var(--gain-on-ink);}
+  .lifestyle-card.current .lifestyle-mode small{color:var(--paper-on-ink-dim);}
+  .lifestyle-monthly{font-family:var(--font-display);font-size:2rem;font-weight:700;letter-spacing:-.02em;margin-top:.5rem;}
+  .lifestyle-monthly span{font-size:.45em;font-weight:500;color:var(--ink-dim);}
+  .lifestyle-card.current .lifestyle-monthly span{color:var(--paper-on-ink-dim);}
+  /* How this mode's monthly cost compares with the most expensive one. */
+  .lifestyle-scale{height:5px;border-radius:99px;background:var(--bg-card-alt);margin:.9rem 0 .4rem;overflow:hidden;}
+  .lifestyle-scale i{display:block;height:100%;border-radius:99px;background:var(--accent);}
+  .lifestyle-card.current .lifestyle-scale{background:var(--paper-on-ink-faint);}
+  .lifestyle-card.current .lifestyle-scale i{background:var(--gain-on-ink);}
   .lifestyle-detail{display:flex;justify-content:space-between;gap:1rem;font-size:.82rem;color:var(--ink-dim);margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border);}
   .lifestyle-detail b{font-family:var(--font-mono);color:var(--ink);font-weight:500;}
+  .lifestyle-card.current .lifestyle-detail{color:var(--paper-on-ink-dim);border-top-color:var(--paper-on-ink-faint);}
+  .lifestyle-card.current .lifestyle-detail b{color:var(--paper-on-ink);}
 
   /* ============================= FINANCIAL FUTURE ============================= */
-  .future-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem 1.6rem;max-width:820px;margin:1.5rem 0 2rem;}
-  .slider-field label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--ink-dim);}
-  .slider-field .sval{font-family:var(--font-mono);color:var(--accent);font-weight:600;}
-  .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.2rem .8rem;max-width:820px;}
+  .future-sliders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 2.6rem;margin:1.5rem 0 1.8rem;padding:1.2rem 1.5rem .6rem;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);}
+  @media (max-width:640px){ .future-sliders{grid-template-columns:minmax(0,1fr);padding:1rem 1.1rem .5rem;} }
+  .slider-field label{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;font-size:.85rem;color:var(--ink-dim);}
+  .slider-field .sval{font-family:var(--font-mono);color:var(--accent);font-weight:600;white-space:nowrap;}
+  .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:1.2rem 1.2rem .8rem;box-shadow:var(--shadow);}
   .chart-wrap svg{width:100%;height:auto;display:block;overflow:visible;}
   .chart-legend{display:flex;gap:1.4rem;flex-wrap:wrap;font-size:.8rem;color:var(--ink-dim);margin-bottom:.6rem;}
   .chart-legend span::before{content:'';display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:.45rem;vertical-align:middle;background:currentColor;}
@@ -260,46 +416,69 @@
   .chart-legend .saved{color:var(--gain);}
   .chart-legend .lbl{color:var(--ink-dim);}
   .line-spent{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
-  .area-spent{fill:var(--accent-soft);}
+  .area-spent{fill:url(#gradSpent);}
   .line-saved{fill:none;stroke:var(--gain);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
-  .dot-spent{fill:var(--accent);}
-  .dot-saved{fill:var(--gain);}
+  .area-saved{fill:url(#gradSaved);}
+  .stop-spent{stop-color:var(--accent);}
+  .stop-saved{stop-color:var(--gain);}
+  .dot-spent{fill:var(--bg-card);stroke:var(--accent);stroke-width:2;}
+  .dot-saved{fill:var(--bg-card);stroke:var(--gain);stroke-width:2;}
   .axis-label{font-family:var(--font-mono);font-size:11px;fill:var(--ink-dimmer);}
-  .grid-line{stroke:var(--border);stroke-width:1;}
+  .end-label{font-family:var(--font-mono);font-size:11px;font-weight:600;}
+  .end-label.spent{fill:var(--accent);}
+  .end-label.saved{fill:var(--gain);}
+  .grid-line{stroke:var(--border);stroke-width:1;stroke-dasharray:2 4;}
   .crossover-line{stroke:var(--accent);stroke-width:1;stroke-dasharray:4 4;}
-  .milestone-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;margin-top:1.2rem;max-width:820px;}
-  .milestone-cell{text-align:center;padding:.7rem .4rem;border-radius:8px;background:var(--bg-card-alt);}
-  .milestone-age{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);}
-  .milestone-val{font-family:var(--font-mono);font-size:.85rem;font-weight:600;margin-top:.25rem;color:var(--accent);}
-  .milestone-val.saved{color:var(--gain);font-weight:500;}
-  .future-note{margin-top:1.2rem;max-width:820px;padding:1rem 1.2rem;border-left:3px solid var(--accent);background:var(--bg-card);border-radius:0 10px 10px 0;font-size:.92rem;}
+  .crossover-label{font-family:var(--font-mono);font-size:10px;fill:var(--accent);}
+  .milestone-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;margin-top:1rem;}
+  .milestone-cell{text-align:center;padding:.8rem .4rem;border-radius:12px;background:var(--bg-card);border:1px solid var(--border);}
+  .milestone-age{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.08em;color:var(--ink-dim);}
+  .milestone-val{font-family:var(--font-mono);font-size:.9rem;font-weight:600;margin-top:.3rem;color:var(--accent);}
+  .milestone-val.saved{color:var(--gain);font-weight:500;font-size:.8rem;margin-top:.1rem;}
+  .future-note{margin-top:1rem;padding:1rem 1.2rem;border-left:3px solid var(--accent);background:var(--bg-card);border-radius:0 12px 12px 0;font-size:.92rem;box-shadow:var(--shadow);}
   .future-note.good{border-left-color:var(--gain);}
 
   /* ============================= WORTH SCORE ============================= */
-  .score-wrap{display:flex;flex-wrap:wrap;gap:2.5rem;align-items:center;margin-top:1rem;}
-  .score-seal{width:170px;height:170px;border-radius:50%;border:2px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;background:var(--bg-card);}
-  .score-seal::before{content:'';position:absolute;inset:8px;border:1px dashed var(--border-strong);border-radius:50%;}
-  .score-num{font-family:var(--font-mono);font-size:3rem;font-weight:700;color:var(--accent);}
-  .score-max{font-family:var(--font-mono);font-size:.85rem;color:var(--ink-dimmer);margin-top:-.3rem;}
-  .score-factors{flex:1;min-width:240px;max-width:520px;display:flex;flex-direction:column;gap:1.1rem;}
-  .score-factor-label{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:.35rem;}
-  .score-factor-label b{font-family:var(--font-mono);}
+  .score-wrap{display:flex;flex-wrap:wrap;gap:2.5rem 3.5rem;align-items:center;margin-top:1rem;}
+  /* A ring filled to the score (conic gradient driven by --score, set from JS). */
+  .score-seal{
+    --score:0;width:200px;height:200px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;
+    background:conic-gradient(var(--accent) calc(var(--score) * 1%),var(--bg-card-alt) 0);
+    box-shadow:var(--shadow-lift);transition:--score 1.4s var(--ease);
+  }
+  .score-seal::before{content:'';position:absolute;inset:14px;border-radius:50%;background:var(--bg-card);box-shadow:inset 0 2px 8px rgba(24,20,15,0.08);}
+  .score-seal::after{content:'';position:absolute;inset:24px;border:1px dashed var(--border-strong);border-radius:50%;}
+  .score-num{position:relative;z-index:1;font-family:var(--font-display);font-size:3.4rem;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--accent);}
+  .score-max{position:relative;z-index:1;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-dimmer);margin-top:.3rem;}
+  .score-factors{flex:1;min-width:240px;max-width:560px;display:flex;flex-direction:column;gap:.8rem;}
+  .score-factors > div{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:.95rem 1.1rem;box-shadow:var(--shadow);}
+  .score-factor-label{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:.5rem;}
+  .score-factor-label b{font-family:var(--font-mono);font-size:1rem;}
   .score-factor-label small{color:var(--ink-dimmer);font-family:var(--font-mono);font-weight:400;}
-  .score-factor-hint{font-size:.78rem;color:var(--ink-dimmer);margin-top:.35rem;}
-  .score-bar-track{height:7px;background:var(--bg-card-alt);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-  .score-bar-fill{height:100%;background:var(--accent);width:0;transition:width .9s var(--ease);}
+  .score-factor-hint{font-size:.78rem;color:var(--ink-dimmer);margin-top:.5rem;}
+  .score-bar-track{height:6px;background:var(--bg-card-alt);border-radius:99px;overflow:hidden;}
+  .score-bar-fill{height:100%;border-radius:99px;background:var(--accent);width:0;transition:width .9s var(--ease);}
 
   /* ============================= FINALE ============================= */
   .finale{text-align:center;align-items:center;}
-  .finale-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;color:var(--ink-dim);text-transform:uppercase;}
-  .finale-numbers{display:flex;flex-direction:column;gap:.2rem;margin:1rem 0 1.8rem;}
-  .finale-monthly{font-family:var(--font-display);font-size:clamp(3rem,12vw,6.5rem);font-weight:700;line-height:1;}
-  .finale-monthly span{font-size:.38em;font-weight:500;color:var(--ink-dim);}
-  .finale-yearly{font-family:var(--font-mono);color:var(--ink-dim);font-size:1.1rem;margin-top:.6rem;}
-  .finale-hours{font-family:var(--font-mono);color:var(--accent);font-size:1.3rem;margin-top:.3rem;font-weight:600;}
-  .finale-tagline{color:var(--ink-dim);font-size:1.1rem;font-style:italic;margin-top:1.6rem;max-width:480px;}
+  /* The closing bill: a second receipt that bookends the one in the hero. */
+  .bill{position:relative;width:min(100%,560px);padding:2.6rem clamp(1.4rem,5vw,3rem) 2.4rem;background:var(--bg-card);filter:drop-shadow(0 30px 40px rgba(24,20,15,0.14));}
+  .bill::before,.bill::after{content:'';position:absolute;left:0;right:0;height:10px;}
+  .bill::before{bottom:100%;background:conic-gradient(from -45deg at bottom,transparent 90deg,var(--bg-card) 0) 0 0/20px 100%;}
+  .bill::after{top:100%;background:conic-gradient(from 135deg at top,transparent 90deg,var(--bg-card) 0) 0 0/20px 100%;}
+  .finale-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.2em;color:var(--ink-dim);text-transform:uppercase;}
+  .finale-numbers{display:flex;flex-direction:column;align-items:center;gap:.2rem;margin:1.1rem 0 1.4rem;padding-bottom:1.6rem;border-bottom:1px dashed var(--border-strong);}
+  .finale-monthly{font-family:var(--font-display);font-size:clamp(3rem,11vw,5.6rem);font-weight:700;letter-spacing:-.03em;line-height:1;}
+  .finale-monthly span{font-size:.36em;font-weight:500;color:var(--ink-dim);letter-spacing:0;}
+  .finale-yearly{font-family:var(--font-mono);color:var(--ink-dim);font-size:1.05rem;margin-top:.8rem;}
+  /* Hours of work, as an ink stamp. */
+  .finale-hours{display:inline-block;margin-top:1.3rem;padding:.55rem 1.1rem;border:2px solid var(--accent);border-radius:8px;color:var(--accent);font-family:var(--font-mono);font-size:1rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-3deg);box-shadow:inset 0 0 0 3px var(--bg-card),inset 0 0 0 4px var(--accent-soft);}
+  .finale-hours:empty{display:none;}
+  @media (max-width:480px){ .finale-hours{font-size:.78rem;letter-spacing:.04em;padding:.5rem .8rem;} }
+  .finale-tagline{color:var(--ink-dim);font-size:1.08rem;font-style:italic;margin:0 auto;max-width:440px;}
 
-  footer{text-align:center;padding:3rem 1.5rem calc(5rem + env(safe-area-inset-bottom));color:var(--ink-dimmer);font-size:.78rem;font-family:var(--font-mono);letter-spacing:.03em;display:flex;flex-direction:column;gap:.5rem;}
+  footer{text-align:center;padding:3rem 1.5rem calc(5rem + env(safe-area-inset-bottom));color:var(--ink-dimmer);font-size:.76rem;font-family:var(--font-mono);letter-spacing:.03em;display:flex;flex-direction:column;align-items:center;gap:.5rem;max-width:1000px;margin:0 auto;border-top:1px solid var(--border);}
+  .footer-mark{font-family:var(--font-display);font-size:1.3rem;font-weight:700;letter-spacing:-.02em;color:var(--accent);margin-bottom:.35rem;}
 </style>
 </head>
 <body>
@@ -308,133 +487,171 @@
 
 <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
 <button class="reset-btn" id="resetBtn" type="button" title="Reset all data" aria-label="Reset all saved data">↺</button>
+<!-- Section rail: filled in by renderRail(), shown on wide screens only. -->
+<nav class="rail" id="rail" aria-label="Sections"></nav>
 
 <main>
 
 <!-- 1. HERO -->
-<section class="section hero" id="hero">
-  <div class="hero-content">
-    <div class="hero-logo">WORTH.</div>
-    <h1 class="hero-title">What does your life cost?</h1>
-    <p class="hero-tagline">Money is just time in another form.</p>
-    <button class="btn btn-primary" id="ctaStart" type="button">Calculate my worth <span class="arrow" aria-hidden="true">→</span></button>
+<section class="section hero" id="hero" data-nav="Start">
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-logo">WORTH.</div>
+      <h1 class="hero-title">What does your life <span class="hl">cost?</span></h1>
+      <p class="hero-tagline">Money is just time in another form.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="ctaStart" type="button">Calculate my worth <span class="arrow" aria-hidden="true">→</span></button>
+        <span class="hero-note">No sign-up · stays on your device</span>
+      </div>
+    </div>
+    <!-- A month of spending as a till receipt, priced in hours (see renderHeroReceipt). Decorative: the same figures are in the sections below. -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="receipt" id="heroReceipt"></div>
+    </div>
   </div>
   <div class="scroll-hint" aria-hidden="true">SCROLL ↓</div>
 </section>
 
 <!-- 2. PROFILE -->
-<section class="section profile" id="profile">
+<section class="section profile" id="profile" data-nav="Profile">
   <span class="eyebrow">Your financial profile</span>
   <h2>Let's start with the basics.</h2>
-  <div class="field-row">
-    <div class="field"><label for="ageInput">Age</label><input type="number" id="ageInput" min="14" max="100" step="1" inputmode="numeric" value="28"></div>
-    <div class="field"><label for="currencySelect">Currency</label>
-      <select id="currencySelect">
-        <option value="€">EUR — €</option>
-        <option value="$">USD — $</option>
-        <option value="£">GBP — £</option>
-        <option value="CHF">CHF</option>
-      </select>
+  <div class="split profile-grid">
+    <div class="profile-form">
+      <div class="field-row">
+        <div class="field"><label for="ageInput">Age</label><input type="number" id="ageInput" min="14" max="100" step="1" inputmode="numeric" value="28"></div>
+        <div class="field"><label for="currencySelect">Currency</label>
+          <select id="currencySelect">
+            <option value="€">EUR — €</option>
+            <option value="$">USD — $</option>
+            <option value="£">GBP — £</option>
+            <option value="CHF">CHF</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="incomeInput">Monthly income</label><input type="number" id="incomeInput" min="0" step="10" inputmode="decimal" value="1500"></div>
+        <div class="field"><label for="savingsInput">Current savings</label><input type="number" id="savingsInput" min="0" step="10" inputmode="decimal" value="1000"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="hoursWeekInput">Hours worked / week</label><input type="number" id="hoursWeekInput" min="1" max="100" step="1" inputmode="numeric" value="40"></div>
+        <div class="field"><label for="weeksYearInput">Weeks worked / year</label><input type="number" id="weeksYearInput" min="1" max="52" step="1" inputmode="numeric" value="52"></div>
+      </div>
+      <p class="help-text">Income × 12 ÷ (hours per week × weeks per year): a simplified rate that assumes you're paid for every hour you work, before tax. Don't know the exact numbers? The defaults are reasonable starting points.</p>
+    </div>
+    <div class="hourly-preview" aria-live="polite">
+      <div class="label">Your hourly income</div>
+      <div class="value" id="hourlyPreview">—</div>
+      <div class="formula" id="hourlyFormula"></div>
+      <div class="hourly-chips" id="hourlyChips"></div>
     </div>
   </div>
-  <div class="field-row">
-    <div class="field"><label for="incomeInput">Monthly income</label><input type="number" id="incomeInput" min="0" step="10" inputmode="decimal" value="1500"></div>
-    <div class="field"><label for="savingsInput">Current savings</label><input type="number" id="savingsInput" min="0" step="10" inputmode="decimal" value="1000"></div>
-  </div>
-  <div class="field-row">
-    <div class="field"><label for="hoursWeekInput">Hours worked / week</label><input type="number" id="hoursWeekInput" min="1" max="100" step="1" inputmode="numeric" value="40"></div>
-    <div class="field"><label for="weeksYearInput">Weeks worked / year</label><input type="number" id="weeksYearInput" min="1" max="52" step="1" inputmode="numeric" value="52"></div>
-  </div>
-  <div class="hourly-preview" aria-live="polite">
-    <div class="label">Your hourly income</div>
-    <div class="value" id="hourlyPreview">—</div>
-    <div class="formula" id="hourlyFormula"></div>
-  </div>
-  <p class="help-text">Income × 12 ÷ (hours per week × weeks per year): a simplified rate that assumes you're paid for every hour you work, before tax. Don't know the exact numbers? The defaults are reasonable starting points.</p>
-  <div style="margin-top:1.8rem;">
+  <div class="profile-cta">
     <button class="btn btn-primary" id="ctaCalc" type="button">Show my worth <span class="arrow" aria-hidden="true">→</span></button>
   </div>
   <p class="error-msg" id="profileError" role="alert" hidden></p>
 </section>
 
 <!-- 3. YOUR LIFE COST -->
-<section class="section reveal" id="lifeCost" hidden>
+<section class="section reveal" id="lifeCost" data-nav="Spending" hidden>
   <span class="eyebrow">Your life cost</span>
   <h2>What you spend, every month.</h2>
   <p class="lede">Add, rename or remove categories. Everything below updates as you type.</p>
-  <div class="item-list" id="expenseList"></div>
-  <div><button class="btn btn-ghost" id="addExpense" type="button">+ Add category</button></div>
-  <div class="stat-grid">
-    <div class="stat-card"><span class="stat-label">Monthly cost</span><span class="stat-value" id="monthlyCostNum">—</span></div>
-    <div class="stat-card"><span class="stat-label">Yearly cost</span><span class="stat-value" id="yearlyCostNum">—</span></div>
-    <div class="stat-card"><span class="stat-label">Daily cost</span><span class="stat-value" id="dailyCostNum">—</span></div>
-    <div class="stat-card"><span class="stat-label">Hourly cost</span><span class="stat-value" id="hourlyCostNum">—</span></div>
+  <div class="split wide-left">
+    <div class="cost-main">
+      <div class="item-list" id="expenseList"></div>
+      <div><button class="btn btn-ghost" id="addExpense" type="button">+ Add category</button></div>
+    </div>
+    <div class="cost-side sticky">
+      <div class="donut-card card">
+        <div class="donut" id="costDonut" role="img" aria-label="Share of each category in your monthly spending">
+          <div class="donut-center"><span class="donut-num" id="donutTotal">—</span><span class="donut-cap">a month</span></div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><span class="stat-label">Monthly cost</span><span class="stat-value" id="monthlyCostNum">—</span></div>
+        <div class="stat-card"><span class="stat-label">Yearly cost</span><span class="stat-value" id="yearlyCostNum">—</span></div>
+        <div class="stat-card"><span class="stat-label">Daily cost</span><span class="stat-value" id="dailyCostNum">—</span></div>
+        <div class="stat-card"><span class="stat-label">Hourly cost</span><span class="stat-value" id="hourlyCostNum">—</span></div>
+      </div>
+      <p class="help-text">Daily and hourly cost spread your yearly spending over every day and every hour of the year (365 days, 24 hours), not just working time — what simply being you costs, around the clock.</p>
+    </div>
   </div>
-  <p class="help-text">Daily and hourly cost spread your yearly spending over every day and every hour of the year (365 days, 24 hours), not just working time — what simply being you costs, around the clock.</p>
 </section>
 
 <!-- 4. THE TIME PRICE (signature) -->
-<section class="section reveal" id="timePrice" hidden>
+<section class="section reveal" id="timePrice" data-nav="Time price" hidden>
   <span class="eyebrow">The time price</span>
   <h2>Anything you buy, in hours of your life.</h2>
   <p class="lede">Type in the price of anything. Watch it convert, instantly.</p>
-  <div class="price-input-row">
-    <label for="tpName" class="visually-hidden">Item name</label>
-    <input type="text" id="tpName" placeholder="e.g. Sneakers" maxlength="60" enterkeyhint="next">
-    <label for="tpPrice" class="visually-hidden">Price</label>
-    <input type="number" id="tpPrice" placeholder="Price" min="0" step="1" inputmode="decimal" enterkeyhint="done">
+  <!-- One grid for the whole section: the readout sits right of the inputs on wide screens and right under them on phones. -->
+  <div class="tp-grid">
+    <div class="price-input-row tp-a">
+      <label for="tpName" class="visually-hidden">Item name</label>
+      <input type="text" id="tpName" placeholder="e.g. Sneakers" maxlength="60" enterkeyhint="next">
+      <label for="tpPrice" class="visually-hidden">Price</label>
+      <input type="number" id="tpPrice" placeholder="Price" min="0" step="1" inputmode="decimal" enterkeyhint="done">
+    </div>
+    <div class="time-price-readout tp-r" aria-live="polite">
+      <div class="tpr-label">This costs you</div>
+      <div class="tpr-price" id="tprPrice">—</div>
+      <div class="tpr-hours"><span id="tprHours">0</span><span class="unit">hours of your life</span></div>
+      <div class="tpr-days" id="tprDays">—</div>
+      <div class="tpr-cells" id="tprCells" aria-hidden="true"></div>
+    </div>
+    <p class="help-text tp-b">Price ÷ your hourly income. A working day = your weekly hours ÷ 5.</p>
+    <div class="price-actions tp-c">
+      <button class="btn btn-primary" id="addPurchase" type="button" disabled>Add to my list</button>
+    </div>
+    <div class="purchase-list tp-d" id="purchaseList"></div>
   </div>
-  <div class="time-price-readout" aria-live="polite">
-    <div class="tpr-label">This costs you</div>
-    <div class="tpr-price" id="tprPrice">—</div>
-    <div class="tpr-hours"><span id="tprHours">0</span><span class="unit">hours of your life</span></div>
-    <div class="tpr-days" id="tprDays">—</div>
-  </div>
-  <p class="help-text">Price ÷ your hourly income. A working day = your weekly hours ÷ 5.</p>
-  <div class="price-actions">
-    <button class="btn btn-primary" id="addPurchase" type="button" disabled>Add to my list</button>
-  </div>
-  <div class="purchase-list" id="purchaseList"></div>
 </section>
 
 <!-- 5. DREAMS -->
-<section class="section reveal" id="dreams" hidden>
+<section class="section reveal" id="dreams" data-nav="Dreams" hidden>
   <span class="eyebrow">Your dreams</span>
   <h2>What do your dreams cost?</h2>
   <p class="lede">Add the goals you're working toward — a trip, a car, university, a business.</p>
-  <div class="price-input-row">
-    <label for="dreamName" class="visually-hidden">Dream name</label>
-    <input type="text" id="dreamName" placeholder="e.g. New York trip" maxlength="60" enterkeyhint="next">
-    <label for="dreamPrice" class="visually-hidden">Price</label>
-    <input type="number" id="dreamPrice" placeholder="Price" min="0" step="1" inputmode="decimal" enterkeyhint="done">
-    <button class="btn btn-primary" id="addDream" type="button" disabled>Add</button>
+  <div class="dreams-form">
+    <div class="price-input-row">
+      <label for="dreamName" class="visually-hidden">Dream name</label>
+      <input type="text" id="dreamName" placeholder="e.g. New York trip" maxlength="60" enterkeyhint="next">
+      <label for="dreamPrice" class="visually-hidden">Price</label>
+      <input type="number" id="dreamPrice" placeholder="Price" min="0" step="1" inputmode="decimal" enterkeyhint="done">
+      <button class="btn btn-primary" id="addDream" type="button" disabled>Add</button>
+    </div>
+    <div class="field savings-rate-field">
+      <label for="dreamSavings">How much can you save per month toward your dreams?</label>
+      <input type="number" id="dreamSavings" min="0" step="10" inputmode="decimal" placeholder="0">
+      <p class="help-text" id="dreamSavingsHint"></p>
+    </div>
   </div>
-  <div class="field savings-rate-field">
-    <label for="dreamSavings">How much can you save per month toward your dreams?</label>
-    <input type="number" id="dreamSavings" min="0" step="10" inputmode="decimal" placeholder="0">
-    <p class="help-text" id="dreamSavingsHint"></p>
-  </div>
-  <div id="dreamsList"></div>
+  <div class="dreams-list" id="dreamsList"></div>
 </section>
 
 <!-- 6. WHAT IF -->
-<section class="section reveal" id="whatIf" hidden>
+<section class="section reveal" id="whatIf" data-nav="What if" hidden>
   <span class="eyebrow">What if?</span>
   <h2>What if your lifestyle changed?</h2>
   <p class="lede">Drag any category down to a new target. See what you'd get back.</p>
-  <div id="whatIfList"></div>
-  <div class="whatif-summary" aria-live="polite">
-    <div class="eyebrow">You just saved</div>
-    <div class="big" id="wifMonthly">—</div>
-    <div class="row" id="wifYearly"></div>
-    <div class="row" id="wifHours"></div>
-    <div class="decade" id="wifTenYear"></div>
+  <div class="split wide-left">
+    <div>
+      <div id="whatIfList"></div>
+      <div class="whatif-reset"><button class="btn btn-ghost" id="whatIfReset" type="button">Reset sliders</button></div>
+    </div>
+    <div class="whatif-summary sticky" aria-live="polite">
+      <div class="eyebrow">You just saved</div>
+      <div class="big" id="wifMonthly">—</div>
+      <div class="row" id="wifYearly"></div>
+      <div class="row" id="wifHours"></div>
+      <div class="decade" id="wifTenYear"></div>
+    </div>
   </div>
-  <div class="whatif-reset"><button class="btn btn-ghost" id="whatIfReset" type="button">Reset sliders</button></div>
 </section>
 
 <!-- 7. LIFESTYLE MODES -->
-<section class="section reveal" id="lifestyle" hidden>
+<section class="section reveal" id="lifestyle" data-nav="Lifestyle" hidden>
   <span class="eyebrow">Lifestyle modes</span>
   <h2>Three ways to live.</h2>
   <p class="lifestyle-sentence" id="lifestyleSentence"></p>
@@ -444,7 +661,7 @@
 </section>
 
 <!-- 8. FINANCIAL FUTURE -->
-<section class="section reveal" id="future" hidden>
+<section class="section reveal" id="future" data-nav="Future" hidden>
   <span class="eyebrow">Financial future</span>
   <h2>Where this lifestyle leads.</h2>
   <p class="lede">A projection, not a prediction or financial advice. Real inflation, income and expenses rarely move in a straight line.</p>
@@ -464,31 +681,34 @@
 </section>
 
 <!-- 9. WORTH SCORE -->
-<section class="section reveal" id="worthScore" hidden>
+<section class="section reveal" id="worthScore" data-nav="Score" hidden>
   <span class="eyebrow">The WORTH score</span>
   <h2>Your number, explained.</h2>
   <div class="score-wrap">
-    <div class="score-seal"><div class="score-num" id="scoreNum">—</div><div class="score-max">/ 100</div></div>
+    <div class="score-seal" id="scoreSeal"><div class="score-num" id="scoreNum">—</div><div class="score-max">/ 100</div></div>
     <div class="score-factors" id="scoreFactors"></div>
   </div>
   <p class="help-text">An internal, illustrative score built only from the numbers you entered: savings rate (55%), emergency runway (25%) and income-to-cost ratio (20%). It is not a scientific measure, a credit score or financial advice.</p>
 </section>
 
 <!-- 10. THE BIG NUMBER -->
-<section class="section finale" id="finale" hidden>
-  <span class="finale-label">Your life costs</span>
-  <div class="finale-numbers">
-    <div class="finale-monthly"><span id="finaleMonthly" style="font-size:inherit;font-weight:inherit;color:inherit">—</span><span> / month</span></div>
-    <div class="finale-yearly" id="finaleYearly"></div>
-    <div class="finale-hours" id="finaleHours"></div>
+<section class="section finale" id="finale" data-nav="Total" hidden>
+  <div class="bill">
+    <span class="finale-label">Your life costs</span>
+    <div class="finale-numbers">
+      <div class="finale-monthly"><span id="finaleMonthly" style="font-size:inherit;font-weight:inherit;color:inherit">—</span><span> / month</span></div>
+      <div class="finale-yearly" id="finaleYearly"></div>
+      <div class="finale-hours" id="finaleHours"></div>
+    </div>
+    <p class="finale-tagline">Every month, you are buying your lifestyle with time.</p>
   </div>
-  <p class="finale-tagline">Every month, you are buying your lifestyle with time.</p>
 </section>
 
 </main>
 
 <footer>
-  <span>WORTH — Money is just time in another form.</span>
+  <span class="footer-mark">WORTH.</span>
+  <span>Money is just time in another form.</span>
   <span>Your data stays on this device. The only outside request is for fonts (Google Fonts) — never your data.</span>
 </footer>
 
@@ -735,6 +955,27 @@ function fmtDuration(months){
   return [y ? plural(y, 'year', 'years') : '', m ? plural(m, 'month', 'months') : ''].filter(Boolean).join(' ');
 }
 
+/**
+ * Paints the filled part of a range slider. CSS draws the track as a
+ * gradient that switches colour at --fill; this keeps --fill in sync with
+ * the slider's value, min and max.
+ * @param {HTMLInputElement} el
+ */
+function paintRange(el){
+  var min = parseFloat(el.min) || 0, max = parseFloat(el.max), v = parseFloat(el.value) || 0;
+  if(!isFinite(max)) max = 100;
+  var pct = max > min ? (v - min) / (max - min) * 100 : 100;
+  el.style.setProperty('--fill', Math.max(0, Math.min(100, pct)) + '%');
+}
+
+/**
+ * Colour of the n-th expense category, shared by its swatch, its share bar
+ * and its slice of the donut. Taken in list order from the --c1…--c9 tokens.
+ * @param {number} index - position in state.expenses
+ * @returns {string} a CSS colour value
+ */
+function catColor(index){ return 'var(--c' + (index % 9 + 1) + ')'; }
+
 /** True when the user has asked their OS for reduced motion. */
 function prefersReducedMotion(){
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -825,13 +1066,46 @@ function projectionSavings(){
    RENDER: PROFILE
    ============================================================================ */
 
-/** Updates the live hourly-income card under the profile form. */
+/** Updates the live hourly-income card next to the profile form. */
 function renderHourlyPreview(){
   var p = state.profile, h = hourlyIncome();
-  $('hourlyPreview').textContent = h > 0 ? fmtMoney(h, 2) + ' / hour' : '—';
+  var value = $('hourlyPreview');
+  if(h > 0) value.innerHTML = escapeHtml(fmtMoney(h, 2)) + '<small> / hour</small>';
+  else value.textContent = '—';
   $('hourlyFormula').textContent = h > 0
     ? fmtMoney(p.monthlyIncome * 12) + ' ÷ ' + fmtInt(p.hoursPerWeek * p.weeksPerYear) + ' hours a year'
     : '';
+  $('hourlyChips').innerHTML = h > 0
+    ? '<span><b>' + escapeHtml(fmtMoney(h * workDayHours(), 2)) + '</b> a working day</span>' +
+      '<span><b>' + escapeHtml(fmtMoney(h * p.hoursPerWeek)) + '</b> a working week</span>'
+    : '';
+}
+
+/**
+ * The receipt in the hero: the month's biggest expenses with their price in
+ * money and in hours of work, then the total. Before the profile is filled
+ * in it shows the default numbers and says "Example month"; afterwards it is
+ * the user's own month. Re-drawn whenever a number changes.
+ */
+function renderHeroReceipt(){
+  var el = $('heroReceipt');
+  var hi = hourlyIncome(), total = monthlyCost();
+  var items = state.expenses.filter(function(e){ return e.monthly > 0; })
+    .sort(function(a, b){ return b.monthly - a.monthly; });
+  var shown = items.slice(0, 6);
+  var hours = function(v){ return hi > 0 ? fmt1(v / hi) + ' h' : '—'; };
+  var today = new Date().toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+  var html = '<div class="rc-head"><div class="rc-brand">WORTH.</div>' +
+    '<div class="rc-sub">' + (revealed ? 'Your month' : 'Example month') + ' · ' + escapeHtml(today) + '</div></div>' +
+    '<div class="rc-cols"><span>Item</span><span>Price</span><span>Time</span></div>';
+  shown.forEach(function(e){
+    html += '<div class="rc-line"><span>' + escapeHtml(e.name || 'Unnamed') + '</span><span>' + escapeHtml(fmtMoney(e.monthly)) + '</span><span class="h">' + hours(e.monthly) + '</span></div>';
+  });
+  if(items.length > shown.length) html += '<div class="rc-more">+ ' + plural(items.length - shown.length, 'more category', 'more categories') + '</div>';
+  html += '<div class="rc-total"><span>Total / month</span><span>' + escapeHtml(fmtMoney(total)) + '</span><span class="h">' + hours(total) + '</span></div>' +
+    '<div class="rc-rate">at ' + (hi > 0 ? escapeHtml(fmtMoney(hi, 2)) : '—') + ' per hour of work</div>' +
+    '<div class="rc-bars"></div><div class="rc-foot">Paid in time</div>';
+  el.innerHTML = html;
 }
 
 /* ============================================================================
@@ -840,15 +1114,19 @@ function renderHourlyPreview(){
 
 /** Rebuilds the list of expense rows (only when an item is added or removed). */
 function renderExpenses(){
-  $('expenseList').innerHTML = state.expenses.map(function(e){
-    return '<div class="item-row">' +
+  $('expenseList').innerHTML = state.expenses.map(function(e, i){
+    return '<div class="item-row" style="--c:' + catColor(i) + '">' +
+      '<span class="item-swatch" aria-hidden="true"></span>' +
       '<input type="text" class="item-name" value="' + escapeHtml(e.name) + '" data-id="' + e.id + '" maxlength="' + BOUNDS.nameLength + '" placeholder="Category name" aria-label="Category name">' +
+      '<span class="item-share" id="share-' + e.id + '" aria-hidden="true"></span>' +
       '<div class="item-amount-wrap"><span class="curr" aria-hidden="true">' + escapeHtml(cur()) + '</span>' +
         '<input type="number" class="item-amount" value="' + e.monthly + '" min="0" step="1" inputmode="decimal" data-id="' + e.id + '" aria-label="Monthly amount for ' + escapeHtml(e.name || 'this category') + '">' +
       '</div>' +
       '<button class="item-remove" type="button" data-id="' + e.id + '" aria-label="Remove ' + escapeHtml(e.name || 'category') + '">×</button>' +
+      '<span class="item-bar" id="bar-' + e.id + '" aria-hidden="true"></span>' +
     '</div>';
   }).join('') || '<p class="list-empty">No categories yet. Add your first one below.</p>';
+  renderSpendingShape();
 }
 
 /** Monthly / yearly / daily / hourly cost of living. */
@@ -859,6 +1137,40 @@ function renderExpenseTotals(){
   animateNumber($('yearlyCostNum'), yearly, money0);
   animateNumber($('dailyCostNum'), yearly / 365, money2);
   animateNumber($('hourlyCostNum'), yearly / 365 / 24, money2);
+  animateNumber($('donutTotal'), monthly, money0);
+  renderSpendingShape();
+}
+
+/**
+ * How the monthly total is split: each row's percentage and share bar, the
+ * donut (a conic gradient with one slice per category, separated by thin
+ * paper-coloured gaps) and the legend of the five biggest categories.
+ */
+function renderSpendingShape(){
+  var total = monthlyCost();
+  var stops = [], at = 0;
+  state.expenses.forEach(function(e, i){
+    var share = total > 0 ? e.monthly / total : 0;
+    var shareEl = $('share-' + e.id), barEl = $('bar-' + e.id);
+    if(shareEl) shareEl.textContent = total > 0 ? Math.round(share * 100) + '%' : '';
+    if(barEl) barEl.style.width = (share * 100).toFixed(2) + '%';
+    if(share <= 0) return;
+    var from = at * 100, to = (at + share) * 100;
+    var gap = share > 0.02 ? 0.4 : 0;        // a hairline between slices, skipped for tiny ones
+    stops.push(catColor(i) + ' ' + from.toFixed(3) + '% ' + (to - gap).toFixed(3) + '%');
+    if(gap) stops.push('var(--bg-card) ' + (to - gap).toFixed(3) + '% ' + to.toFixed(3) + '%');
+    at += share;
+  });
+  $('costDonut').style.background = stops.length ? 'conic-gradient(' + stops.join(',') + ')' : '';
+
+  var top = state.expenses.map(function(e, i){ return { e:e, color:catColor(i) }; })
+    .filter(function(x){ return x.e.monthly > 0; })
+    .sort(function(a, b){ return b.e.monthly - a.e.monthly; });
+  var legend = top.slice(0, 5).map(function(x){
+    return '<div><i style="background:' + x.color + '"></i><span>' + escapeHtml(x.e.name || 'Unnamed') + '</span><b>' + Math.round(x.e.monthly / total * 100) + '%</b></div>';
+  }).join('');
+  if(top.length > 5) legend += '<div><i style="background:var(--border-strong)"></i><span>' + plural(top.length - 5, 'other', 'others') + '</span></div>';
+  $('donutLegend').innerHTML = legend || '<div><span>Nothing to split yet.</span></div>';
 }
 
 /* ============================================================================
@@ -874,6 +1186,17 @@ function renderTimePriceReadout(){
   animateNumber($('tprHours'), tp ? tp.hours : 0, fmt1, 400);
   $('tprDays').textContent = tp && price > 0 ? fmt1(tp.days) + ' working days' : '—';
   $('addPurchase').disabled = !(name && price > 0);
+
+  // One cell per working day (filled in part for the last one), up to ten.
+  var cells = '';
+  if(tp && price > 0){
+    var shown = Math.min(10, Math.ceil(tp.days));
+    for(var i = 0; i < shown; i++){
+      cells += '<span class="tpr-cell"><i style="width:' + (Math.min(1, tp.days - i) * 100).toFixed(1) + '%"></i></span>';
+    }
+    if(tp.days > 10) cells += '<span class="tpr-more">+' + fmtInt(Math.ceil(tp.days - 10)) + ' more</span>';
+  }
+  $('tprCells').innerHTML = cells;
 }
 
 /** The saved shopping list: price → hours → working days, newest first. */
@@ -972,6 +1295,7 @@ function updateWhatIf(){
   $('wifTenYear').textContent = monthlySaved > 0
     ? 'Kept for 10 years: ' + fmtMoney(yearly * 10) + ' — ' + fmtInt(hours * 10) + ' hours of your life back.'
     : 'Move a slider to see what ten years of that change would give back.';
+  Array.prototype.forEach.call(document.querySelectorAll('.whatif-slider'), paintRange);
 }
 
 /* ============================================================================
@@ -982,12 +1306,14 @@ function updateWhatIf(){
 function renderLifestyle(){
   var current = monthlyCost(), hi = hourlyIncome();
   $('lifestyleSentence').innerHTML = 'Your current lifestyle requires approximately <b>' + fmtMoney(current * 12) + '</b> a year.';
+  var maxFactor = Math.max.apply(null, LIFESTYLE_MODES.map(function(m){ return m.factor; }));
   $('lifestyleGrid').innerHTML = LIFESTYLE_MODES.map(function(m){
     var monthly = current * m.factor, yearly = monthly * 12;
     var required = yearly / INCOME_MARGIN;
     return '<div class="lifestyle-card' + (m.factor === 1 ? ' current' : '') + '">' +
       '<div class="lifestyle-mode">' + m.name + ' <small>· ' + m.note + '</small></div>' +
       '<div class="lifestyle-monthly">' + fmtMoney(monthly) + '<span> / mo</span></div>' +
+      '<div class="lifestyle-scale" aria-hidden="true"><i style="width:' + (m.factor / maxFactor * 100).toFixed(1) + '%"></i></div>' +
       '<div class="lifestyle-detail"><span>Yearly cost</span><b>' + fmtMoney(yearly) + '</b></div>' +
       '<div class="lifestyle-detail"><span>Required income / yr</span><b>' + fmtMoney(required) + '</b></div>' +
       '<div class="lifestyle-detail"><span>Hours of work / yr</span><b>' + (hi > 0 ? fmtInt(required / hi) : '—') + '</b></div>' +
@@ -1060,8 +1386,9 @@ function renderFutureChart(proj){
   // The drawing is sized to the chart's real width on screen (not a fixed
   // 600 units scaled down), so axis labels stay legible on a phone.
   var svgEl = $('futureChart');
-  var W = Math.round(Math.max(300, Math.min(760, svgEl.parentNode.clientWidth - 24 || 600)));
-  var H = Math.round(Math.max(200, W * 0.4)), L = 54, R = 12, T = 12, B = 28;
+  var W = Math.round(Math.max(300, Math.min(980, svgEl.parentNode.clientWidth - 24 || 600)));
+  var narrow = W < 480;
+  var H = Math.round(Math.max(210, W * 0.38)), L = narrow ? 46 : 54, R = narrow ? 50 : 64, T = 14, B = 28;   // R leaves room for the end-of-line values
   svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
   var ys = proj.years;
   var a0 = ys[0].age, a1 = ys[ys.length - 1].age;
@@ -1070,7 +1397,11 @@ function renderFutureChart(proj){
   var y = function(v){ return H - B - v / yMax * (H - T - B); };
   var line = function(key){ return ys.map(function(p){ return x(p.age).toFixed(1) + ',' + y(p[key]).toFixed(1); }).join(' '); };
 
-  var svg = '';
+  // Vertical fades under each line (colours come from the .stop-* classes).
+  var svg = '<defs>' +
+    '<linearGradient id="gradSpent" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="stop-spent" stop-opacity=".22"/><stop offset="1" class="stop-spent" stop-opacity="0"/></linearGradient>' +
+    '<linearGradient id="gradSaved" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="stop-saved" stop-opacity=".2"/><stop offset="1" class="stop-saved" stop-opacity="0"/></linearGradient>' +
+    '</defs>';
   for(var i = 0; i <= 4; i++){                         // horizontal gridlines with value labels
     var v = yMax / 4 * i;
     svg += '<line class="grid-line" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>' +
@@ -1083,15 +1414,24 @@ function renderFutureChart(proj){
     svg += '<text class="axis-label" x="' + x(m.age) + '" y="' + (H - 8) + '" text-anchor="middle">' + m.age + '</text>';
   });
   if(proj.crossoverAge !== null && proj.crossoverAge > a0){
-    svg += '<line class="crossover-line" x1="' + x(proj.crossoverAge) + '" x2="' + x(proj.crossoverAge) + '" y1="' + T + '" y2="' + (H - B) + '"/>';
+    var cx = x(proj.crossoverAge), toLeft = cx > W * 0.7;
+    svg += '<line class="crossover-line" x1="' + cx + '" x2="' + cx + '" y1="' + T + '" y2="' + (H - B) + '"/>' +
+           '<text class="crossover-label" x="' + (toLeft ? cx - 6 : cx + 6) + '" y="' + (T + 10) + '" text-anchor="' + (toLeft ? 'end' : 'start') + '">spending &gt; income</text>';
   }
   svg += '<polygon class="area-spent" points="' + x(a0) + ',' + y(0) + ' ' + line('spent') + ' ' + x(a1) + ',' + y(0) + '"/>' +
+         '<polygon class="area-saved" points="' + x(a0) + ',' + y(0) + ' ' + line('saved') + ' ' + x(a1) + ',' + y(0) + '"/>' +
          '<polyline class="line-spent" points="' + line('spent') + '"/>' +
          '<polyline class="line-saved" points="' + line('saved') + '"/>';
   proj.milestones.forEach(function(m){
     svg += '<circle class="dot-spent" cx="' + x(m.age) + '" cy="' + y(m.spent) + '" r="4"/>' +
-           '<circle class="dot-saved" cx="' + x(m.age) + '" cy="' + y(m.saved) + '" r="3.5"/>';
+           '<circle class="dot-saved" cx="' + x(m.age) + '" cy="' + y(m.saved) + '" r="4"/>';
   });
+  // Final values at the end of each line, nudged apart if they would overlap.
+  var end = ys[ys.length - 1];
+  var ySpent = y(end.spent), ySaved = y(end.saved);
+  if(Math.abs(ySpent - ySaved) < 14){ if(ySpent <= ySaved) ySaved = ySpent + 14; else ySpent = ySaved + 14; }
+  svg += '<text class="end-label spent" x="' + (x(a1) + 10) + '" y="' + (ySpent + 4) + '">' + escapeHtml(fmtShort(end.spent)) + '</text>' +
+         '<text class="end-label saved" x="' + (x(a1) + 10) + '" y="' + (ySaved + 4) + '">' + escapeHtml(fmtShort(end.saved)) + '</text>';
   svgEl.innerHTML = svg;
 }
 
@@ -1113,6 +1453,7 @@ function renderFuture(){
     var el = $(id);
     if(document.activeElement !== el) el.value = f[{ fInflation:'inflation', fSalaryGrowth:'salaryGrowth', fExpenseGrowth:'expenseGrowth' }[id]];
   });
+  ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth', 'fMonthlySavings'].forEach(function(id){ paintRange($(id)); });
 
   var proj = projectFuture();
   renderFutureChart(proj);
@@ -1163,6 +1504,7 @@ function renderScore(){
   ];
   var score = Math.round(factors.reduce(function(s, f){ return s + f.val * f.weight; }, 0));
   animateNumber($('scoreNum'), score, fmtInt, 1000);
+  $('scoreSeal').style.setProperty('--score', score);          // fills the ring (see .score-seal)
 
   var wrap = $('scoreFactors');
   var oldWidths = Array.prototype.map.call(wrap.querySelectorAll('.score-bar-fill'), function(el){ return el.style.width; });
@@ -1207,6 +1549,7 @@ function renderDependents(){
   renderFuture();
   renderScore();
   renderFinale();
+  renderHeroReceipt();
 }
 
 /** Full render, including lists whose structure may have changed. */
@@ -1221,9 +1564,11 @@ function renderAll(){
  * @param {boolean} scroll - scroll to the first result
  */
 function revealResults(scroll){
+  revealed = true;
   renderAll();
   RESULT_SECTIONS.forEach(function(id){ $(id).hidden = false; });
-  revealed = true;
+  renderFuture();          // again, now that the chart is on screen and can be measured
+  renderRail();
   setupReveal();
   if(scroll) $('lifeCost').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block:'start' });
 }
@@ -1311,6 +1656,7 @@ function bindEvents(){
     $(id).addEventListener('input', function(){
       readProfile();
       renderHourlyPreview();
+      renderHeroReceipt();
       if(!revealed) return;
       saveState();
       if(id === 'currencySelect') renderExpenses();   // the currency symbol lives inside each row
@@ -1436,6 +1782,36 @@ function setupScrollProgress(){
   }, { passive:true });
 }
 
+var railObserver = null;
+/**
+ * The section rail on the right edge (wide screens only): one link per
+ * visible section, named by its data-nav attribute. They are plain anchors,
+ * so they work with the keyboard and scroll through the page's own smooth
+ * scrolling. An IntersectionObserver lights up the dot of whichever section
+ * crosses the middle of the screen. Rebuilt when the results are revealed,
+ * since hidden sections get no dot.
+ */
+function renderRail(){
+  var rail = $('rail');
+  var sections = Array.prototype.filter.call(document.querySelectorAll('section[data-nav]'), function(s){ return !s.hidden; });
+  rail.innerHTML = sections.map(function(s){
+    return '<a href="#' + s.id + '" data-for="' + s.id + '"><span class="rail-label">' + escapeHtml(s.dataset.nav) + '</span><span class="rail-dot"></span></a>';
+  }).join('');
+  if(!('IntersectionObserver' in window)) return;
+  if(railObserver) railObserver.disconnect();
+  railObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting) return;
+      Array.prototype.forEach.call(rail.children, function(link){
+        var on = link.dataset.for === entry.target.id;
+        link.classList.toggle('is-active', on);
+        if(on) link.setAttribute('aria-current', 'true'); else link.removeAttribute('aria-current');
+      });
+    });
+  }, { rootMargin:'-50% 0px -50% 0px' });
+  sections.forEach(function(s){ railObserver.observe(s); });
+}
+
 /** Fades sections in as they scroll into view; shows everything at once on browsers without IntersectionObserver. */
 function setupReveal(){
   var els = document.querySelectorAll('.reveal:not(.is-visible)');
@@ -1468,6 +1844,8 @@ function init(){
   $('hoursWeekInput').value = p.hoursPerWeek;
   $('weeksYearInput').value = p.weeksPerYear;
   renderHourlyPreview();
+  renderHeroReceipt();
+  renderRail();
   bindEvents();
   setupScrollProgress();
   // Redraw the chart at the new width when the screen rotates or the window is resized.
