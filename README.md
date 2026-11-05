@@ -8,16 +8,16 @@ No backend, no build step, no dependencies to install. Everything runs client-si
 
 ## Live features
 
-- **The receipt.** The opening screen prints your month as a till receipt: your biggest expenses, each priced in money and in hours of work. Before you enter anything it shows an example month, clearly labelled as such.
+- **The receipt.** The opening screen prints your month out of a till printer, as a receipt: your biggest expenses, each priced in money and in hours of work. It then hangs from the printer, swaying, and tilts towards your mouse. Before you enter anything it shows an example month, clearly labelled as such.
 - **Financial profile.** Enter income, hours worked and savings to get your hourly rate. The formula is shown under the result, together with what you earn in a working day and a working week.
 - **Your Life Cost.** Monthly expenses by category, with the total broken down per year, per day and per hour. A donut chart and a share bar under each category show where the money goes.
-- **The Time Price.** Type the price of anything and watch it convert instantly into hours and working days of your life. Keep a list to compare purchases.
+- **The Time Price.** Type the price of anything and watch it convert instantly into hours and working days of your life, on a counter whose digits roll like an odometer. Keep a list to compare purchases.
 - **Dreams.** Goals with a price, shown as hours of work, working days and how long they take to afford at the amount you can save each month.
 - **What If.** Drag each category down to a new target and see what you'd get back per month, per year and over ten years, in money and in hours.
 - **Lifestyle Modes.** A minimal, current and luxury version of your own spending, each with yearly cost, required income and hours of work.
 - **Financial Future.** An adjustable projection to ages 30, 40, 50, 60 and beyond. Sliders set inflation, salary growth, lifestyle growth and monthly savings. A chart shows money spent and saved, and a note says if and when spending would overtake income.
 - **WORTH Score.** An internal, illustrative score from your savings rate, emergency runway and income-to-cost ratio, with each factor explained.
-- **The Big Number.** What your life costs per month, per year, and in hours of work per year.
+- **The Big Number.** What your life costs per month, per year, and in hours of work per year, printed as a closing bill and stamped.
 
 All numbers are computed live from what you enter. Nothing is hardcoded or simulated.
 
@@ -71,6 +71,7 @@ Vanilla HTML, CSS and JavaScript in a single, fully commented file. No framework
 | `manifest.json` | App name, colours and icons for installation |
 | `service-worker.js` | Offline support and instant updates |
 | `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `favicon-32.png` | App icons |
+| `og-image.png` | Preview image shown when the link is shared (1200 × 630) |
 
 ## Disclaimer
 

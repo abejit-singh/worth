@@ -29,7 +29,12 @@
 <meta property="og:title" content="WORTH — What does your life cost?">
 <meta property="og:description" content="Money is just time in another form. See what your lifestyle really costs — in hours of your life.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://abejit-singh.github.io/worth/">
+<meta property="og:image" content="https://abejit-singh.github.io/worth/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://abejit-singh.github.io/worth/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="WORTH — What does your life cost?">
 <meta name="twitter:description" content="Money is just time in another form. See what your lifestyle really costs — in hours of your life.">
 <link rel="icon" type="image/png" href="favicon-32.png">
@@ -73,6 +78,7 @@
     --gain-soft:rgba(62,107,82,0.14);
     --gain-track:rgba(62,107,82,0.42);
     --gain-on-ink:#B7E2C8;               /* green that stays readable on ink */
+    --marker:rgba(208,140,58,0.34);      /* highlighter behind key words in headings */
     /* Expense categories (donut, swatches, share bars): earthy tones around the bordeaux. */
     --c1:#7A2733; --c2:#B4533A; --c3:#D08C3A; --c4:#8A8F3C; --c5:#3E6B52;
     --c6:#3F7C85; --c7:#4D5D8C; --c8:#7A4F7D; --c9:#A3876A;
@@ -167,8 +173,9 @@
   /* ============================= BUTTONS & FIELDS ============================= */
   .btn{font-family:var(--font-sans);font-weight:600;font-size:.97rem;padding:.95rem 1.6rem;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s,border-color .3s,color .3s;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;}
   .btn:disabled{opacity:.42;cursor:default;transform:none;box-shadow:none;}
-  .btn-primary{background:var(--accent);color:var(--paper-on-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 10px 24px -14px var(--accent-glow);}
-  .btn-primary:hover:not(:disabled){background:var(--accent-strong);transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 16px 30px -12px var(--accent-glow);}
+  /* --mx / --my: the "magnetic" lean towards the cursor, set by setupMagnetic(). */
+  .btn-primary{background:var(--accent);color:var(--paper-on-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 10px 24px -14px var(--accent-glow);transform:translate(var(--mx,0px),var(--my,0px));}
+  .btn-primary:hover:not(:disabled){background:var(--accent-strong);transform:translate(var(--mx,0px),calc(var(--my,0px) - 2px));box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 16px 30px -12px var(--accent-glow);}
   .btn-ghost{background:rgba(251,249,244,0.6);color:var(--ink);border-color:var(--border-strong);}
   .btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--bg-card);}
   .arrow{transition:transform .3s var(--ease);}
@@ -215,14 +222,33 @@
   /* The scroll hint sits to the right of the fixed reset button so they never overlap. */
   .scroll-hint{position:absolute;bottom:calc(2.4rem + env(safe-area-inset-bottom));left:max(clamp(1.5rem,7vw,5rem),84px);font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;color:var(--ink-dimmer);opacity:0;animation:heroIn 1s var(--ease) forwards;animation-delay:.6s;}
   @keyframes heroIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
-  @keyframes receiptIn{from{opacity:0;transform:translateY(-24px) rotate(1deg);}}
-
-  /* The receipt: the month's spending, in money and in hours (see renderHeroReceipt). */
-  .hero-visual{justify-self:end;width:100%;max-width:360px;filter:drop-shadow(0 26px 30px rgba(24,20,15,0.16));animation:receiptIn 1.2s var(--ease) .3s both;}
+  /* The receipt: the month's spending, in money and in hours (see renderHeroReceipt).
+     It prints out of a till printer (receiptPrint), then hangs from the slot and sways
+     (receiptSway). The whole thing tilts towards the mouse in 3D (--rx / --ry, setupTilt). */
+  .hero-visual{justify-self:end;width:100%;max-width:380px;perspective:900px;}
+  .hero-tilt{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s var(--ease);transform-style:preserve-3d;}
+  .printer{position:relative;z-index:2;height:42px;margin:0 -14px;border-radius:12px 12px 8px 8px;background:linear-gradient(180deg,#3a332b,var(--ink) 60%);box-shadow:0 14px 24px -12px rgba(24,20,15,0.6),inset 0 1px 0 rgba(255,255,255,0.12);}
+  .printer-slot{position:absolute;left:18px;right:18px;bottom:9px;height:5px;border-radius:3px;background:#050403;box-shadow:inset 0 2px 3px rgba(0,0,0,0.8);}
+  .printer-led{position:absolute;right:20px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--gain-on-ink);box-shadow:0 0 8px var(--gain-on-ink);animation:blink 1.4s steps(1) 3 .2s,ledOn 0s 4.4s forwards;}
+  @keyframes blink{50%{opacity:.25;}}
+  @keyframes ledOn{to{opacity:1;}}
+  /* The clip hides the receipt while it is still "inside" the printer. Padding gives the sway room. */
+  .receipt-clip{position:relative;z-index:1;margin:-12px -24px 0;padding:0 24px 30px;overflow:hidden;}
   .receipt{
-    position:relative;background:var(--bg-card);padding:1.6rem 1.5rem 1.4rem;transform:rotate(2.2deg);
+    position:relative;background:var(--bg-card);padding:1.6rem 1.5rem 1.4rem;
     font-family:var(--font-mono);font-size:.78rem;color:var(--ink);
+    box-shadow:0 30px 40px -28px rgba(24,20,15,0.45);transform-origin:50% 0;
+    animation:receiptPrint 2.6s cubic-bezier(.3,.1,.3,1) .35s both,receiptSway 7s ease-in-out 2.95s infinite alternate;
   }
+  /* Printing: the paper feeds out in small jerks, like a real thermal printer. */
+  @keyframes receiptPrint{
+    0%{transform:translateY(-100%);}
+    20%{transform:translateY(-78%);} 24%{transform:translateY(-76%);}
+    44%{transform:translateY(-50%);} 48%{transform:translateY(-48%);}
+    68%{transform:translateY(-22%);} 72%{transform:translateY(-20%);}
+    100%{transform:translateY(0);}
+  }
+  @keyframes receiptSway{from{transform:rotate(-1.4deg);}to{transform:rotate(1.4deg);}}
   /* Torn, zig-zag bottom edge: down-pointing triangles drawn with a conic gradient. */
   .receipt::after{content:'';position:absolute;left:0;right:0;top:100%;height:10px;background:conic-gradient(from 135deg at top,transparent 90deg,var(--bg-card) 0) 0 0/20px 100%;}
   .rc-head{text-align:center;padding-bottom:1rem;border-bottom:1px dashed var(--border-strong);}
@@ -242,9 +268,12 @@
   .rc-foot{text-align:center;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dimmer);}
   @media (max-width:899px){
     .hero-grid{display:block;}
-    .hero-visual{width:min(340px,100%);margin:3.2rem auto 0;}
-    .receipt{transform:rotate(1.5deg);}
+    .hero-visual{width:min(330px,calc(100% - 28px));margin:3.2rem auto 0;}
   }
+  /* Highlighter strokes behind key words in the headings, drawn when the section scrolls in. */
+  mark.hl{color:inherit;padding:0 .08em;margin:0 -.08em;border-radius:.2em;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+    background:linear-gradient(100deg,transparent .2em,var(--marker) .3em,var(--marker) calc(100% - .2em),transparent) no-repeat 0 72%/0% 42%;transition:background-size 1.1s var(--ease) .35s;}
+  .is-visible mark.hl,.profile mark.hl{background-size:100% 42%;}
 
   /* ============================= PROFILE ============================= */
   .profile-grid{align-items:center;}
@@ -288,7 +317,11 @@
   /* The spending donut: a conic gradient built by renderExpenseTotals(). */
   .cost-side{display:flex;flex-direction:column;gap:1rem;}
   .donut-card{display:flex;align-items:center;gap:1.6rem;padding:1.5rem;}
-  .donut{position:relative;flex-shrink:0;width:170px;aspect-ratio:1;border-radius:50%;background:var(--bg-card-alt);transition:background .4s;}
+  .donut{position:relative;flex-shrink:0;width:170px;aspect-ratio:1;border-radius:50%;background:var(--bg-card-alt);}
+  /* The slices sweep in clockwise the first time the section is seen (--sweep, a registered angle, transitions 0 → 360°). */
+  @property --sweep{syntax:'<angle>';inherits:false;initial-value:360deg;}
+  .donut-slices{position:absolute;inset:0;border-radius:50%;-webkit-mask:conic-gradient(#000 var(--sweep),transparent 0);mask:conic-gradient(#000 var(--sweep),transparent 0);transition:--sweep 1.6s var(--ease) .25s;}
+  .reveal:not(.is-visible) .donut-slices{--sweep:0deg;}
   .donut::after{content:'';position:absolute;inset:22%;border-radius:50%;background:var(--bg-card);box-shadow:inset 0 2px 6px rgba(24,20,15,0.08);}
   .donut-center{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
   .donut-num{font-family:var(--font-display);font-weight:700;font-size:1.35rem;letter-spacing:-.02em;}
@@ -469,11 +502,23 @@
   .finale-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.2em;color:var(--ink-dim);text-transform:uppercase;}
   .finale-numbers{display:flex;flex-direction:column;align-items:center;gap:.2rem;margin:1.1rem 0 1.4rem;padding-bottom:1.6rem;border-bottom:1px dashed var(--border-strong);}
   .finale-monthly{font-family:var(--font-display);font-size:clamp(3rem,11vw,5.6rem);font-weight:700;letter-spacing:-.03em;line-height:1;}
-  .finale-monthly span{font-size:.36em;font-weight:500;color:var(--ink-dim);letter-spacing:0;}
+  .finale-monthly .per{font-size:.36em;font-weight:500;color:var(--ink-dim);letter-spacing:0;}
   .finale-yearly{font-family:var(--font-mono);color:var(--ink-dim);font-size:1.05rem;margin-top:.8rem;}
   /* Hours of work, as an ink stamp. */
   .finale-hours{display:inline-block;margin-top:1.3rem;padding:.55rem 1.1rem;border:2px solid var(--accent);border-radius:8px;color:var(--accent);font-family:var(--font-mono);font-size:1rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-3deg);box-shadow:inset 0 0 0 3px var(--bg-card),inset 0 0 0 4px var(--accent-soft);}
   .finale-hours:empty{display:none;}
+  /* The stamp comes down hard once the bill is on screen, and the paper takes the hit. */
+  .finale.is-visible .finale-hours{animation:stampDown .55s cubic-bezier(.2,1.5,.45,1) .7s both;}
+  .finale.is-visible .bill{animation:billHit .4s ease-out .95s;}
+  @keyframes stampDown{from{opacity:0;transform:rotate(-14deg) scale(2.4);}to{opacity:1;transform:rotate(-3deg) scale(1);}}
+  @keyframes billHit{30%{transform:translateY(3px) scale(.995);}}
+
+  /* Odometer numbers (see odometer()): each digit is a column 0–9 that rolls to its value. */
+  .odo{display:inline-flex;align-items:flex-start;white-space:nowrap;}
+  .odo-d{display:inline-block;height:1.02em;overflow:hidden;line-height:1.02;}
+  .odo-strip{display:flex;flex-direction:column;transition:transform 1s cubic-bezier(.2,.9,.25,1);}
+  .odo-strip span{height:1.02em;}
+  .odo-c{display:inline-block;line-height:1.02;}
   @media (max-width:480px){ .finale-hours{font-size:.78rem;letter-spacing:.04em;padding:.5rem .8rem;} }
   .finale-tagline{color:var(--ink-dim);font-size:1.08rem;font-style:italic;margin:0 auto;max-width:440px;}
 
@@ -505,8 +550,12 @@
       </div>
     </div>
     <!-- A month of spending as a till receipt, priced in hours (see renderHeroReceipt). Decorative: the same figures are in the sections below. -->
-    <div class="hero-visual" aria-hidden="true">
-      <div class="receipt" id="heroReceipt"></div>
+    <div class="hero-visual" id="heroVisual" aria-hidden="true">
+      <!-- The receipt comes out of a till printer, then hangs from it and sways (CSS); it tilts towards the mouse (setupTilt). -->
+      <div class="hero-tilt" id="heroTilt">
+        <div class="printer"><span class="printer-led"></span><span class="printer-slot"></span></div>
+        <div class="receipt-clip"><div class="receipt" id="heroReceipt"></div></div>
+      </div>
     </div>
   </div>
   <div class="scroll-hint" aria-hidden="true">SCROLL ↓</div>
@@ -555,7 +604,7 @@
 <!-- 3. YOUR LIFE COST -->
 <section class="section reveal" id="lifeCost" data-nav="Spending" hidden>
   <span class="eyebrow">Your life cost</span>
-  <h2>What you spend, every month.</h2>
+  <h2>What you spend, every <mark class="hl">month</mark>.</h2>
   <p class="lede">Add, rename or remove categories. Everything below updates as you type.</p>
   <div class="split wide-left">
     <div class="cost-main">
@@ -565,6 +614,7 @@
     <div class="cost-side sticky">
       <div class="donut-card card">
         <div class="donut" id="costDonut" role="img" aria-label="Share of each category in your monthly spending">
+          <div class="donut-slices" id="donutSlices"></div>
           <div class="donut-center"><span class="donut-num" id="donutTotal">—</span><span class="donut-cap">a month</span></div>
         </div>
         <div class="donut-legend" id="donutLegend"></div>
@@ -583,7 +633,7 @@
 <!-- 4. THE TIME PRICE (signature) -->
 <section class="section reveal" id="timePrice" data-nav="Time price" hidden>
   <span class="eyebrow">The time price</span>
-  <h2>Anything you buy, in hours of your life.</h2>
+  <h2>Anything you buy, in <mark class="hl">hours of your life</mark>.</h2>
   <p class="lede">Type in the price of anything. Watch it convert, instantly.</p>
   <!-- One grid for the whole section: the readout sits right of the inputs on wide screens and right under them on phones. -->
   <div class="tp-grid">
@@ -611,7 +661,7 @@
 <!-- 5. DREAMS -->
 <section class="section reveal" id="dreams" data-nav="Dreams" hidden>
   <span class="eyebrow">Your dreams</span>
-  <h2>What do your dreams cost?</h2>
+  <h2>What do your <mark class="hl">dreams</mark> cost?</h2>
   <p class="lede">Add the goals you're working toward — a trip, a car, university, a business.</p>
   <div class="dreams-form">
     <div class="price-input-row">
@@ -633,7 +683,7 @@
 <!-- 6. WHAT IF -->
 <section class="section reveal" id="whatIf" data-nav="What if" hidden>
   <span class="eyebrow">What if?</span>
-  <h2>What if your lifestyle changed?</h2>
+  <h2>What if your lifestyle <mark class="hl">changed</mark>?</h2>
   <p class="lede">Drag any category down to a new target. See what you'd get back.</p>
   <div class="split wide-left">
     <div>
@@ -653,7 +703,7 @@
 <!-- 7. LIFESTYLE MODES -->
 <section class="section reveal" id="lifestyle" data-nav="Lifestyle" hidden>
   <span class="eyebrow">Lifestyle modes</span>
-  <h2>Three ways to live.</h2>
+  <h2>Three ways to <mark class="hl">live</mark>.</h2>
   <p class="lifestyle-sentence" id="lifestyleSentence"></p>
   <p class="lede">Minimal and Luxury are scaled from your own spending, not fixed prices — everyone's baseline is different.</p>
   <div class="lifestyle-grid" id="lifestyleGrid"></div>
@@ -663,7 +713,7 @@
 <!-- 8. FINANCIAL FUTURE -->
 <section class="section reveal" id="future" data-nav="Future" hidden>
   <span class="eyebrow">Financial future</span>
-  <h2>Where this lifestyle leads.</h2>
+  <h2>Where this lifestyle <mark class="hl">leads</mark>.</h2>
   <p class="lede">A projection, not a prediction or financial advice. Real inflation, income and expenses rarely move in a straight line.</p>
   <div class="future-sliders">
     <div class="slider-field"><label for="fInflation">Inflation <span class="sval" id="fInflationVal"></span></label><input type="range" id="fInflation" min="0" max="10" step="0.5"></div>
@@ -683,7 +733,7 @@
 <!-- 9. WORTH SCORE -->
 <section class="section reveal" id="worthScore" data-nav="Score" hidden>
   <span class="eyebrow">The WORTH score</span>
-  <h2>Your number, explained.</h2>
+  <h2>Your <mark class="hl">number</mark>, explained.</h2>
   <div class="score-wrap">
     <div class="score-seal" id="scoreSeal"><div class="score-num" id="scoreNum">—</div><div class="score-max">/ 100</div></div>
     <div class="score-factors" id="scoreFactors"></div>
@@ -692,11 +742,11 @@
 </section>
 
 <!-- 10. THE BIG NUMBER -->
-<section class="section finale" id="finale" data-nav="Total" hidden>
+<section class="section finale reveal" id="finale" data-nav="Total" hidden>
   <div class="bill">
     <span class="finale-label">Your life costs</span>
     <div class="finale-numbers">
-      <div class="finale-monthly"><span id="finaleMonthly" style="font-size:inherit;font-weight:inherit;color:inherit">—</span><span> / month</span></div>
+      <div class="finale-monthly"><span id="finaleMonthly">—</span><span class="per"> / month</span></div>
       <div class="finale-yearly" id="finaleYearly"></div>
       <div class="finale-hours" id="finaleHours"></div>
     </div>
@@ -976,6 +1026,38 @@ function paintRange(el){
  */
 function catColor(index){ return 'var(--c' + (index % 9 + 1) + ')'; }
 
+/**
+ * Shows `text` in `el` as an odometer: every digit is a column of 0–9 that
+ * rolls to its value, like a mechanical counter; other characters (currency
+ * signs, commas, the decimal point) are printed as they are. When only the
+ * digits change, the existing columns roll from their old values to the new
+ * ones; when the shape of the number changes (more digits, another
+ * currency), it is rebuilt and every column rolls up from 0.
+ * Screen readers get the plain text from a visually hidden copy.
+ * @param {HTMLElement} el
+ * @param {string} text - the formatted number, e.g. "€1,150" or "12.4"
+ */
+function odometer(el, text){
+  var chars = text.split('');
+  var odo = el.querySelector('.odo');
+  var reuse = odo && odo.children.length === chars.length && chars.every(function(ch, i){
+    var node = odo.children[i];
+    return /\d/.test(ch) ? node.classList.contains('odo-d') : node.classList.contains('odo-c') && node.textContent === ch;
+  });
+  if(!reuse){
+    var strip = '<span class="odo-strip">' + '0123456789'.split('').map(function(d){ return '<span>' + d + '</span>'; }).join('') + '</span>';
+    el.innerHTML = '<span class="visually-hidden"></span><span class="odo" aria-hidden="true">' + chars.map(function(ch){
+      return /\d/.test(ch) ? '<span class="odo-d">' + strip + '</span>' : '<span class="odo-c">' + escapeHtml(ch) + '</span>';
+    }).join('') + '</span>';
+    odo = el.querySelector('.odo');
+    void odo.offsetWidth;            // commit the columns at 0 first, so they roll up to their digits
+  }
+  el.querySelector('.visually-hidden').textContent = text;
+  chars.forEach(function(ch, i){
+    if(/\d/.test(ch)) odo.children[i].firstChild.style.transform = 'translateY(' + (-1.02 * +ch) + 'em)';
+  });
+}
+
 /** True when the user has asked their OS for reduced motion. */
 function prefersReducedMotion(){
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1161,7 +1243,7 @@ function renderSpendingShape(){
     if(gap) stops.push('var(--bg-card) ' + (to - gap).toFixed(3) + '% ' + to.toFixed(3) + '%');
     at += share;
   });
-  $('costDonut').style.background = stops.length ? 'conic-gradient(' + stops.join(',') + ')' : '';
+  $('donutSlices').style.background = stops.length ? 'conic-gradient(' + stops.join(',') + ')' : '';
 
   var top = state.expenses.map(function(e, i){ return { e:e, color:catColor(i) }; })
     .filter(function(x){ return x.e.monthly > 0; })
@@ -1183,7 +1265,7 @@ function renderTimePriceReadout(){
   var price = num($('tpPrice').value, 0, BOUNDS.amount[1], 0);
   var tp = timePrice(price);
   $('tprPrice').textContent = (name ? name + ' — ' : '') + fmtMoney(price);
-  animateNumber($('tprHours'), tp ? tp.hours : 0, fmt1, 400);
+  odometer($('tprHours'), fmt1(tp ? tp.hours : 0));
   $('tprDays').textContent = tp && price > 0 ? fmt1(tp.days) + ' working days' : '—';
   $('addPurchase').disabled = !(name && price > 0);
 
@@ -1289,7 +1371,7 @@ function updateWhatIf(){
   var yearly = monthlySaved * 12;
   var hi = hourlyIncome();
   var hours = hi > 0 ? yearly / hi : 0;
-  $('wifMonthly').textContent = fmtMoney(monthlySaved) + ' / month';
+  odometer($('wifMonthly'), fmtMoney(monthlySaved) + ' / month');
   $('wifYearly').textContent = fmtMoney(yearly) + ' a year';
   $('wifHours').textContent = fmtInt(hours) + ' hours of work saved every year';
   $('wifTenYear').textContent = monthlySaved > 0
@@ -1526,7 +1608,7 @@ function renderScore(){
 /** The closing screen: monthly cost, yearly cost, and the hours of work it takes. */
 function renderFinale(){
   var monthly = monthlyCost(), yearly = monthly * 12, hi = hourlyIncome();
-  animateNumber($('finaleMonthly'), monthly, function(v){ return fmtMoney(v); }, 900);
+  odometer($('finaleMonthly'), fmtMoney(monthly));
   $('finaleYearly').textContent = fmtMoney(yearly) + ' / year';
   $('finaleHours').textContent = hi > 0 ? fmtInt(yearly / hi) + ' hours of work / year' : '';
 }
@@ -1812,6 +1894,47 @@ function renderRail(){
   sections.forEach(function(s){ railObserver.observe(s); });
 }
 
+/**
+ * The receipt in the hero tilts towards the mouse in 3D, like a slip of
+ * paper held up to look at. Mouse only, off with reduced motion.
+ */
+function setupTilt(){
+  if(prefersReducedMotion()) return;
+  var area = $('heroVisual'), tilt = $('heroTilt');
+  area.addEventListener('pointermove', function(e){
+    if(e.pointerType !== 'mouse') return;
+    var r = area.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    tilt.style.setProperty('--ry', (x * 14).toFixed(2) + 'deg');
+    tilt.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg');
+  });
+  area.addEventListener('pointerleave', function(){
+    tilt.style.setProperty('--ry', '0deg');
+    tilt.style.setProperty('--rx', '0deg');
+  });
+}
+
+/**
+ * Magnetic primary buttons: with a mouse, a button leans a few pixels
+ * towards the cursor while it hovers over it, and springs back when it
+ * leaves. Off with reduced motion.
+ */
+function setupMagnetic(){
+  if(prefersReducedMotion()) return;
+  Array.prototype.forEach.call(document.querySelectorAll('.btn-primary'), function(btn){
+    btn.addEventListener('pointermove', function(e){
+      if(e.pointerType !== 'mouse' || btn.disabled) return;
+      var r = btn.getBoundingClientRect();
+      btn.style.setProperty('--mx', ((e.clientX - r.left) / r.width - 0.5) * 10 + 'px');
+      btn.style.setProperty('--my', ((e.clientY - r.top) / r.height - 0.5) * 8 + 'px');
+    });
+    btn.addEventListener('pointerleave', function(){
+      btn.style.setProperty('--mx', '0px');
+      btn.style.setProperty('--my', '0px');
+    });
+  });
+}
+
 /** Fades sections in as they scroll into view; shows everything at once on browsers without IntersectionObserver. */
 function setupReveal(){
   var els = document.querySelectorAll('.reveal:not(.is-visible)');
@@ -1848,6 +1971,8 @@ function init(){
   renderRail();
   bindEvents();
   setupScrollProgress();
+  setupTilt();
+  setupMagnetic();
   // Redraw the chart at the new width when the screen rotates or the window is resized.
   var resizeTimer = null;
   window.addEventListener('resize', function(){
