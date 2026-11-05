@@ -16,7 +16,7 @@
  * is ever sent anywhere: this file only keeps copies of what the page
  * downloads anyway. Bump CACHE_NAME whenever an app file changes.
  */
-var CACHE_NAME = 'worth-cache-v4';
+var CACHE_NAME = 'worth-cache-v5';
 
 var APP_SHELL = [
   './',
