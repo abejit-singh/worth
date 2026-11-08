@@ -44,6 +44,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* =============================================================
+     WORTH — styles
+     Contents: Tokens · Reset & base · Atmosphere · Chrome (progress
+     bar, reset) · Layout · Buttons & fields · Surfaces · Hero ·
+     Profile · Stat grid · Expense rows · Time price · Dreams · What
+     if · Lifestyle modes · Financial future · WORTH score · Finale
+     ============================================================= */
+
+  /* =============================================================
      TOKENS
      Every color, font and easing curve is defined once here and
      referenced through var(--name) everywhere else — including the
@@ -51,388 +59,1438 @@
      Palette: warm paper, near-black ink, a deep bordeaux accent
      (money spent) and a muted green (money kept).
      ============================================================= */
-  :root{
-    color-scheme:only light;
-    --bg:#EFEBE1;
-    --bg-card:#FBF9F4;
-    --bg-card-alt:#F4F0E6;
-    --border:rgba(24,20,15,0.12);
-    --border-strong:rgba(24,20,15,0.22);
-    --ink:#18140F;
-    --ink-dim:rgba(24,20,15,0.64);
-    --ink-dimmer:rgba(24,20,15,0.46);
-    --paper-on-ink:#FBF9F4;              /* text on the dark ink panels */
-    --paper-on-ink-dim:rgba(251,249,244,0.66);
-    --accent:#7A2733;
-    --accent-soft:rgba(122,39,51,0.1);
-    --accent-strong:#5C1D26;
-    --gain:#3E6B52;
-    --gain-soft:rgba(62,107,82,0.14);
-    --gain-on-ink:#B7E2C8;               /* green that stays readable on ink */
-    /* Premium layer: card stock, ink panels, light (see PREMIUM LAYER at the end) */
-    --card-top:#FDFCF9;                  /* cards: a sheet of card stock, lit from above… */
-    --card-bottom:#F6F2E9;               /* …slightly warmer at the bottom */
-    --accent-hi:#923546;                 /* top of the bordeaux gradient */
-    --ink-hi:#2E261E;                    /* the lit corner of the dark ink panels */
-    --shadow-card:inset 0 1px 0 rgba(255,255,255,0.9),0 1px 2px rgba(24,20,15,0.06),0 16px 32px -22px rgba(24,20,15,0.45);
-    --shadow-lift:inset 0 1px 0 rgba(255,255,255,0.9),0 2px 4px rgba(24,20,15,0.06),0 26px 46px -24px rgba(24,20,15,0.5);
-    --shadow-ink:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 6px rgba(24,20,15,0.25),0 34px 60px -30px rgba(24,20,15,0.7);
+  :root {
+    color-scheme: only light;
+    --bg: #efebe1;
+    --bg-card: #fbf9f4;
+    --bg-card-alt: #f4f0e6;
+    --border: rgba(24, 20, 15, 0.12);
+    --border-strong: rgba(24, 20, 15, 0.22);
+    --ink: #18140f;
+    --ink-dim: rgba(24, 20, 15, 0.64);
+    --ink-dimmer: rgba(24, 20, 15, 0.46);
+    --paper-on-ink: #fbf9f4; /* text on the dark ink panels */
+    --paper-on-ink-dim: rgba(251, 249, 244, 0.66);
+    --accent: #7a2733;
+    --accent-soft: rgba(122, 39, 51, 0.1);
+    --accent-strong: #5c1d26;
+    --gain: #3e6b52;
+    --gain-soft: rgba(62, 107, 82, 0.14);
+    --gain-on-ink: #b7e2c8; /* green that stays readable on ink */
+    --card-top: #fdfcf9; /* cards: a sheet of card stock, lit from above… */
+    --card-bottom: #f6f2e9; /* …slightly warmer at the bottom */
+    --accent-hi: #923546; /* top of the bordeaux gradient */
+    --ink-hi: #2e261e; /* the lit corner of the dark ink panels */
+    --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(24, 20, 15, 0.06),
+      0 16px 32px -22px rgba(24, 20, 15, 0.45);
+    --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 4px rgba(24, 20, 15, 0.06),
+      0 26px 46px -24px rgba(24, 20, 15, 0.5);
+    --shadow-ink: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 6px rgba(24, 20, 15, 0.25),
+      0 34px 60px -30px rgba(24, 20, 15, 0.7);
     /* Paper: a fine grain, very faint, laid over the whole page. */
-    --paper-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    --font-display:'Space Grotesk',var(--font-sans);
-    --font-mono:'IBM Plex Mono','SF Mono',Menlo,Consolas,monospace;
-    --ease:cubic-bezier(.16,1,.3,1);
+    --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Space Grotesk', var(--font-sans);
+    --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* ============================= RESET & BASE ============================= */
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  /* `hidden` must win over layout rules such as .section{display:flex}, or the results would show before the profile is filled in. */
-  [hidden]{display:none !important;}
-  html{scroll-behavior:smooth;scrollbar-color:rgba(24,20,15,0.25) transparent;}
-  body{
-    background-color:var(--bg);
-    /* faint dot grid, like ledger paper */
-    background-image:radial-gradient(rgba(24,20,15,0.05) 1px, transparent 1px);
-    background-size:18px 18px;
-    color:var(--ink);font-family:var(--font-sans);font-weight:300;line-height:1.5;
-    overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  ::selection{background:var(--accent);color:var(--paper-on-ink);}
-  button,input,select{font:inherit;color:inherit;}
-  h1,h2,h3{font-family:var(--font-display);font-weight:600;letter-spacing:-0.02em;line-height:1.05;text-shadow:0 1px 0 rgba(255,255,255,0.75);}
-  h2{font-size:clamp(1.9rem,5vw,3.2rem);margin-bottom:1rem;}
-  p{max-width:62ch;}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
-  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+  /* `hidden` must win over layout rules such as .section{display:flex}, or the results would show before the profile is filled in. */
+  [hidden] {
+    display: none !important;
+  }
+  html {
+    scroll-behavior: smooth;
+    scrollbar-color: rgba(24, 20, 15, 0.25) transparent;
+  }
+  body {
+    background-color: var(--bg);
+    /* faint dot grid, like ledger paper */
+    background-image: radial-gradient(rgba(24, 20, 15, 0.05) 1px, transparent 1px);
+    background-size: 18px 18px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--paper-on-ink);
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+  }
+  h2 {
+    font-size: clamp(1.9rem, 5vw, 3.2rem);
+    margin-bottom: 1rem;
+  }
+  p {
+    max-width: 62ch;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  /* Scrollbar (WebKit / Blink; Firefox uses scrollbar-color on html). */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(24, 20, 15, 0.2);
+    border-radius: 99px;
+    border: 3px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 20, 15, 0.32);
+  }
   /* Respect the OS "reduce motion" setting: every animation becomes instant. */
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;animation-delay:0s !important;transition-duration:.01ms !important;}
-    html{scroll-behavior:auto;}
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0s !important;
+      transition-duration: 0.01ms !important;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* ============================= ATMOSPHERE ============================= */
+  /* Paper under a warm lamp: two soft pools of light drifting very slowly. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -15%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(40% 34% at 16% 10%, rgba(255, 255, 255, 0.6), transparent 72%),
+      radial-gradient(36% 32% at 86% 90%, rgba(208, 150, 80, 0.09), transparent 72%);
+    animation: drift 36s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    to {
+      transform: translate3d(4%, -3%, 0) scale(1.05);
+    }
+  }
+  /* Grain over the whole page, very faint, so the paper is never flat. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.16;
+    background: var(--paper-grain) 0 0 / 220px 220px;
   }
 
   /* ============================= CHROME (progress bar, reset) ============================= */
-  .progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent-strong),var(--accent-hi));z-index:999;box-shadow:0 1px 6px rgba(122,39,51,0.35);}
-  .reset-btn{
-    position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:20px;width:42px;height:42px;border-radius:50%;
-    background:linear-gradient(180deg,var(--card-top),var(--card-bottom));border:1px solid var(--border);color:var(--ink-dim);
-    font-size:1.05rem;cursor:pointer;z-index:900;display:flex;align-items:center;justify-content:center;
-    transition:all .35s var(--ease);box-shadow:var(--shadow-card);
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent-strong), var(--accent-hi));
+    z-index: 999;
+    box-shadow: 0 1px 6px rgba(122, 39, 51, 0.35);
   }
-  .reset-btn:hover{border-color:var(--accent);color:var(--accent);transform:rotate(-70deg);}
+  .reset-btn {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 20px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, var(--card-top), var(--card-bottom));
+    border: 1px solid var(--border);
+    color: var(--ink-dim);
+    font-size: 1.05rem;
+    cursor: pointer;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.35s var(--ease);
+    box-shadow: var(--shadow-card);
+  }
+  .reset-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(-70deg);
+  }
 
   /* ============================= LAYOUT ============================= */
-  .section{
-    min-height:100vh;padding:clamp(4.5rem,11vh,7.5rem) clamp(1.5rem,7vw,5rem);
-    display:flex;flex-direction:column;justify-content:center;position:relative;
-    max-width:1160px;margin:0 auto;width:100%;
+  .section {
+    min-height: 100vh;
+    padding: clamp(4.5rem, 11vh, 7.5rem) clamp(1.5rem, 7vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    max-width: 1160px;
+    margin: 0 auto;
+    width: 100%;
   }
-  /* Sections fade up the first time they scroll into view (see setupReveal). */
-  /* A section's parts arrive one after another: each rises a little, out of a
+  /* Sections are revealed the first time they scroll into view (see setupReveal).
+     A section's parts arrive one after another: each rises a little, out of a
      soft blur. `translate` rather than `transform`, so it never fights with the
      tilt on the time-price card; an animation rather than a transition, so it
      never fights with hover effects. --i is the part's place in the section. */
-  .reveal:not(.is-visible) > *{opacity:0;}
-  .reveal.is-visible > *{animation:rise 1s var(--ease) backwards;animation-delay:calc(var(--i,0) * 80ms);}
-  :is(.reveal,.hero-content) > :nth-child(2){--i:1;}
-  :is(.reveal,.hero-content) > :nth-child(3){--i:2;}
-  :is(.reveal,.hero-content) > :nth-child(4){--i:3;}
-  :is(.reveal,.hero-content) > :nth-child(5){--i:4;}
-  :is(.reveal,.hero-content) > :nth-child(6){--i:5;}
-  :is(.reveal,.hero-content) > :nth-child(n+7){--i:6;}
-  @keyframes rise{from{opacity:0;translate:0 24px;filter:blur(8px);}}
-  .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:1.1rem;}
-  .lede{color:var(--ink-dim);margin-bottom:2.1rem;font-size:1.02rem;}
-  .help-text{font-size:.82rem;color:var(--ink-dimmer);margin-top:.6rem;max-width:520px;line-height:1.55;}
-  .list-empty{color:var(--ink-dimmer);font-size:.9rem;padding:.5rem 0;}
+  .reveal:not(.is-visible) > * {
+    opacity: 0;
+  }
+  .reveal.is-visible > * {
+    animation: rise 1s var(--ease) backwards;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+  :is(.reveal, .hero-content) > :nth-child(2) {
+    --i: 1;
+  }
+  :is(.reveal, .hero-content) > :nth-child(3) {
+    --i: 2;
+  }
+  :is(.reveal, .hero-content) > :nth-child(4) {
+    --i: 3;
+  }
+  :is(.reveal, .hero-content) > :nth-child(5) {
+    --i: 4;
+  }
+  :is(.reveal, .hero-content) > :nth-child(6) {
+    --i: 5;
+  }
+  :is(.reveal, .hero-content) > :nth-child(n + 7) {
+    --i: 6;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 24px;
+      filter: blur(8px);
+    }
+  }
+  /* List items arrive and leave smoothly (see the add / remove handlers). */
+  .enter {
+    animation: itemIn 0.55s var(--ease) both;
+  }
+  .leaving {
+    animation: itemOut 0.32s var(--ease) forwards;
+    pointer-events: none;
+  }
+  @keyframes itemIn {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
+      scale: 0.98;
+      filter: blur(4px);
+    }
+  }
+  @keyframes itemOut {
+    to {
+      opacity: 0;
+      translate: 16px 0;
+      scale: 0.98;
+      filter: blur(3px);
+    }
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.1rem;
+  }
+  .lede {
+    color: var(--ink-dim);
+    margin-bottom: 2.1rem;
+    font-size: 1.02rem;
+  }
+  .help-text {
+    font-size: 0.82rem;
+    color: var(--ink-dimmer);
+    margin-top: 0.6rem;
+    max-width: 520px;
+    line-height: 1.55;
+  }
+  .list-empty {
+    color: var(--ink-dimmer);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
 
   /* ============================= BUTTONS & FIELDS ============================= */
-  .btn{font-family:var(--font-sans);font-weight:600;font-size:.97rem;padding:.95rem 1.6rem;border-radius:8px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;
-    position:relative;isolation:isolate;overflow:hidden;
-    transition:transform .4s var(--ease),box-shadow .4s var(--ease),background-color .3s,border-color .3s,color .3s,opacity .3s;}
+  .btn {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.97rem;
+    padding: 0.95rem 1.6rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform 0.4s var(--ease),
+      box-shadow 0.4s var(--ease),
+      background-color 0.3s,
+      border-color 0.3s,
+      color 0.3s,
+      opacity 0.3s;
+  }
   /* A band of light sweeps across a button when the mouse arrives. */
-  .btn::after{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,0.32) 48%,transparent 66%);
-    transform:translateX(-115%);transition:transform .9s var(--ease);}
-  .btn:hover:not(:disabled)::after{transform:translateX(115%);}
-  .btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none;}
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.32) 48%, transparent 66%);
+    transform: translateX(-115%);
+    transition: transform 0.9s var(--ease);
+  }
+  .btn:hover:not(:disabled)::after {
+    transform: translateX(115%);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+  }
   /* --mx / --my: the button leans a few pixels towards the cursor (setupPointerEffects). */
-  .btn-primary{color:var(--paper-on-ink);
-    background:linear-gradient(180deg,var(--accent-hi),var(--accent) 55%,var(--accent-strong));
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.22),inset 0 -1px 0 rgba(0,0,0,0.2),0 2px 4px rgba(92,29,38,0.2),0 12px 24px -14px rgba(92,29,38,0.6);
-    transform:translate(var(--mx,0px),var(--my,0px));}
-  .btn-primary:hover:not(:disabled){transform:translate(var(--mx,0px),calc(var(--my,0px) - 2px));box-shadow:inset 0 1px 0 rgba(255,255,255,0.22),inset 0 -1px 0 rgba(0,0,0,0.2),0 4px 8px rgba(92,29,38,0.18),0 18px 32px -14px rgba(92,29,38,0.6);}
-  .btn-primary:active:not(:disabled){transform:translate(var(--mx,0px),var(--my,0px)) scale(.97);transition-duration:.1s;}
-  .btn-ghost{background:linear-gradient(180deg,var(--card-top),var(--card-bottom));color:var(--ink);border-color:var(--border-strong);box-shadow:var(--shadow-card);}
-  .btn-ghost::after{background:linear-gradient(110deg,transparent 30%,rgba(122,39,51,0.08) 48%,transparent 66%);}
-  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
-  .btn-ghost:active{transform:scale(.97);transition-duration:.1s;}
-  .arrow{transition:transform .3s var(--ease);}
-  .btn:hover .arrow{transform:translateX(4px);}
+  .btn-primary {
+    color: var(--paper-on-ink);
+    background: linear-gradient(180deg, var(--accent-hi), var(--accent) 55%, var(--accent-strong));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 2px 4px rgba(92, 29, 38, 0.2),
+      0 12px 24px -14px rgba(92, 29, 38, 0.6);
+    transform: translate(var(--mx, 0px), var(--my, 0px));
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translate(var(--mx, 0px), calc(var(--my, 0px) - 2px));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 4px 8px rgba(92, 29, 38, 0.18),
+      0 18px 32px -14px rgba(92, 29, 38, 0.6);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translate(var(--mx, 0px), var(--my, 0px)) scale(0.97);
+    transition-duration: 0.1s;
+  }
+  .btn-ghost {
+    background: linear-gradient(180deg, var(--card-top), var(--card-bottom));
+    color: var(--ink);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-card);
+  }
+  .btn-ghost::after {
+    background: linear-gradient(110deg, transparent 30%, rgba(122, 39, 51, 0.08) 48%, transparent 66%);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-ghost:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+  }
+  .arrow {
+    transition: transform 0.3s var(--ease);
+  }
+  .btn:hover .arrow {
+    transform: translateX(4px);
+  }
 
   /* Inputs use 1rem (16px) text: anything smaller makes iOS Safari zoom the page on focus. */
-  input[type="text"],input[type="number"],select{width:100%;background:linear-gradient(180deg,#F7F4ED,var(--bg-card));border:1px solid var(--border-strong);color:var(--ink);padding:.85rem 1rem;border-radius:8px;font-size:1rem;font-family:var(--font-sans);
-    box-shadow:inset 0 1px 2px rgba(24,20,15,0.08),0 1px 0 rgba(255,255,255,0.8);transition:border-color .25s,box-shadow .3s var(--ease);}
-  input::placeholder{color:var(--ink-dimmer);}
-  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:inset 0 1px 2px rgba(24,20,15,0.08),0 0 0 4px var(--accent-soft);}
+  input[type='text'],
+  input[type='number'],
+  select {
+    width: 100%;
+    background: linear-gradient(180deg, #f7f4ed, var(--bg-card));
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    box-shadow:
+      inset 0 1px 2px rgba(24, 20, 15, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.3s var(--ease);
+  }
+  input::placeholder {
+    color: var(--ink-dimmer);
+  }
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow:
+      inset 0 1px 2px rgba(24, 20, 15, 0.08),
+      0 0 0 4px var(--accent-soft);
+  }
   /* The select's arrow, redrawn as a small bordeaux chevron (two CSS triangles). */
-  select{-webkit-appearance:none;appearance:none;cursor:pointer;padding-right:2.6rem;
-    background:linear-gradient(45deg,transparent 50%,var(--accent) 50%) calc(100% - 20px) 52% / 5px 5px no-repeat,
-      linear-gradient(135deg,var(--accent) 50%,transparent 50%) calc(100% - 15px) 52% / 5px 5px no-repeat,
-      linear-gradient(180deg,#F7F4ED,var(--bg-card));}
-  input[aria-invalid="true"]{border-color:var(--accent);background:var(--accent-soft);}
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    padding-right: 2.6rem;
+    background:
+      linear-gradient(45deg, transparent 50%, var(--accent) 50%) calc(100% - 20px) 52% / 5px 5px no-repeat,
+      linear-gradient(135deg, var(--accent) 50%, transparent 50%) calc(100% - 15px) 52% / 5px 5px no-repeat,
+      linear-gradient(180deg, #f7f4ed, var(--bg-card));
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
 
-  input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:99px;outline:none;margin:.9rem 0;touch-action:pan-y;cursor:pointer;
-    background:linear-gradient(90deg,var(--accent-strong),var(--accent-hi) var(--fill,0%),rgba(24,20,15,0.12) var(--fill,0%));
-    box-shadow:inset 0 1px 2px rgba(24,20,15,0.15),0 1px 0 rgba(255,255,255,0.8);}
-  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;cursor:pointer;
-    background:radial-gradient(circle at 50% 50%,var(--accent) 0 26%,transparent 30%),linear-gradient(180deg,#fff,#EFEAE0);
-    border:1px solid rgba(24,20,15,0.18);box-shadow:0 2px 5px rgba(24,20,15,0.25),inset 0 -1px 0 rgba(24,20,15,0.08);transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
-  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);}
-  input[type="range"]:active::-webkit-slider-thumb{transform:scale(1.18);box-shadow:0 4px 10px rgba(24,20,15,0.25),0 0 0 6px var(--accent-soft);}
-  input[type="range"]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;cursor:pointer;
-    background:radial-gradient(circle at 50% 50%,var(--accent) 0 26%,transparent 30%),linear-gradient(180deg,#fff,#EFEAE0);
-    border:1px solid rgba(24,20,15,0.18);box-shadow:0 2px 5px rgba(24,20,15,0.25);}
-  input[type="range"]::-moz-range-track{background:transparent;}
-  input[type="range"]:focus-visible{outline-offset:6px;}
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 99px;
+    outline: none;
+    margin: 0.9rem 0;
+    touch-action: pan-y;
+    cursor: pointer;
+    background: linear-gradient(
+      90deg,
+      var(--accent-strong),
+      var(--accent-hi) var(--fill, 0%),
+      rgba(24, 20, 15, 0.12) var(--fill, 0%)
+    );
+    box-shadow:
+      inset 0 1px 2px rgba(24, 20, 15, 0.15),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: radial-gradient(circle at 50% 50%, var(--accent) 0 26%, transparent 30%),
+      linear-gradient(180deg, #fff, #efeae0);
+    border: 1px solid rgba(24, 20, 15, 0.18);
+    box-shadow:
+      0 2px 5px rgba(24, 20, 15, 0.25),
+      inset 0 -1px 0 rgba(24, 20, 15, 0.08);
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  input[type='range']::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+  }
+  input[type='range']:active::-webkit-slider-thumb {
+    transform: scale(1.18);
+    box-shadow:
+      0 4px 10px rgba(24, 20, 15, 0.25),
+      0 0 0 6px var(--accent-soft);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: radial-gradient(circle at 50% 50%, var(--accent) 0 26%, transparent 30%),
+      linear-gradient(180deg, #fff, #efeae0);
+    border: 1px solid rgba(24, 20, 15, 0.18);
+    box-shadow: 0 2px 5px rgba(24, 20, 15, 0.25);
+  }
+  input[type='range']::-moz-range-track {
+    background: transparent;
+  }
+  input[type='range']:focus-visible {
+    outline-offset: 6px;
+  }
 
-  .field{margin:1.4rem 0;max-width:440px;}
-  .field label{display:block;font-size:.85rem;color:var(--ink-dim);margin-bottom:.55rem;}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:480px;}
-  @media (max-width:480px){.field-row{grid-template-columns:1fr;gap:0;}}
-  .error-msg{color:var(--accent);font-size:.88rem;margin-top:1rem;font-weight:500;}
+  .field {
+    margin: 1.4rem 0;
+    max-width: 440px;
+  }
+  .field label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+    margin-bottom: 0.55rem;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 480px;
+  }
+  @media (max-width: 480px) {
+    .field-row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+  .error-msg {
+    color: var(--accent);
+    font-size: 0.88rem;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+
+  /* ============================= SURFACES ============================= */
+  /* Card stock. Every card is a sheet of thick paper: lit from above, a bright
+     top edge, a soft shadow under it. With a mouse a warm light follows the
+     pointer across it (--px / --py from setupPointerEffects), faded in and out
+     by --light. Registering --light as a number lets it transition. */
+  @property --light {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+  .hourly-preview,
+  .item-row,
+  .purchase-row,
+  .dream-card,
+  .whatif-row,
+  .lifestyle-card,
+  .chart-wrap,
+  .future-note {
+    background: radial-gradient(
+        360px circle at var(--px, 50%) var(--py, 50%),
+        rgba(255, 255, 255, calc(var(--light, 0) * 0.85)),
+        transparent 60%
+      ),
+      linear-gradient(180deg, var(--card-top), var(--card-bottom));
+    box-shadow: var(--shadow-card);
+    transition:
+      --light 0.5s var(--ease),
+      box-shadow 0.45s var(--ease),
+      transform 0.45s var(--ease),
+      border-color 0.3s;
+  }
+  /* Cards you only read lift a little; rows you type in stay put. */
+  :is(.purchase-row, .dream-card, .lifestyle-card):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  /* Ink panels. The two dark panels are glossy: lit from the top-left corner,
+     an inner highlight along the top edge, a deep shadow, and a sheen that
+     follows the pointer. */
+  .time-price-readout,
+  .whatif-summary {
+    background: radial-gradient(
+        420px circle at var(--px, 50%) var(--py, 50%),
+        rgba(255, 255, 255, calc(var(--light, 0) * 0.09)),
+        transparent 55%
+      ),
+      radial-gradient(120% 90% at 12% -10%, var(--ink-hi), var(--ink) 62%);
+    box-shadow: var(--shadow-ink);
+    transition: --light 0.5s var(--ease);
+  }
+  :is(
+      .hourly-preview,
+      .item-row,
+      .purchase-row,
+      .dream-card,
+      .whatif-row,
+      .lifestyle-card,
+      .chart-wrap,
+      .future-note,
+      .stat-card,
+      .time-price-readout,
+      .whatif-summary
+    ):hover {
+    --light: 1;
+  }
 
   /* ============================= HERO ============================= */
-  .hero{align-items:flex-start;text-align:left;}
-  .hero-content{max-width:880px;}
-  .hero-content > *{animation:rise 1.2s var(--ease) backwards;animation-delay:calc(.15s + var(--i,0) * 100ms);}
-  .hero-logo{font-family:var(--font-display);font-size:1.3rem;font-weight:700;letter-spacing:-.02em;margin-bottom:2.4rem;color:var(--accent);}
-  .hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,7.5vw,4.6rem);font-weight:600;letter-spacing:-.02em;line-height:1.05;}
-  .hero-tagline{font-size:clamp(1.1rem,2.6vw,1.35rem);color:var(--ink-dim);margin-top:1.1rem;font-style:italic;}
-  .hero-content .btn{margin-top:2.3rem;}
+  .hero {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .hero-content {
+    max-width: 880px;
+  }
+  .hero-content > * {
+    animation: rise 1.2s var(--ease) backwards;
+    animation-delay: calc(0.15s + var(--i, 0) * 100ms);
+  }
+  .hero-logo {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.4rem;
+    color: var(--accent);
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 7.5vw, 4.6rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .hero-tagline {
+    font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+    color: var(--ink-dim);
+    margin-top: 1.1rem;
+    font-style: italic;
+  }
+  .hero-content .btn {
+    margin-top: 2.3rem;
+  }
   /* The scroll hint sits to the right of the fixed reset button so they never overlap. */
-  .scroll-hint{position:absolute;bottom:calc(2.4rem + env(safe-area-inset-bottom));left:max(clamp(1.5rem,7vw,5rem),84px);font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;color:var(--ink-dimmer);opacity:0;animation:heroIn 1s var(--ease) forwards;animation-delay:.6s;}
-  @keyframes heroIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+  .scroll-hint {
+    position: absolute;
+    bottom: calc(2.4rem + env(safe-area-inset-bottom));
+    left: max(clamp(1.5rem, 7vw, 5rem), 84px);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-dimmer);
+    opacity: 0;
+    animation: heroIn 1s var(--ease) forwards;
+    animation-delay: 0.6s;
+  }
+  @keyframes heroIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 
   /* ============================= PROFILE ============================= */
-  .hourly-preview{margin-top:2rem;padding:1.6rem 1.8rem;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;max-width:440px;}
-  .hourly-preview .label{font-size:.78rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.08em;}
-  .hourly-preview .value{font-family:var(--font-mono);font-size:2.1rem;font-weight:600;color:var(--accent);margin-top:.3rem;text-shadow:0 1px 0 rgba(255,255,255,0.9);}
-  .hourly-preview .formula{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-dimmer);margin-top:.35rem;}
+  .hourly-preview {
+    margin-top: 2rem;
+    padding: 1.6rem 1.8rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 440px;
+  }
+  .hourly-preview .label {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .hourly-preview .value {
+    font-family: var(--font-mono);
+    font-size: 2.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 0.3rem;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  .hourly-preview .formula {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-dimmer);
+    margin-top: 0.35rem;
+  }
 
   /* ============================= STAT GRID ============================= */
-  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:1.5rem;}
-  .stat-card{background:var(--bg-card);padding:1.4rem 1.5rem;display:flex;flex-direction:column;gap:.4rem;}
-  .stat-label{font-size:.74rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em;}
-  .stat-value{font-family:var(--font-mono);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums;}
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow-card);
+  }
+  .stat-card {
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: radial-gradient(
+        300px circle at var(--px, 50%) var(--py, 50%),
+        rgba(255, 255, 255, calc(var(--light, 0) * 0.85)),
+        transparent 60%
+      ),
+      linear-gradient(180deg, var(--card-top), var(--card-bottom));
+    transition: --light 0.5s var(--ease);
+  }
+  .stat-label {
+    font-size: 0.74rem;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
 
   /* ============================= EXPENSE ROWS ============================= */
-  .item-list{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.1rem;}
-  .item-row{display:flex;align-items:center;gap:.6rem;background:var(--bg-card);border:1px solid var(--border);padding:.65rem .9rem;border-radius:10px;}
-  .item-row input.item-name{flex:1 1 auto;min-width:0;width:auto;background:transparent;border:none;padding:.3rem 0;}
-  .item-amount-wrap{display:flex;align-items:center;gap:.4rem;flex-shrink:0;}
-  .item-amount-wrap .curr{color:var(--ink-dimmer);font-size:.85rem;}
-  .item-row input.item-name{box-shadow:none;}
-  .item-row input.item-amount{width:92px;background:rgba(24,20,15,0.035);border:1px solid var(--border);border-radius:7px;padding:.4rem .5rem;font-family:var(--font-mono);text-align:right;box-shadow:inset 0 1px 2px rgba(24,20,15,0.08);}
-  .item-remove{background:none;border:none;color:var(--ink-dimmer);font-size:1.15rem;cursor:pointer;width:32px;height:32px;border-radius:50%;transition:all .2s;flex-shrink:0;}
-  .item-remove:hover{color:var(--accent);background:var(--accent-soft);}
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.1rem;
+  }
+  .item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+  }
+  .item-row:focus-within {
+    border-color: rgba(122, 39, 51, 0.45);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 4px var(--accent-soft);
+  }
+  /* Scoped as `.item-row input.…` so these win over the generic input[type=…] field styles above. */
+  .item-row input.item-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    background: transparent;
+    border: none;
+    padding: 0.3rem 0;
+    box-shadow: none;
+  }
+  .item-amount-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .item-amount-wrap .curr {
+    color: var(--ink-dimmer);
+    font-size: 0.85rem;
+  }
+  .item-row input.item-amount {
+    width: 92px;
+    background: rgba(24, 20, 15, 0.035);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.4rem 0.5rem;
+    font-family: var(--font-mono);
+    text-align: right;
+    box-shadow: inset 0 1px 2px rgba(24, 20, 15, 0.08);
+  }
+  .item-remove {
+    background: none;
+    border: none;
+    color: var(--ink-dimmer);
+    font-size: 1.15rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .item-remove:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
 
   /* ============================= TIME PRICE (signature) ============================= */
-  .price-input-row{display:flex;gap:.8rem;flex-wrap:wrap;max-width:560px;margin-bottom:.5rem;}
-  .price-input-row input[type="text"]{flex:2;min-width:160px;}
-  .price-input-row input[type="number"]{flex:1;min-width:120px;}
-  .time-price-readout{margin-top:2.2rem;padding:2.4rem clamp(1.5rem,5vw,3rem);background:var(--ink);color:var(--paper-on-ink);border-radius:20px;text-align:center;max-width:640px;position:relative;overflow:hidden;}
-  .time-price-readout::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(251,249,244,0.04) 1px, transparent 1px);background-size:16px 16px;pointer-events:none;}
-  .tpr-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-on-ink-dim);}
-  .tpr-price{font-family:var(--font-mono);font-size:clamp(1.3rem,5vw,2.2rem);font-weight:500;margin-top:.5rem;color:var(--paper-on-ink-dim);overflow-wrap:anywhere;}
-  .tpr-hours{font-family:var(--font-display);font-size:clamp(3rem,11vw,5.5rem);font-weight:700;line-height:1;margin-top:.6rem;}
-  .tpr-hours .unit{display:block;font-size:.2em;font-family:var(--font-mono);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-on-ink-dim);margin-top:.8rem;}
-  .tpr-days{font-family:var(--font-mono);font-size:1rem;color:var(--paper-on-ink-dim);margin-top:.8rem;}
-  .price-actions{display:flex;justify-content:center;margin-top:1.6rem;max-width:640px;}
-  .purchase-list{margin-top:2.6rem;max-width:760px;}
-  .purchase-head{display:grid;grid-template-columns:1fr auto auto auto;gap:1rem;padding:0 1rem .4rem;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink-dimmer);text-transform:uppercase;}
-  .purchase-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:.6rem;}
-  .purchase-head span:not(:first-child),.purchase-metric{text-align:right;min-width:72px;}
-  .purchase-name{font-weight:500;overflow-wrap:anywhere;}
-  .purchase-name small{display:block;font-family:var(--font-mono);font-weight:400;color:var(--ink-dim);font-size:.8rem;}
-  .purchase-metric{font-family:var(--font-mono);font-size:.85rem;color:var(--ink-dim);white-space:nowrap;}
-  @media (max-width:600px){
-    .purchase-head{display:none;}
-    .purchase-row{grid-template-columns:1fr auto;}
-    .purchase-row .item-remove{grid-row:1;grid-column:2;}
-    .purchase-metric{text-align:left;}
+  .price-input-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    max-width: 560px;
+    margin-bottom: 0.5rem;
+  }
+  .price-input-row input[type='text'] {
+    flex: 2;
+    min-width: 160px;
+  }
+  .price-input-row input[type='number'] {
+    flex: 1;
+    min-width: 120px;
+  }
+  /* The signature card: an ink panel that leans towards the mouse (--rx / --ry). */
+  .time-price-readout {
+    margin-top: 2.2rem;
+    padding: 2.4rem clamp(1.5rem, 5vw, 3rem);
+    color: var(--paper-on-ink);
+    border-radius: 20px;
+    text-align: center;
+    max-width: 640px;
+    position: relative;
+    overflow: hidden;
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition:
+      --light 0.5s var(--ease),
+      transform 0.8s var(--ease);
+  }
+  .time-price-readout:hover {
+    transition:
+      --light 0.5s var(--ease),
+      transform 0.15s linear;
+  }
+  .time-price-readout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(251, 249, 244, 0.04) 1px, transparent 1px);
+    background-size: 16px 16px;
+    pointer-events: none;
+  }
+  .tpr-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--paper-on-ink-dim);
+  }
+  .tpr-price {
+    font-family: var(--font-mono);
+    font-size: clamp(1.3rem, 5vw, 2.2rem);
+    font-weight: 500;
+    margin-top: 0.5rem;
+    color: var(--paper-on-ink-dim);
+    overflow-wrap: anywhere;
+  }
+  .tpr-hours {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 11vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 0.6rem;
+  }
+  /* The hours figure is lit from above; its caption keeps its own colour. */
+  .tpr-hours > span:not(.unit) {
+    background: linear-gradient(180deg, #fff 30%, #cfc8bc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .tpr-hours .unit {
+    display: block;
+    font-size: 0.2em;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper-on-ink-dim);
+    margin-top: 0.8rem;
+  }
+  .tpr-days {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--paper-on-ink-dim);
+    margin-top: 0.8rem;
+  }
+  .price-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.6rem;
+    max-width: 640px;
+  }
+  .purchase-list {
+    margin-top: 2.6rem;
+    max-width: 760px;
+  }
+  .purchase-head {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 1rem;
+    padding: 0 1rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-dimmer);
+    text-transform: uppercase;
+  }
+  .purchase-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .purchase-head span:not(:first-child),
+  .purchase-metric {
+    text-align: right;
+    min-width: 72px;
+  }
+  .purchase-name {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .purchase-name small {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    color: var(--ink-dim);
+    font-size: 0.8rem;
+  }
+  .purchase-metric {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+  @media (max-width: 600px) {
+    .purchase-head {
+      display: none;
+    }
+    .purchase-row {
+      grid-template-columns: 1fr auto;
+    }
+    .purchase-row .item-remove {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .purchase-metric {
+      text-align: left;
+    }
   }
 
   /* ============================= DREAMS ============================= */
-  .dream-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1rem;max-width:760px;}
-  .dream-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
-  .dream-name{font-family:var(--font-display);font-weight:600;font-size:1.15rem;overflow-wrap:anywhere;}
-  .dream-price{font-family:var(--font-mono);color:var(--accent);font-size:1.1rem;white-space:nowrap;}
-  .dream-metrics{display:flex;gap:1.8rem;flex-wrap:wrap;align-items:flex-end;margin-top:.9rem;font-size:.85rem;color:var(--ink-dim);}
-  .dream-metrics b{font-family:var(--font-mono);color:var(--ink);display:block;font-size:1rem;font-weight:600;}
-  .dream-metrics .item-remove{margin-left:auto;}
-  .dream-progress{height:5px;border-radius:3px;background:var(--bg-card-alt);border:1px solid var(--border);margin-top:1rem;overflow:hidden;}
-  .dream-progress div{height:100%;background:var(--gain);}
-  .savings-rate-field{max-width:340px;margin:1.6rem 0 1.8rem;}
+  .dream-card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    max-width: 760px;
+  }
+  .dream-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .dream-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    overflow-wrap: anywhere;
+  }
+  .dream-price {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+  .dream-metrics {
+    display: flex;
+    gap: 1.8rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+  }
+  .dream-metrics b {
+    font-family: var(--font-mono);
+    color: var(--ink);
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .dream-metrics .item-remove {
+    margin-left: auto;
+  }
+  .dream-progress {
+    height: 5px;
+    border-radius: 3px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    margin-top: 1rem;
+    overflow: hidden;
+  }
+  .dream-progress div {
+    height: 100%;
+    background: var(--gain);
+  }
+  .savings-rate-field {
+    max-width: 340px;
+    margin: 1.6rem 0 1.8rem;
+  }
 
   /* ============================= WHAT IF ============================= */
-  .whatif-row{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem .4rem;margin-bottom:.8rem;max-width:640px;}
-  .whatif-top{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;}
-  .whatif-name{font-weight:500;overflow-wrap:anywhere;}
-  .whatif-values{font-family:var(--font-mono);color:var(--ink-dim);white-space:nowrap;}
-  .whatif-values .to{color:var(--gain);font-weight:600;}
-  .whatif-summary{margin-top:2.4rem;padding:2rem;background:var(--ink);color:var(--paper-on-ink);border-radius:18px;text-align:center;max-width:640px;}
-  .whatif-summary .eyebrow{color:var(--paper-on-ink-dim);margin-bottom:.4rem;}
-  .whatif-summary .big{font-family:var(--font-mono);font-size:clamp(2.2rem,7vw,3.4rem);font-weight:700;color:var(--gain-on-ink);}
-  .whatif-summary .row{margin-top:.7rem;font-family:var(--font-mono);font-size:.9rem;color:var(--paper-on-ink-dim);}
-  .whatif-summary .decade{margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid rgba(251,249,244,.14);font-family:var(--font-display);font-size:clamp(1.2rem,3.5vw,1.6rem);font-weight:600;color:var(--paper-on-ink);}
-  .whatif-reset{margin-top:1rem;}
+  .whatif-row {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem 0.4rem;
+    margin-bottom: 0.8rem;
+    max-width: 640px;
+  }
+  .whatif-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  .whatif-name {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .whatif-values {
+    font-family: var(--font-mono);
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+  .whatif-values .to {
+    color: var(--gain);
+    font-weight: 600;
+  }
+  .whatif-summary {
+    margin-top: 2.4rem;
+    padding: 2rem;
+    color: var(--paper-on-ink);
+    border-radius: 18px;
+    text-align: center;
+    max-width: 640px;
+  }
+  .whatif-summary .eyebrow {
+    color: var(--paper-on-ink-dim);
+    margin-bottom: 0.4rem;
+  }
+  .whatif-summary .big {
+    font-family: var(--font-mono);
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    font-weight: 700;
+    color: var(--gain-on-ink);
+  }
+  .whatif-summary .row {
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--paper-on-ink-dim);
+  }
+  .whatif-summary .decade {
+    margin-top: 1.4rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(251, 249, 244, 0.14);
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    font-weight: 600;
+    color: var(--paper-on-ink);
+  }
+  .whatif-reset {
+    margin-top: 1rem;
+  }
 
   /* ============================= LIFESTYLE MODES ============================= */
-  .lifestyle-sentence{font-family:var(--font-display);font-size:clamp(1.2rem,3vw,1.6rem);font-weight:500;max-width:30ch;margin-bottom:.5rem;}
-  .lifestyle-sentence b{color:var(--accent);font-weight:600;}
-  .lifestyle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;}
-  .lifestyle-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.6rem;}
-  .lifestyle-card.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
-  .lifestyle-mode{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);}
-  .lifestyle-mode small{letter-spacing:.04em;text-transform:none;color:var(--ink-dimmer);}
-  .lifestyle-card.current .lifestyle-mode{color:var(--accent);}
-  .lifestyle-monthly{font-family:var(--font-display);font-size:1.9rem;font-weight:600;margin-top:.5rem;}
-  .lifestyle-monthly span{font-size:.5em;color:var(--ink-dim);}
-  .lifestyle-detail{display:flex;justify-content:space-between;gap:1rem;font-size:.82rem;color:var(--ink-dim);margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border);}
-  .lifestyle-detail b{font-family:var(--font-mono);color:var(--ink);font-weight:500;}
+  .lifestyle-sentence {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 500;
+    max-width: 30ch;
+    margin-bottom: 0.5rem;
+  }
+  .lifestyle-sentence b {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .lifestyle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .lifestyle-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+  }
+  .lifestyle-card.current {
+    border-color: var(--accent);
+    box-shadow:
+      0 0 0 1px var(--accent),
+      var(--shadow-lift);
+  }
+  .lifestyle-mode {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .lifestyle-mode small {
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--ink-dimmer);
+  }
+  .lifestyle-card.current .lifestyle-mode {
+    color: var(--accent);
+  }
+  .lifestyle-monthly {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .lifestyle-monthly span {
+    font-size: 0.5em;
+    color: var(--ink-dim);
+  }
+  .lifestyle-detail {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--border);
+  }
+  .lifestyle-detail b {
+    font-family: var(--font-mono);
+    color: var(--ink);
+    font-weight: 500;
+  }
 
   /* ============================= FINANCIAL FUTURE ============================= */
-  .future-sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem 1.6rem;max-width:820px;margin:1.5rem 0 2rem;}
-  .slider-field label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--ink-dim);}
-  .slider-field .sval{font-family:var(--font-mono);color:var(--accent);font-weight:600;}
-  .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.2rem 1.2rem .8rem;max-width:820px;}
-  .chart-wrap svg{width:100%;height:auto;display:block;overflow:visible;}
-  .chart-legend{display:flex;gap:1.4rem;flex-wrap:wrap;font-size:.8rem;color:var(--ink-dim);margin-bottom:.6rem;}
-  .chart-legend span::before{content:'';display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:.45rem;vertical-align:middle;background:currentColor;}
-  .chart-legend .spent{color:var(--accent);}
-  .chart-legend .saved{color:var(--gain);}
-  .chart-legend .lbl{color:var(--ink-dim);}
-  .line-spent{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
-  .area-spent{fill:var(--accent-soft);}
-  .line-saved{fill:none;stroke:var(--gain);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
-  .dot-spent{fill:var(--accent);}
-  .dot-saved{fill:var(--gain);}
-  .axis-label{font-family:var(--font-mono);font-size:11px;fill:var(--ink-dimmer);}
-  .grid-line{stroke:var(--border);stroke-width:1;}
-  .crossover-line{stroke:var(--accent);stroke-width:1;stroke-dasharray:4 4;}
-  .milestone-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;margin-top:1.2rem;max-width:820px;}
-  .milestone-cell{text-align:center;padding:.7rem .4rem;border-radius:8px;background:var(--bg-card-alt);}
-  .milestone-age{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);}
-  .milestone-val{font-family:var(--font-mono);font-size:.85rem;font-weight:600;margin-top:.25rem;color:var(--accent);}
-  .milestone-val.saved{color:var(--gain);font-weight:500;}
-  .future-note{margin-top:1.2rem;max-width:820px;padding:1rem 1.2rem;border-left:3px solid var(--accent);background:var(--bg-card);border-radius:0 10px 10px 0;font-size:.92rem;}
-  .future-note.good{border-left-color:var(--gain);}
+  .future-sliders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem 1.6rem;
+    max-width: 820px;
+    margin: 1.5rem 0 2rem;
+  }
+  .slider-field label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+  }
+  .slider-field .sval {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .chart-wrap {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.2rem 1.2rem 0.8rem;
+    max-width: 820px;
+  }
+  .chart-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+    margin-bottom: 0.6rem;
+  }
+  .chart-legend span::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    margin-right: 0.45rem;
+    vertical-align: middle;
+    background: currentColor;
+  }
+  .chart-legend .spent {
+    color: var(--accent);
+  }
+  .chart-legend .saved {
+    color: var(--gain);
+  }
+  .chart-legend .lbl {
+    color: var(--ink-dim);
+  }
+  .line-spent {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .area-spent {
+    fill: var(--accent-soft);
+  }
+  .line-saved {
+    fill: none;
+    stroke: var(--gain);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .dot-spent {
+    fill: var(--accent);
+  }
+  .dot-saved {
+    fill: var(--gain);
+  }
+  .axis-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--ink-dimmer);
+  }
+  .grid-line {
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .crossover-line {
+    stroke: var(--accent);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+  }
+  .milestone-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+    max-width: 820px;
+  }
+  .milestone-cell {
+    text-align: center;
+    padding: 0.7rem 0.4rem;
+    border-radius: 8px;
+    background: var(--bg-card-alt);
+    box-shadow:
+      inset 0 1px 2px rgba(24, 20, 15, 0.07),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  .milestone-age {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+  }
+  .milestone-val {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    color: var(--accent);
+  }
+  .milestone-val.saved {
+    color: var(--gain);
+    font-weight: 500;
+  }
+  .future-note {
+    margin-top: 1.2rem;
+    max-width: 820px;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.92rem;
+  }
+  .future-note.good {
+    border-left-color: var(--gain);
+  }
 
   /* ============================= WORTH SCORE ============================= */
-  .score-wrap{display:flex;flex-wrap:wrap;gap:2.5rem;align-items:center;margin-top:1rem;}
-  .score-seal{width:170px;height:170px;border-radius:50%;border:2px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;
-    background:radial-gradient(circle at 50% 30%,#FFFEFB,var(--card-bottom) 75%);
-    box-shadow:inset 0 2px 8px rgba(24,20,15,0.08),0 0 0 6px rgba(122,39,51,0.06),0 22px 40px -22px rgba(24,20,15,0.5);}
-  .score-seal::before{content:'';position:absolute;inset:8px;border:1px dashed var(--border-strong);border-radius:50%;}
-  .score-num{font-family:var(--font-mono);font-size:3rem;font-weight:700;color:var(--accent);text-shadow:0 1px 0 #fff;}
-  .score-max{font-family:var(--font-mono);font-size:.85rem;color:var(--ink-dimmer);margin-top:-.3rem;}
-  .score-factors{flex:1;min-width:240px;max-width:520px;display:flex;flex-direction:column;gap:1.1rem;}
-  .score-factor-label{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:.35rem;}
-  .score-factor-label b{font-family:var(--font-mono);}
-  .score-factor-label small{color:var(--ink-dimmer);font-family:var(--font-mono);font-weight:400;}
-  .score-factor-hint{font-size:.78rem;color:var(--ink-dimmer);margin-top:.35rem;}
-  .score-bar-track{height:7px;background:var(--bg-card-alt);border:1px solid var(--border);border-radius:4px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(24,20,15,0.1);}
-  .score-bar-fill{height:100%;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent 60%),linear-gradient(90deg,var(--accent-strong),var(--accent-hi));width:0;transition:width 1.1s var(--ease);}
+  .score-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .score-seal {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    background: radial-gradient(circle at 50% 30%, #fffefb, var(--card-bottom) 75%);
+    box-shadow:
+      inset 0 2px 8px rgba(24, 20, 15, 0.08),
+      0 0 0 6px rgba(122, 39, 51, 0.06),
+      0 22px 40px -22px rgba(24, 20, 15, 0.5);
+  }
+  .score-seal::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 50%;
+  }
+  .score-num {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 1px 0 #fff;
+  }
+  .score-max {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-dimmer);
+    margin-top: -0.3rem;
+  }
+  .score-factors {
+    flex: 1;
+    min-width: 240px;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .score-factor-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
+  }
+  .score-factor-label b {
+    font-family: var(--font-mono);
+  }
+  .score-factor-label small {
+    color: var(--ink-dimmer);
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+  .score-factor-hint {
+    font-size: 0.78rem;
+    color: var(--ink-dimmer);
+    margin-top: 0.35rem;
+  }
+  .score-bar-track {
+    height: 7px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(24, 20, 15, 0.1);
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 60%),
+      linear-gradient(90deg, var(--accent-strong), var(--accent-hi));
+    width: 0;
+    transition: width 1.1s var(--ease);
+  }
 
   /* ============================= FINALE ============================= */
-  .finale{text-align:center;align-items:center;}
-  .finale-label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;color:var(--ink-dim);text-transform:uppercase;}
-  .finale-numbers{display:flex;flex-direction:column;gap:.2rem;margin:1rem 0 1.8rem;}
-  .finale-monthly{font-family:var(--font-display);font-size:clamp(3rem,12vw,6.5rem);font-weight:700;line-height:1;}
-  .finale-monthly span{font-size:.38em;font-weight:500;color:var(--ink-dim);}
-  .finale-yearly{font-family:var(--font-mono);color:var(--ink-dim);font-size:1.1rem;margin-top:.6rem;}
-  .finale-hours{font-family:var(--font-mono);color:var(--accent);font-size:1.3rem;margin-top:.3rem;font-weight:600;}
-  .finale-tagline{color:var(--ink-dim);font-size:1.1rem;font-style:italic;margin-top:1.6rem;max-width:480px;}
-
-  footer{text-align:center;padding:3rem 1.5rem calc(5rem + env(safe-area-inset-bottom));color:var(--ink-dimmer);font-size:.78rem;font-family:var(--font-mono);letter-spacing:.03em;display:flex;flex-direction:column;gap:.5rem;}
-
-  /* =============================================================
-     PREMIUM LAYER
-     Texture, depth, light and motion on top of the styles above.
-     Nothing here moves anything: the layout is exactly the same.
-     ============================================================= */
-
-  /* ---- Texture: paper under a warm lamp ---- */
-  body::before{
-    content:'';position:fixed;inset:-15%;z-index:-1;pointer-events:none;
-    background:
-      radial-gradient(40% 34% at 16% 10%,rgba(255,255,255,0.6),transparent 72%),
-      radial-gradient(36% 32% at 86% 90%,rgba(208,150,80,0.09),transparent 72%);
-    animation:drift 36s ease-in-out infinite alternate;
+  .finale {
+    text-align: center;
+    align-items: center;
   }
-  @keyframes drift{to{transform:translate3d(4%,-3%,0) scale(1.05);}}
-  /* Grain over the whole page, very faint, so the paper is never flat. */
-  body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.16;background:var(--paper-grain) 0 0 / 220px 220px;}
-
-  /* ---- Card stock ----
-     Every card is a sheet of thick paper: lit from above, a bright top edge,
-     a soft shadow under it. With a mouse a warm light follows the pointer
-     across it and along its edge (--px / --py from setupPointerEffects,
-     faded in and out by --light). */
-  @property --light{syntax:'<number>';inherits:false;initial-value:0;}
-  .hourly-preview,.item-row,.purchase-row,.dream-card,.whatif-row,.lifestyle-card,.chart-wrap,.future-note{
-    background:
-      radial-gradient(360px circle at var(--px,50%) var(--py,50%),rgba(255,255,255,calc(var(--light,0) * .85)),transparent 60%),
-      linear-gradient(180deg,var(--card-top),var(--card-bottom));
-    box-shadow:var(--shadow-card);
-    transition:--light .5s var(--ease),box-shadow .45s var(--ease),transform .45s var(--ease),border-color .3s;
+  .finale-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
   }
-  .stat-card{
-    background:
-      radial-gradient(300px circle at var(--px,50%) var(--py,50%),rgba(255,255,255,calc(var(--light,0) * .85)),transparent 60%),
-      linear-gradient(180deg,var(--card-top),var(--card-bottom));
-    transition:--light .5s var(--ease);
+  .finale-numbers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 1rem 0 1.8rem;
   }
-  .stat-grid{box-shadow:var(--shadow-card);}
-  :is(.hourly-preview,.item-row,.purchase-row,.dream-card,.whatif-row,.lifestyle-card,.chart-wrap,.future-note,.stat-card):hover{--light:1;}
-  /* Cards you only read lift a little; rows you type in stay put. */
-  :is(.purchase-row,.dream-card,.lifestyle-card):hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);}
-  .item-row:focus-within{border-color:rgba(122,39,51,0.45);box-shadow:var(--shadow-card),0 0 0 4px var(--accent-soft);}
-  .lifestyle-card.current{box-shadow:0 0 0 1px var(--accent),var(--shadow-lift);}
-  .milestone-cell{box-shadow:inset 0 1px 2px rgba(24,20,15,0.07),0 1px 0 rgba(255,255,255,0.8);}
-
-  /* ---- Ink panels ----
-     The two dark panels are glossy: lit from the top-left corner, an inner
-     highlight along the top edge, a deep shadow, and a sheen that follows the
-     pointer. The time-price card also leans towards the mouse (--rx / --ry). */
-  .time-price-readout,.whatif-summary{
-    background:
-      radial-gradient(420px circle at var(--px,50%) var(--py,50%),rgba(255,255,255,calc(var(--light,0) * .09)),transparent 55%),
-      radial-gradient(120% 90% at 12% -10%,var(--ink-hi),var(--ink) 62%);
-    box-shadow:var(--shadow-ink);
-    transition:--light .5s var(--ease);
+  .finale-monthly {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 12vw, 6.5rem);
+    font-weight: 700;
+    line-height: 1;
   }
-  .time-price-readout{
-    transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-    transition:--light .5s var(--ease),transform .8s var(--ease);
+  .finale-monthly span {
+    font-size: 0.38em;
+    font-weight: 500;
+    color: var(--ink-dim);
   }
-  .time-price-readout:hover{transition:--light .5s var(--ease),transform .15s linear;}
-  :is(.time-price-readout,.whatif-summary):hover{--light:1;}
-  /* The hours figure is lit from above; its caption keeps its own colour. */
-  .tpr-hours > span:not(.unit){background:linear-gradient(180deg,#fff 30%,#CFC8BC);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .finale-yearly {
+    font-family: var(--font-mono);
+    color: var(--ink-dim);
+    font-size: 1.1rem;
+    margin-top: 0.6rem;
+  }
+  .finale-hours {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 1.3rem;
+    margin-top: 0.3rem;
+    font-weight: 600;
+  }
+  .finale-tagline {
+    color: var(--ink-dim);
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-top: 1.6rem;
+    max-width: 480px;
+  }
 
-  /* ---- Lists: items arrive and leave smoothly (see the add / remove handlers) ---- */
-  .enter{animation:itemIn .55s var(--ease) both;}
-  .leaving{animation:itemOut .32s var(--ease) forwards;pointer-events:none;}
-  @keyframes itemIn{from{opacity:0;translate:0 -8px;scale:.98;filter:blur(4px);}}
-  @keyframes itemOut{to{opacity:0;translate:16px 0;scale:.98;filter:blur(3px);}}
-
-  /* ---- Scrollbar (WebKit / Blink; Firefox uses scrollbar-color on html) ---- */
-  ::-webkit-scrollbar{width:10px;height:10px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:rgba(24,20,15,0.2);border-radius:99px;border:3px solid var(--bg);}
-  ::-webkit-scrollbar-thumb:hover{background:rgba(24,20,15,0.32);}
+  footer {
+    text-align: center;
+    padding: 3rem 1.5rem calc(5rem + env(safe-area-inset-bottom));
+    color: var(--ink-dimmer);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.03em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 </style>
 </head>
 <body>
@@ -645,1105 +1703,1385 @@
  *   is never destroyed mid-gesture.
  * - Code order: constants, state & persistence, helpers, derived figures,
  *   one render function per section, event wiring, init.
- * - Syntax deliberately sticks to widely supported JavaScript (var,
- *   function expressions), since there is no build step to transpile it.
+ * - Modern JavaScript that every current browser runs natively (const/let,
+ *   arrow functions, template literals), so there is nothing to transpile.
  */
-(function(){
-'use strict';
-
-/* ============================================================================
-   CONSTANTS
-   ============================================================================ */
-
-var STORAGE_KEY = 'worth_state_v1';
-var CURRENCIES = ['€', '$', '£', 'CHF'];
-
-/** Lifestyle modes, as multiples of the user's own monthly spending. */
-var LIFESTYLE_MODES = [
-  { name:'Minimal', factor:0.55, note:'≈ 55% of current' },
-  { name:'Current', factor:1,    note:'your numbers' },
-  { name:'Luxury',  factor:2.8,  note:'≈ 2.8× current' }
-];
-/** Margin added to yearly cost for "required income" (taxes and saving, rule of thumb). */
-var INCOME_MARGIN = 0.8;          // required income = yearly cost ÷ 0.8 (i.e. cost is 80% of income)
-/** The ages the Financial Future timeline aims for (from the brief: 18 → 25 → 30 → 40 → 50 → 60). */
-var TIMELINE_AGES = [18, 25, 30, 40, 50, 60, 70, 80];
-var TIMELINE_POINTS = 6;
-
-/** Validation bounds for every number the user can enter. */
-var BOUNDS = {
-  age:[14, 100], income:[0, 10000000], savings:[0, 1000000000], hoursPerWeek:[1, 100], weeksPerYear:[1, 52],
-  amount:[0, 10000000], percent:[0, 10], nameLength:60, listLength:60
-};
-
-var DEFAULT_STATE = {
-  profile: { age:28, monthlyIncome:1500, currency:'€', savings:1000, hoursPerWeek:40, weeksPerYear:52 },
-  expenses: [
-    { id:'e1', name:'🏠 Home', monthly:600 },
-    { id:'e2', name:'🍔 Food', monthly:280 },
-    { id:'e3', name:'🚗 Transport', monthly:90 },
-    { id:'e4', name:'📱 Subscriptions', monthly:35 },
-    { id:'e5', name:'👕 Shopping', monthly:90 },
-    { id:'e6', name:'🏋️ Sport', monthly:25 },
-    { id:'e7', name:'🎮 Entertainment', monthly:55 },
-    { id:'e8', name:'✈️ Travel', monthly:45 },
-    { id:'e9', name:'💳 Other', monthly:80 }
-  ],
-  purchases: [],
-  dreams: [],
-  dreamMonthlySavings: 0,
-  whatIfTargets: {},                     // expense id → target monthly amount
-  // monthlySavings: null means "follow my surplus" (income − expenses) until the user moves the slider
-  future: { inflation:3, salaryGrowth:3, expenseGrowth:2, monthlySavings:null }
-};
-
-/* ============================================================================
-   STATE & PERSISTENCE
-   ============================================================================ */
-
-/** Shorthand for document.getElementById. */
-function $(id){ return document.getElementById(id); }
-
-/**
- * Deep-copies plain data via a JSON round-trip (safe because state only
- * ever holds strings, numbers, booleans, arrays and plain objects).
- * @param {object} obj
- * @returns {object}
- */
-function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
-
-/**
- * Parses a value as a finite number and clamps it to [min, max].
- * Anything unreadable becomes `fallback`. Used on every number that comes
- * from an input field or from storage, which is what stops negative
- * expenses, 0-hour weeks or "NaN" from ever reaching the maths.
- * @param {*} value
- * @param {number} min
- * @param {number} max
- * @param {number} fallback
- * @returns {number}
- */
-function num(value, min, max, fallback){
-  var n = parseFloat(value);
-  if(!isFinite(n)) return fallback;
-  return Math.min(max, Math.max(min, n));
-}
-
-/** Trims and shortens a user-provided name. */
-function cleanName(value){ return String(value == null ? '' : value).slice(0, BOUNDS.nameLength); }
-
-/**
- * Returns a short id that is unique even if two items are added in the
- * same millisecond (timestamp + random suffix).
- * @param {string} prefix
- */
-function uid(prefix){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
-
-/**
- * Cleans a list of {id, name, amount} items from storage.
- * @param {*} list
- * @param {string} amountKey - 'monthly' for expenses, 'price' for purchases/dreams
- * @param {string} prefix - id prefix for items missing an id
- * @returns {object[]}
- */
-function sanitizeList(list, amountKey, prefix){
-  if(!Array.isArray(list)) return null;
-  return list.filter(function(x){ return x && typeof x === 'object'; }).slice(0, BOUNDS.listLength).map(function(x){
-    var item = { id: (typeof x.id === 'string' && /^[\w-]{1,40}$/.test(x.id)) ? x.id : uid(prefix), name: cleanName(x.name) };
-    item[amountKey] = num(x[amountKey], BOUNDS.amount[0], BOUNDS.amount[1], 0);
-    return item;
-  });
-}
-
-/**
- * Reads saved state and rebuilds it field by field on top of DEFAULT_STATE,
- * validating every value. Two benefits: (1) data saved by an older version
- * still gets sensible defaults for fields added later; (2) corrupted or
- * hand-edited storage can't crash the app or inject markup — it is simply
- * replaced by defaults.
- * @returns {object} the working state
- */
-function loadState(){
-  var s = clone(DEFAULT_STATE);
-  try{
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return s;
-    var p = JSON.parse(raw) || {};
-    var pr = p.profile || {}, d = s.profile;
-    s.profile = {
-      age: Math.round(num(pr.age, BOUNDS.age[0], BOUNDS.age[1], d.age)),
-      monthlyIncome: num(pr.monthlyIncome, BOUNDS.income[0], BOUNDS.income[1], d.monthlyIncome),
-      currency: CURRENCIES.indexOf(pr.currency) !== -1 ? pr.currency : d.currency,
-      savings: num(pr.savings, BOUNDS.savings[0], BOUNDS.savings[1], d.savings),
-      hoursPerWeek: num(pr.hoursPerWeek, BOUNDS.hoursPerWeek[0], BOUNDS.hoursPerWeek[1], d.hoursPerWeek),
-      weeksPerYear: num(pr.weeksPerYear, BOUNDS.weeksPerYear[0], BOUNDS.weeksPerYear[1], d.weeksPerYear)
-    };
-    s.expenses = sanitizeList(p.expenses, 'monthly', 'e') || s.expenses;
-    s.purchases = sanitizeList(p.purchases, 'price', 'p') || [];
-    s.dreams = sanitizeList(p.dreams, 'price', 'd') || [];
-    s.dreamMonthlySavings = num(p.dreamMonthlySavings, 0, BOUNDS.amount[1], 0);
-    if(p.whatIfTargets && typeof p.whatIfTargets === 'object'){
-      Object.keys(p.whatIfTargets).forEach(function(id){
-        s.whatIfTargets[id] = num(p.whatIfTargets[id], 0, BOUNDS.amount[1], 0);
-      });
-    }
-    var f = p.future || {};
-    s.future = {
-      inflation: num(f.inflation, 0, 10, 3),
-      salaryGrowth: num(f.salaryGrowth, 0, 10, 3),
-      expenseGrowth: num(f.expenseGrowth, 0, 10, 2),
-      monthlySavings: (f.monthlySavings == null) ? null : num(f.monthlySavings, 0, BOUNDS.amount[1], 0)
-    };
-  }catch(e){ /* unreadable data: start from defaults rather than crash */ }
-  return s;
-}
-
-/** Writes state to localStorage (silently skipped if storage is unavailable, e.g. some private modes). */
-function saveState(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ /* app keeps working, just not persisted */ }
-}
-
-/** True if the user has completed the profile before (results are shown straight away on return). */
-function hasSavedData(){
-  try{ return !!localStorage.getItem(STORAGE_KEY); }catch(e){ return false; }
-}
-
-var state = loadState();
-var revealed = false;      // true once the result sections are visible
-
-/* ============================================================================
-   HELPERS
-   ============================================================================ */
-
-/**
- * Escapes text for safe insertion into HTML — element content AND attribute
- * values (quotes included). Every user-provided string passes through here
- * before touching innerHTML, so a category called `"><img onerror=…>`
- * is shown as text instead of running as code.
- * @param {*} value
- * @returns {string}
- */
-function escapeHtml(value){
-  return String(value == null ? '' : value)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-/** The selected currency symbol. */
-function cur(){ return state.profile.currency; }
-
-/**
- * Formats an amount of money in the selected currency: "€1,300" or
- * "1,300 CHF" (CHF is conventionally written after the number).
- * @param {number} v
- * @param {number} [decimals=0]
- * @returns {string}
- */
-function fmtMoney(v, decimals){
-  decimals = decimals || 0;
-  if(!isFinite(v)) v = 0;
-  var n = Math.abs(v).toLocaleString('en-US', { minimumFractionDigits:decimals, maximumFractionDigits:decimals });
-  var sign = v < 0 ? '−' : '';
-  return cur() === 'CHF' ? sign + n + ' CHF' : sign + cur() + n;
-}
-
-/** Formats a number as a rounded integer with thousands separators. */
-function fmtInt(v){ return Math.round(isFinite(v) ? v : 0).toLocaleString('en-US'); }
-
-/** Formats a number with one decimal and thousands separators. */
-function fmt1(v){ return (isFinite(v) ? v : 0).toLocaleString('en-US', { minimumFractionDigits:1, maximumFractionDigits:1 }); }
-
-/** English plural helper: plural(1,'year','years') → "1 year". */
-function plural(n, one, many){ return n + ' ' + (n === 1 ? one : many); }
-
-/**
- * Turns a number of months into "3 years 4 months" (the format from the brief).
- * @param {number} months
- * @returns {string}
- */
-function fmtDuration(months){
-  if(months <= 0) return 'Already covered';
-  var y = Math.floor(months / 12), m = months % 12;
-  if(y > 99) return 'Over 99 years';
-  return [y ? plural(y, 'year', 'years') : '', m ? plural(m, 'month', 'months') : ''].filter(Boolean).join(' ');
-}
-
-/** True when the user has asked their OS for reduced motion. */
-function prefersReducedMotion(){
-  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-/**
- * Colours the part of a range slider left of its thumb: CSS draws the track
- * as a gradient that stops at --fill, and this keeps --fill in step with the
- * slider's value, min and max.
- * @param {HTMLInputElement} el
- */
-function paintRange(el){
-  var min = parseFloat(el.min) || 0, max = parseFloat(el.max), v = parseFloat(el.value) || 0;
-  if(!isFinite(max)) max = 100;
-  var pct = max > min ? (v - min) / (max - min) * 100 : 100;
-  el.style.setProperty('--fill', Math.max(0, Math.min(100, pct)) + '%');
-}
-
-/**
- * Plays the leaving animation on a list item (.leaving), then calls `done`
- * (which removes it from the state and re-renders). Straight away with
- * reduced motion; a timer makes sure `done` runs even if no animation does.
- * @param {Element|null} el
- * @param {function} done
- */
-function leave(el, done){
-  var finished = false;
-  function finish(){ if(!finished){ finished = true; done(); } }
-  if(!el || prefersReducedMotion()){ finish(); return; }
-  el.classList.add('leaving');
-  el.addEventListener('animationend', finish);
-  setTimeout(finish, 450);
-}
-
-/**
- * Animates a number from whatever it currently shows to `target`, so a
- * total ticks from 1,300 to 1,340 instead of restarting from zero on every
- * keystroke. The last value is remembered on the element itself.
- * @param {HTMLElement} el
- * @param {number} target
- * @param {function(number):string} format
- * @param {number} [duration=700] - milliseconds
- */
-function animateNumber(el, target, format, duration){
-  if(!isFinite(target)) target = 0;
-  var from = typeof el._value === 'number' ? el._value : 0;
-  el._value = target;
-  if(from === target || prefersReducedMotion()){ el.textContent = format(target); return; }
-  var start = null;
-  duration = duration || 700;
-  function tick(ts){
-    if(start === null) start = ts;
-    var p = Math.min((ts - start) / duration, 1);
-    el.textContent = format(from + (target - from) * (1 - Math.pow(1 - p, 3)));   // ease-out cubic
-    if(p < 1 && el._value === target) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-/* ============================================================================
-   DERIVED FIGURES
-   The single source of every number shown on the page.
-   ============================================================================ */
-
-/**
- * Hourly income = yearly income ÷ hours worked per year.
- * e.g. €1,500/month, 40 h/week, 52 weeks → 18,000 ÷ 2,080 = €8.65/hour.
- * @returns {number} 0 if the profile is incomplete
- */
-function hourlyIncome(){
-  var p = state.profile;
-  var hours = p.hoursPerWeek * p.weeksPerYear;
-  return hours > 0 ? p.monthlyIncome * 12 / hours : 0;
-}
-
-/** Hours in one working day: weekly hours spread over a 5-day week. */
-function workDayHours(){ return state.profile.hoursPerWeek / 5; }
-
-/**
- * Converts a price into time.
- * @param {number} price
- * @returns {{hours:number, days:number}|null} null when no hourly rate is available
- */
-function timePrice(price){
-  var hi = hourlyIncome();
-  if(hi <= 0) return null;
-  var hours = price / hi;
-  return { hours:hours, days:hours / workDayHours() };
-}
-
-/** Total of all monthly expenses. */
-function monthlyCost(){
-  return state.expenses.reduce(function(sum, e){ return sum + e.monthly; }, 0);
-}
-
-/** Income minus expenses, per month (negative when spending more than earning). */
-function monthlySurplus(){ return state.profile.monthlyIncome - monthlyCost(); }
-
-/**
- * The target an expense is dragged to in What If, never above the expense
- * itself (the user may have lowered the expense since setting the target).
- * @param {object} e - expense
- * @returns {number}
- */
-function whatIfTarget(e){
-  var t = state.whatIfTargets[e.id];
-  return (t == null || t > e.monthly) ? e.monthly : t;
-}
-
-/** Monthly savings used by the projection: the user's choice, or their surplus by default. */
-function projectionSavings(){
-  var f = state.future.monthlySavings;
-  return f == null ? Math.max(0, Math.round(monthlySurplus())) : f;
-}
-
-/* ============================================================================
-   RENDER: PROFILE
-   ============================================================================ */
-
-/** Updates the live hourly-income card under the profile form. */
-function renderHourlyPreview(){
-  var p = state.profile, h = hourlyIncome();
-  $('hourlyPreview').textContent = h > 0 ? fmtMoney(h, 2) + ' / hour' : '—';
-  $('hourlyFormula').textContent = h > 0
-    ? fmtMoney(p.monthlyIncome * 12) + ' ÷ ' + fmtInt(p.hoursPerWeek * p.weeksPerYear) + ' hours a year'
-    : '';
-}
-
-/* ============================================================================
-   RENDER: YOUR LIFE COST
-   ============================================================================ */
-
-/** Rebuilds the list of expense rows (only when an item is added or removed). */
-function renderExpenses(){
-  $('expenseList').innerHTML = state.expenses.map(function(e){
-    return '<div class="item-row">' +
-      '<input type="text" class="item-name" value="' + escapeHtml(e.name) + '" data-id="' + e.id + '" maxlength="' + BOUNDS.nameLength + '" placeholder="Category name" aria-label="Category name">' +
-      '<div class="item-amount-wrap"><span class="curr" aria-hidden="true">' + escapeHtml(cur()) + '</span>' +
-        '<input type="number" class="item-amount" value="' + e.monthly + '" min="0" step="1" inputmode="decimal" data-id="' + e.id + '" aria-label="Monthly amount for ' + escapeHtml(e.name || 'this category') + '">' +
-      '</div>' +
-      '<button class="item-remove" type="button" data-id="' + e.id + '" aria-label="Remove ' + escapeHtml(e.name || 'category') + '">×</button>' +
-    '</div>';
-  }).join('') || '<p class="list-empty">No categories yet. Add your first one below.</p>';
-}
-
-/** Monthly / yearly / daily / hourly cost of living. */
-function renderExpenseTotals(){
-  var monthly = monthlyCost(), yearly = monthly * 12;
-  var money0 = function(v){ return fmtMoney(v); }, money2 = function(v){ return fmtMoney(v, 2); };
-  animateNumber($('monthlyCostNum'), monthly, money0);
-  animateNumber($('yearlyCostNum'), yearly, money0);
-  animateNumber($('dailyCostNum'), yearly / 365, money2);
-  animateNumber($('hourlyCostNum'), yearly / 365 / 24, money2);
-}
-
-/* ============================================================================
-   RENDER: THE TIME PRICE
-   ============================================================================ */
-
-/** The big dark readout that converts the typed price into hours, live. */
-function renderTimePriceReadout(){
-  var name = $('tpName').value.trim();
-  var price = num($('tpPrice').value, 0, BOUNDS.amount[1], 0);
-  var tp = timePrice(price);
-  $('tprPrice').textContent = (name ? name + ' — ' : '') + fmtMoney(price);
-  animateNumber($('tprHours'), tp ? tp.hours : 0, fmt1, 400);
-  $('tprDays').textContent = tp && price > 0 ? fmt1(tp.days) + ' working days' : '—';
-  $('addPurchase').disabled = !(name && price > 0);
-}
-
-/** The saved shopping list: price → hours → working days, newest first. */
-function renderPurchases(){
-  var list = $('purchaseList');
-  if(state.purchases.length === 0){ list.innerHTML = ''; return; }
-  list.innerHTML = '<div class="purchase-head" aria-hidden="true"><span>Item</span><span>Hours</span><span>Days</span><span></span></div>' +
-    state.purchases.slice().reverse().map(function(p){
-      var tp = timePrice(p.price);
-      return '<div class="purchase-row">' +
-        '<span class="purchase-name">' + escapeHtml(p.name) + '<small>' + fmtMoney(p.price) + '</small></span>' +
-        '<span class="purchase-metric">' + (tp ? fmt1(tp.hours) + ' hrs' : '—') + '</span>' +
-        '<span class="purchase-metric">' + (tp ? fmt1(tp.days) + ' days' : '—') + '</span>' +
-        '<button class="item-remove" type="button" data-id="' + p.id + '" aria-label="Remove ' + escapeHtml(p.name) + '">×</button>' +
-      '</div>';
-    }).join('');
-}
-
-/* ============================================================================
-   RENDER: DREAMS
-   ============================================================================ */
-
-/**
- * Dream cards: price, hours and working days it represents, and — when a
- * monthly saving amount is set — how long it takes to afford.
- */
-function renderDreams(){
-  var wrap = $('dreamsList');
-  var save = state.dreamMonthlySavings;
-  var input = $('dreamSavings');
-  if(document.activeElement !== input) input.value = save || '';
-  var surplus = monthlySurplus();
-  $('dreamSavingsHint').textContent = surplus > 0
-    ? 'Your current surplus is ' + fmtMoney(surplus) + ' a month (income minus expenses).'
-    : 'Right now your expenses use up all of your income.';
-
-  if(state.dreams.length === 0){
-    wrap.innerHTML = '<p class="list-empty">No dreams added yet. What are you working toward?</p>';
-    return;
-  }
-  wrap.innerHTML = state.dreams.slice().reverse().map(function(d){
-    var tp = timePrice(d.price);
-    var months = save > 0 ? Math.ceil(d.price / save) : null;
-    return '<div class="dream-card">' +
-      '<div class="dream-top"><span class="dream-name">' + escapeHtml(d.name) + '</span><span class="dream-price">' + fmtMoney(d.price) + '</span></div>' +
-      '<div class="dream-metrics">' +
-        '<span>Hours of work<b>' + (tp ? fmtInt(tp.hours) : '—') + '</b></span>' +
-        '<span>Working days<b>' + (tp ? fmtInt(tp.days) : '—') + '</b></span>' +
-        '<span>Time to afford<b>' + (months ? fmtDuration(months) : 'Set a monthly amount') + '</b></span>' +
-        '<button class="item-remove" type="button" data-id="' + d.id + '" aria-label="Remove ' + escapeHtml(d.name) + '">×</button>' +
-      '</div></div>';
-  }).join('');
-}
-
-/* ============================================================================
-   RENDER: WHAT IF
-   ============================================================================ */
-
-/** Rebuilds one slider per expense (only when the list of expenses changes). */
-function renderWhatIf(){
-  var wrap = $('whatIfList');
-  var items = state.expenses.filter(function(e){ return e.monthly > 0; });
-  if(items.length === 0){
-    wrap.innerHTML = '<p class="list-empty">Add some expenses above first.</p>';
-  } else {
-    wrap.innerHTML = items.map(function(e){
-      var label = e.name || 'Unnamed category';
-      return '<div class="whatif-row">' +
-        '<div class="whatif-top"><span class="whatif-name">' + escapeHtml(label) + '</span>' +
-        '<span class="whatif-values" id="wif-' + e.id + '"></span></div>' +
-        '<input type="range" class="whatif-slider" data-id="' + e.id + '" min="0" max="' + e.monthly + '" step="1" value="' + whatIfTarget(e) + '" aria-label="New monthly target for ' + escapeHtml(label) + '">' +
-      '</div>';
-    }).join('');
-  }
-  updateWhatIf();
-}
-
-/**
- * Updates the "€250 → €100" labels and the savings summary without
- * rebuilding the sliders — safe to call on every drag event.
- */
-function updateWhatIf(){
-  var monthlySaved = 0;
-  state.expenses.forEach(function(e){
-    var t = whatIfTarget(e);
-    monthlySaved += e.monthly - t;
-    var label = $('wif-' + e.id);
-    if(label) label.innerHTML = fmtMoney(e.monthly) + ' <span class="to">→ ' + fmtMoney(t) + '</span>';
-  });
-  var yearly = monthlySaved * 12;
-  var hi = hourlyIncome();
-  var hours = hi > 0 ? yearly / hi : 0;
-  $('wifMonthly').textContent = fmtMoney(monthlySaved) + ' / month';
-  $('wifYearly').textContent = fmtMoney(yearly) + ' a year';
-  $('wifHours').textContent = fmtInt(hours) + ' hours of work saved every year';
-  $('wifTenYear').textContent = monthlySaved > 0
-    ? 'Kept for 10 years: ' + fmtMoney(yearly * 10) + ' — ' + fmtInt(hours * 10) + ' hours of your life back.'
-    : 'Move a slider to see what ten years of that change would give back.';
-  Array.prototype.forEach.call(document.querySelectorAll('.whatif-slider'), paintRange);
-}
-
-/* ============================================================================
-   RENDER: LIFESTYLE MODES
-   ============================================================================ */
-
-/** Three cards (Minimal / Current / Luxury) computed from the user's own spending. */
-function renderLifestyle(){
-  var current = monthlyCost(), hi = hourlyIncome();
-  $('lifestyleSentence').innerHTML = 'Your current lifestyle requires approximately <b>' + fmtMoney(current * 12) + '</b> a year.';
-  $('lifestyleGrid').innerHTML = LIFESTYLE_MODES.map(function(m){
-    var monthly = current * m.factor, yearly = monthly * 12;
-    var required = yearly / INCOME_MARGIN;
-    return '<div class="lifestyle-card' + (m.factor === 1 ? ' current' : '') + '">' +
-      '<div class="lifestyle-mode">' + m.name + ' <small>· ' + m.note + '</small></div>' +
-      '<div class="lifestyle-monthly">' + fmtMoney(monthly) + '<span> / mo</span></div>' +
-      '<div class="lifestyle-detail"><span>Yearly cost</span><b>' + fmtMoney(yearly) + '</b></div>' +
-      '<div class="lifestyle-detail"><span>Required income / yr</span><b>' + fmtMoney(required) + '</b></div>' +
-      '<div class="lifestyle-detail"><span>Hours of work / yr</span><b>' + (hi > 0 ? fmtInt(required / hi) : '—') + '</b></div>' +
-    '</div>';
-  }).join('');
-}
-
-/* ============================================================================
-   RENDER: FINANCIAL FUTURE
-   ============================================================================ */
-
-/**
- * The ages shown on the timeline: today, then the brief's milestones
- * (25, 30, 40, 50, 60…) that are still ahead. Someone aged 28 sees
- * 28 → 30 → 40 → 50 → 60 → 70.
- * @returns {number[]}
- */
-function timelineAges(){
-  var age = state.profile.age;
-  return [age].concat(TIMELINE_AGES.filter(function(a){ return a > age; })).slice(0, TIMELINE_POINTS);
-}
-
-/**
- * Runs the projection year by year, from today to the last timeline age.
- * Each year: spending grows by (1 + inflation) × (1 + lifestyle growth),
- * income by salary growth, and the monthly savings are added to the
- * savings balance (no interest — deliberately simple and transparent).
- *
- * @returns {{years:object[], milestones:object[], crossoverAge:(number|null)}}
- *   years: one entry per year with cumulative spent and saved;
- *   milestones: the entries at the timeline ages;
- *   crossoverAge: first age at which yearly spending exceeds yearly income.
- */
-function projectFuture(){
-  var f = state.future, p = state.profile;
-  var ages = timelineAges();
-  var spendGrowth = (1 + f.inflation / 100) * (1 + f.expenseGrowth / 100);
-  var incomeGrowth = 1 + f.salaryGrowth / 100;
-  var yearlyCost = monthlyCost() * 12, yearlyIncome = p.monthlyIncome * 12;
-  var yearlySave = projectionSavings() * 12;
-
-  var spent = 0, saved = p.savings, crossoverAge = null, years = [];
-  var last = ages[ages.length - 1] - p.age;
-  for(var y = 0; y <= last; y++){
-    years.push({ age: p.age + y, spent: spent, saved: saved });
-    var cost = yearlyCost * Math.pow(spendGrowth, y);
-    var income = yearlyIncome * Math.pow(incomeGrowth, y);
-    if(crossoverAge === null && cost > income) crossoverAge = p.age + y;
-    spent += cost;
-    saved += yearlySave;
-  }
-  var milestones = ages.map(function(a){ return years[a - p.age]; });
-  return { years:years, milestones:milestones, crossoverAge:crossoverAge };
-}
-
-/** Compact money label for chart axes: €1.2M, €340k, €900. */
-function fmtShort(v){
-  if(v >= 1e6) return fmtMoney(v / 1e6, 1).replace(/(\.0)?( CHF)?$/, 'M$2');
-  if(v >= 1e3) return fmtMoney(v / 1e3).replace(/( CHF)?$/, 'k$1');
-  return fmtMoney(v);
-}
-
-/**
- * Draws the projection chart in SVG: two lines (spent, saved) over age,
- * with gridlines, axis labels and a dashed marker where spending would
- * overtake income. Colours come from CSS classes, not hardcoded values.
- * @param {object} proj - result of projectFuture()
- */
-function renderFutureChart(proj){
-  // The drawing is sized to the chart's real width on screen (not a fixed
-  // 600 units scaled down), so axis labels stay legible on a phone.
-  var svgEl = $('futureChart');
-  var W = Math.round(Math.max(300, Math.min(760, svgEl.parentNode.clientWidth - 24 || 600)));
-  var H = Math.round(Math.max(200, W * 0.4)), L = 54, R = 12, T = 12, B = 28;
-  svgEl.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-  var ys = proj.years;
-  var a0 = ys[0].age, a1 = ys[ys.length - 1].age;
-  var yMax = Math.max(1, d3max(ys, 'spent'), d3max(ys, 'saved')) * 1.08;
-  var x = function(age){ return L + (a1 === a0 ? 0 : (age - a0) / (a1 - a0)) * (W - L - R); };
-  var y = function(v){ return H - B - v / yMax * (H - T - B); };
-  var line = function(key){ return ys.map(function(p){ return x(p.age).toFixed(1) + ',' + y(p[key]).toFixed(1); }).join(' '); };
-
-  var svg = '';
-  for(var i = 0; i <= 4; i++){                         // horizontal gridlines with value labels
-    var v = yMax / 4 * i;
-    svg += '<line class="grid-line" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>' +
-           '<text class="axis-label" x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + escapeHtml(fmtShort(v)) + '</text>';
-  }
-  var lastLabelX = -Infinity;
-  proj.milestones.forEach(function(m){                 // age labels, skipping any that would overlap the previous one
-    if(x(m.age) - lastLabelX < 24) return;
-    lastLabelX = x(m.age);
-    svg += '<text class="axis-label" x="' + x(m.age) + '" y="' + (H - 8) + '" text-anchor="middle">' + m.age + '</text>';
-  });
-  if(proj.crossoverAge !== null && proj.crossoverAge > a0){
-    svg += '<line class="crossover-line" x1="' + x(proj.crossoverAge) + '" x2="' + x(proj.crossoverAge) + '" y1="' + T + '" y2="' + (H - B) + '"/>';
-  }
-  svg += '<polygon class="area-spent" points="' + x(a0) + ',' + y(0) + ' ' + line('spent') + ' ' + x(a1) + ',' + y(0) + '"/>' +
-         '<polyline class="line-spent" points="' + line('spent') + '"/>' +
-         '<polyline class="line-saved" points="' + line('saved') + '"/>';
-  proj.milestones.forEach(function(m){
-    svg += '<circle class="dot-spent" cx="' + x(m.age) + '" cy="' + y(m.spent) + '" r="4"/>' +
-           '<circle class="dot-saved" cx="' + x(m.age) + '" cy="' + y(m.saved) + '" r="3.5"/>';
-  });
-  svgEl.innerHTML = svg;
-}
-
-/** Largest value of `key` in a list of objects. */
-function d3max(list, key){ return list.reduce(function(m, o){ return Math.max(m, o[key]); }, 0); }
-
-/** Sliders, chart, milestone cells and the plain-language summary under the chart. */
-function renderFuture(){
-  var f = state.future;
-  var save = projectionSavings();
-  $('fInflationVal').textContent = f.inflation + '%';
-  $('fSalaryGrowthVal').textContent = f.salaryGrowth + '%';
-  $('fExpenseGrowthVal').textContent = f.expenseGrowth + '%';
-  $('fMonthlySavingsVal').textContent = fmtMoney(save) + (f.monthlySavings == null ? ' (your surplus)' : '');
-  var slider = $('fMonthlySavings');
-  slider.max = Math.max(3000, Math.ceil(state.profile.monthlyIncome / 100) * 100, save);
-  if(document.activeElement !== slider) slider.value = save;
-  ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth'].forEach(function(id){
-    var el = $(id);
-    if(document.activeElement !== el) el.value = f[{ fInflation:'inflation', fSalaryGrowth:'salaryGrowth', fExpenseGrowth:'expenseGrowth' }[id]];
-  });
-  ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth', 'fMonthlySavings'].forEach(function(id){ paintRange($(id)); });
-
-  var proj = projectFuture();
-  renderFutureChart(proj);
-  $('milestoneTable').innerHTML = proj.milestones.map(function(m, i){
-    return '<div class="milestone-cell"><div class="milestone-age">' + (i === 0 ? 'TODAY · ' : 'AGE ') + m.age + '</div>' +
-      '<div class="milestone-val" title="Spent so far">' + fmtShort(m.spent) + '</div>' +
-      '<div class="milestone-val saved" title="Saved so far">' + fmtShort(m.saved) + ' saved</div></div>';
-  }).join('');
-
-  var end = proj.milestones[proj.milestones.length - 1];
-  var note = $('futureNote');
-  if(proj.crossoverAge !== null){
-    note.className = 'future-note';
-    note.textContent = proj.crossoverAge === state.profile.age
-      ? 'Right now your expenses are higher than your income.'
-      : 'At these rates, your yearly expenses would overtake your income around age ' + proj.crossoverAge + '.';
-  } else {
-    note.className = 'future-note good';
-    note.textContent = 'By ' + end.age + ', this lifestyle would have cost about ' + fmtMoney(end.spent) +
-      ', and your income stays ahead of your expenses the whole way.';
-  }
-}
-
-/* ============================================================================
-   RENDER: WORTH SCORE
-   ============================================================================ */
-
-/** Clamps a number to the 0–1 range. */
-function clamp01(v){ return Math.max(0, Math.min(1, v)); }
-
-/**
- * The WORTH score (0–100), from three factors, each scored 0–100:
- *  - Savings rate (55%): share of income left after expenses; 100 = saving it all.
- *  - Emergency runway (25%): savings ÷ 6 months of expenses; 100 = six months covered.
- *  - Income / cost ratio (20%): (income ÷ expenses) − 1; 100 = earning twice what you spend.
- * Weights favour the habit (saving) over the stock (savings) on purpose:
- * the app is about how you trade time for money every month.
- */
-function renderScore(){
-  var income = state.profile.monthlyIncome, cost = monthlyCost(), savings = state.profile.savings;
-  var factors = [
-    { label:'Savings rate', weight:0.55, val: income > 0 ? clamp01((income - cost) / income) * 100 : 0,
-      hint: income > 0 ? fmtInt(Math.max(0, (income - cost) / income * 100)) + '% of your income is left after expenses.' : 'Add an income to calculate this.' },
-    { label:'Emergency runway', weight:0.25, val: cost > 0 ? clamp01(savings / (cost * 6)) * 100 : (savings > 0 ? 100 : 0),
-      hint: cost > 0 ? 'Your savings cover ' + fmt1(savings / cost) + ' months of expenses (target: 6).' : 'No expenses entered.' },
-    { label:'Income / cost ratio', weight:0.20, val: cost > 0 ? clamp01(income / cost - 1) * 100 : (income > 0 ? 100 : 0),
-      hint: cost > 0 ? 'You earn ' + (income / cost).toFixed(2) + '× what you spend (100 points at 2×).' : 'No expenses entered.' }
+(() => {
+  'use strict';
+
+  /* ============================================================================
+     CONSTANTS
+     ============================================================================ */
+
+  const STORAGE_KEY = 'worth_state_v1';
+  const CURRENCIES = ['€', '$', '£', 'CHF'];
+
+  /** Lifestyle modes, as multiples of the user's own monthly spending. */
+  const LIFESTYLE_MODES = [
+    { name: 'Minimal', factor: 0.55, note: '≈ 55% of current' },
+    { name: 'Current', factor: 1, note: 'your numbers' },
+    { name: 'Luxury', factor: 2.8, note: '≈ 2.8× current' }
   ];
-  var score = Math.round(factors.reduce(function(s, f){ return s + f.val * f.weight; }, 0));
-  animateNumber($('scoreNum'), score, fmtInt, 1000);
+  /** Margin added to yearly cost for "required income" (taxes and saving, rule of thumb). */
+  const INCOME_MARGIN = 0.8; // required income = yearly cost ÷ 0.8 (i.e. cost is 80% of income)
+  /** The ages the Financial Future timeline aims for (from the brief: 18 → 25 → 30 → 40 → 50 → 60). */
+  const TIMELINE_AGES = [18, 25, 30, 40, 50, 60, 70, 80];
+  const TIMELINE_POINTS = 6;
 
-  var wrap = $('scoreFactors');
-  var oldWidths = Array.prototype.map.call(wrap.querySelectorAll('.score-bar-fill'), function(el){ return el.style.width; });
-  wrap.innerHTML = factors.map(function(f, i){
-    return '<div><div class="score-factor-label"><span>' + f.label + ' <small>· ' + Math.round(f.weight * 100) + '%</small></span><b>' + Math.round(f.val) + '</b></div>' +
-      '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + (oldWidths[i] || '0%') + '"></div></div>' +
-      '<div class="score-factor-hint">' + escapeHtml(f.hint) + '</div></div>';
-  }).join('');
-  var fills = wrap.querySelectorAll('.score-bar-fill');
-  requestAnimationFrame(function(){
-    Array.prototype.forEach.call(fills, function(el, i){ el.style.width = factors[i].val + '%'; });
-  });
-}
+  /** Validation bounds for every number the user can enter. */
+  const BOUNDS = {
+    age: [14, 100],
+    income: [0, 10000000],
+    savings: [0, 1000000000],
+    hoursPerWeek: [1, 100],
+    weeksPerYear: [1, 52],
+    amount: [0, 10000000],
+    percent: [0, 10],
+    nameLength: 60,
+    listLength: 60
+  };
 
-/* ============================================================================
-   RENDER: THE BIG NUMBER
-   ============================================================================ */
+  const DEFAULT_STATE = {
+    profile: {
+      age: 28,
+      monthlyIncome: 1500,
+      currency: '€',
+      savings: 1000,
+      hoursPerWeek: 40,
+      weeksPerYear: 52
+    },
+    expenses: [
+      { id: 'e1', name: '🏠 Home', monthly: 600 },
+      { id: 'e2', name: '🍔 Food', monthly: 280 },
+      { id: 'e3', name: '🚗 Transport', monthly: 90 },
+      { id: 'e4', name: '📱 Subscriptions', monthly: 35 },
+      { id: 'e5', name: '👕 Shopping', monthly: 90 },
+      { id: 'e6', name: '🏋️ Sport', monthly: 25 },
+      { id: 'e7', name: '🎮 Entertainment', monthly: 55 },
+      { id: 'e8', name: '✈️ Travel', monthly: 45 },
+      { id: 'e9', name: '💳 Other', monthly: 80 }
+    ],
+    purchases: [],
+    dreams: [],
+    dreamMonthlySavings: 0,
+    whatIfTargets: {}, // expense id → target monthly amount
+    // monthlySavings: null means "follow my surplus" (income − expenses) until the user moves the slider
+    future: { inflation: 3, salaryGrowth: 3, expenseGrowth: 2, monthlySavings: null }
+  };
 
-/** The closing screen: monthly cost, yearly cost, and the hours of work it takes. */
-function renderFinale(){
-  var monthly = monthlyCost(), yearly = monthly * 12, hi = hourlyIncome();
-  animateNumber($('finaleMonthly'), monthly, function(v){ return fmtMoney(v); }, 900);
-  $('finaleYearly').textContent = fmtMoney(yearly) + ' / year';
-  $('finaleHours').textContent = hi > 0 ? fmtInt(yearly / hi) + ' hours of work / year' : '';
-}
+  /* ============================================================================
+     STATE & PERSISTENCE
+     ============================================================================ */
 
-/* ============================================================================
-   FLOW
-   ============================================================================ */
+  /** Shorthand for document.getElementById. */
+  function $(id) {
+    return document.getElementById(id);
+  }
 
-var RESULT_SECTIONS = ['lifeCost','timePrice','dreams','whatIf','lifestyle','future','worthScore','finale'];
+  /**
+   * Deep-copies plain data via a JSON round-trip (safe because state only
+   * ever holds strings, numbers, booleans, arrays and plain objects).
+   * @param {object} obj
+   * @returns {object}
+   */
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
 
-/** Every section that depends on totals — called whenever a number changes. */
-function renderDependents(){
-  renderHourlyPreview();
-  renderExpenseTotals();
-  renderTimePriceReadout();
-  renderPurchases();
-  renderDreams();
-  updateWhatIf();
-  renderLifestyle();
-  renderFuture();
-  renderScore();
-  renderFinale();
-}
+  /**
+   * Parses a value as a finite number and clamps it to [min, max].
+   * Anything unreadable becomes `fallback`. Used on every number that comes
+   * from an input field or from storage, which is what stops negative
+   * expenses, 0-hour weeks or "NaN" from ever reaching the maths.
+   * @param {*} value
+   * @param {number} min
+   * @param {number} max
+   * @param {number} fallback
+   * @returns {number}
+   */
+  function num(value, min, max, fallback) {
+    const n = parseFloat(value);
+    if (!isFinite(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
+  }
 
-/** Full render, including lists whose structure may have changed. */
-function renderAll(){
-  renderExpenses();
-  renderWhatIf();
-  renderDependents();
-}
+  /** Trims and shortens a user-provided name. */
+  function cleanName(value) {
+    return String(value == null ? '' : value).slice(0, BOUNDS.nameLength);
+  }
 
-/**
- * Shows the result sections (hidden until the profile is submitted once).
- * @param {boolean} scroll - scroll to the first result
- */
-function revealResults(scroll){
-  renderAll();
-  RESULT_SECTIONS.forEach(function(id){ $(id).hidden = false; });
-  revealed = true;
-  setupReveal();
-  if(scroll) $('lifeCost').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block:'start' });
-}
+  /**
+   * Returns a short id that is unique even if two items are added in the
+   * same millisecond (timestamp + random suffix).
+   * @param {string} prefix
+   */
+  function uid(prefix) {
+    return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  }
 
-/** The profile fields and their bounds, in one place for reading and validation. */
-var PROFILE_FIELDS = [
-  { id:'ageInput',       key:'age',           bounds:BOUNDS.age,          int:true },
-  { id:'incomeInput',    key:'monthlyIncome', bounds:BOUNDS.income },
-  { id:'savingsInput',   key:'savings',       bounds:BOUNDS.savings },
-  { id:'hoursWeekInput', key:'hoursPerWeek',  bounds:BOUNDS.hoursPerWeek },
-  { id:'weeksYearInput', key:'weeksPerYear',  bounds:BOUNDS.weeksPerYear }
-];
+  /**
+   * Cleans a list of {id, name, amount} items from storage.
+   * @param {*} list
+   * @param {string} amountKey - 'monthly' for expenses, 'price' for purchases/dreams
+   * @param {string} prefix - id prefix for items missing an id
+   * @returns {object[]}
+   */
+  function sanitizeList(list, amountKey, prefix) {
+    if (!Array.isArray(list)) return null;
+    return list
+      .filter((x) => x && typeof x === 'object')
+      .slice(0, BOUNDS.listLength)
+      .map((x) => {
+        const item = {
+          id: typeof x.id === 'string' && /^[\w-]{1,40}$/.test(x.id) ? x.id : uid(prefix),
+          name: cleanName(x.name)
+        };
+        item[amountKey] = num(x[amountKey], BOUNDS.amount[0], BOUNDS.amount[1], 0);
+        return item;
+      });
+  }
 
-/**
- * Reads the profile form into state. Values out of range are flagged on
- * the field (aria-invalid) and clamped for the maths, so a half-typed
- * number never produces nonsense elsewhere on the page.
- * @returns {string|null} an error message for the first invalid field, or null
- */
-function readProfile(){
-  var error = null;
-  state.profile.currency = CURRENCIES.indexOf($('currencySelect').value) !== -1 ? $('currencySelect').value : '€';
-  PROFILE_FIELDS.forEach(function(f){
-    var el = $(f.id), raw = parseFloat(el.value);
-    var bad = !isFinite(raw) || raw < f.bounds[0] || raw > f.bounds[1] || (f.key === 'monthlyIncome' && raw <= 0);
-    el.setAttribute('aria-invalid', String(bad));
-    if(bad && !error){
-      error = f.key === 'monthlyIncome' ? 'Enter a monthly income greater than zero.'
-            : 'Enter a value between ' + f.bounds[0] + ' and ' + fmtInt(f.bounds[1]) + ' for “' + el.labels[0].textContent + '”.';
+  /**
+   * Reads saved state and rebuilds it field by field on top of DEFAULT_STATE,
+   * validating every value. Two benefits: (1) data saved by an older version
+   * still gets sensible defaults for fields added later; (2) corrupted or
+   * hand-edited storage can't crash the app or inject markup — it is simply
+   * replaced by defaults.
+   * @returns {object} the working state
+   */
+  function loadState() {
+    const s = clone(DEFAULT_STATE);
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return s;
+      const p = JSON.parse(raw) || {};
+      const pr = p.profile || {},
+        d = s.profile;
+      s.profile = {
+        age: Math.round(num(pr.age, BOUNDS.age[0], BOUNDS.age[1], d.age)),
+        monthlyIncome: num(pr.monthlyIncome, BOUNDS.income[0], BOUNDS.income[1], d.monthlyIncome),
+        currency: CURRENCIES.indexOf(pr.currency) !== -1 ? pr.currency : d.currency,
+        savings: num(pr.savings, BOUNDS.savings[0], BOUNDS.savings[1], d.savings),
+        hoursPerWeek: num(pr.hoursPerWeek, BOUNDS.hoursPerWeek[0], BOUNDS.hoursPerWeek[1], d.hoursPerWeek),
+        weeksPerYear: num(pr.weeksPerYear, BOUNDS.weeksPerYear[0], BOUNDS.weeksPerYear[1], d.weeksPerYear)
+      };
+      s.expenses = sanitizeList(p.expenses, 'monthly', 'e') || s.expenses;
+      s.purchases = sanitizeList(p.purchases, 'price', 'p') || [];
+      s.dreams = sanitizeList(p.dreams, 'price', 'd') || [];
+      s.dreamMonthlySavings = num(p.dreamMonthlySavings, 0, BOUNDS.amount[1], 0);
+      if (p.whatIfTargets && typeof p.whatIfTargets === 'object') {
+        Object.keys(p.whatIfTargets).forEach((id) => {
+          s.whatIfTargets[id] = num(p.whatIfTargets[id], 0, BOUNDS.amount[1], 0);
+        });
+      }
+      const f = p.future || {};
+      s.future = {
+        inflation: num(f.inflation, 0, 10, 3),
+        salaryGrowth: num(f.salaryGrowth, 0, 10, 3),
+        expenseGrowth: num(f.expenseGrowth, 0, 10, 2),
+        monthlySavings: f.monthlySavings == null ? null : num(f.monthlySavings, 0, BOUNDS.amount[1], 0)
+      };
+    } catch (e) {
+      /* unreadable data: start from defaults rather than crash */
     }
-    var v = num(raw, f.bounds[0], f.bounds[1], state.profile[f.key]);
-    state.profile[f.key] = f.int ? Math.round(v) : v;
-  });
-  return error;
-}
+    return s;
+  }
 
-/** "Show my worth": validate, save, reveal the results. */
-function handleCalc(){
-  var error = readProfile();
-  var box = $('profileError');
-  if(error){ box.textContent = error; box.hidden = false; return; }
-  box.hidden = true;
-  saveState();
-  revealResults(true);
-}
+  /** Writes state to localStorage (silently skipped if storage is unavailable, e.g. some private modes). */
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      /* app keeps working, just not persisted */
+    }
+  }
 
-/* ============================================================================
-   EVENTS
-   One delegated listener per list: rows are rebuilt from state, so
-   listening on the stable container avoids re-attaching handlers.
-   ============================================================================ */
+  /** True if the user has completed the profile before (results are shown straight away on return). */
+  function hasSavedData() {
+    try {
+      return !!localStorage.getItem(STORAGE_KEY);
+    } catch (e) {
+      return false;
+    }
+  }
 
-/** Finds the item with `id` in one of the state lists. */
-function findItem(list, id){ return list.filter(function(x){ return x.id === id; })[0]; }
+  const state = loadState();
+  let revealed = false; // true once the result sections are visible
 
-/**
- * Adds an item from a name + price pair of inputs (Time Price and Dreams).
- * @param {string} nameId
- * @param {string} priceId
- * @param {object[]} list - state list to add to
- * @param {string} prefix - id prefix
- * @returns {boolean} true if something was added
- */
-function addFromInputs(nameId, priceId, list, prefix){
-  var name = cleanName($(nameId).value.trim());
-  var price = num($(priceId).value, 0, BOUNDS.amount[1], 0);
-  if(!name || price <= 0 || list.length >= BOUNDS.listLength) return false;
-  list.push({ id:uid(prefix), name:name, price:price });
-  $(nameId).value = ''; $(priceId).value = '';
-  $(nameId).focus();
-  saveState();
-  return true;
-}
+  /* ============================================================================
+     HELPERS
+     ============================================================================ */
 
-/** Wires every control on the page to state changes and re-renders. Called once at start-up. */
-function bindEvents(){
-  $('ctaStart').addEventListener('click', function(){
-    $('profile').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block:'start' });
-    setTimeout(function(){ $('incomeInput').focus({ preventScroll:true }); }, 600);
-  });
-  $('ctaCalc').addEventListener('click', handleCalc);
+  /**
+   * Escapes text for safe insertion into HTML — element content AND attribute
+   * values (quotes included). Every user-provided string passes through here
+   * before touching innerHTML, so a category called `"><img onerror=…>`
+   * is shown as text instead of running as code.
+   * @param {*} value
+   * @returns {string}
+   */
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-  // Profile: live hourly preview while typing; full update once results are visible.
-  ['ageInput','currencySelect','incomeInput','savingsInput','hoursWeekInput','weeksYearInput'].forEach(function(id){
-    $(id).addEventListener('input', function(){
-      readProfile();
-      renderHourlyPreview();
-      if(!revealed) return;
+  /** The selected currency symbol. */
+  function cur() {
+    return state.profile.currency;
+  }
+
+  /**
+   * Formats an amount of money in the selected currency: "€1,300" or
+   * "1,300 CHF" (CHF is conventionally written after the number).
+   * @param {number} v
+   * @param {number} [decimals=0]
+   * @returns {string}
+   */
+  function fmtMoney(v, decimals) {
+    decimals = decimals || 0;
+    if (!isFinite(v)) v = 0;
+    const n = Math.abs(v).toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    const sign = v < 0 ? '−' : '';
+    return cur() === 'CHF' ? `${sign + n} CHF` : sign + cur() + n;
+  }
+
+  /** Formats a number as a rounded integer with thousands separators. */
+  function fmtInt(v) {
+    return Math.round(isFinite(v) ? v : 0).toLocaleString('en-US');
+  }
+
+  /** Formats a number with one decimal and thousands separators. */
+  function fmt1(v) {
+    return (isFinite(v) ? v : 0).toLocaleString('en-US', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    });
+  }
+
+  /** English plural helper: plural(1,'year','years') → "1 year". */
+  function plural(n, one, many) {
+    return `${n} ${n === 1 ? one : many}`;
+  }
+
+  /**
+   * Turns a number of months into "3 years 4 months" (the format from the brief).
+   * @param {number} months
+   * @returns {string}
+   */
+  function fmtDuration(months) {
+    if (months <= 0) return 'Already covered';
+    const y = Math.floor(months / 12),
+      m = months % 12;
+    if (y > 99) return 'Over 99 years';
+    return [y ? plural(y, 'year', 'years') : '', m ? plural(m, 'month', 'months') : '']
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  /** True when the user has asked their OS for reduced motion. */
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /**
+   * Colours the part of a range slider left of its thumb: CSS draws the track
+   * as a gradient that stops at --fill, and this keeps --fill in step with the
+   * slider's value, min and max.
+   * @param {HTMLInputElement} el
+   */
+  function paintRange(el) {
+    const min = parseFloat(el.min) || 0;
+    let max = parseFloat(el.max);
+    const v = parseFloat(el.value) || 0;
+    if (!isFinite(max)) max = 100;
+    const pct = max > min ? ((v - min) / (max - min)) * 100 : 100;
+    el.style.setProperty('--fill', `${Math.max(0, Math.min(100, pct))}%`);
+  }
+
+  /**
+   * Plays the leaving animation on a list item (.leaving), then calls `done`
+   * (which removes it from the state and re-renders). Straight away with
+   * reduced motion; a timer makes sure `done` runs even if no animation does.
+   * @param {Element|null} el
+   * @param {function} done
+   */
+  function leave(el, done) {
+    let finished = false;
+    function finish() {
+      if (!finished) {
+        finished = true;
+        done();
+      }
+    }
+    if (!el || prefersReducedMotion()) {
+      finish();
+      return;
+    }
+    el.classList.add('leaving');
+    el.addEventListener('animationend', finish);
+    setTimeout(finish, 450);
+  }
+
+  /**
+   * Animates a number from whatever it currently shows to `target`, so a
+   * total ticks from 1,300 to 1,340 instead of restarting from zero on every
+   * keystroke. The last value is remembered on the element itself.
+   * @param {HTMLElement} el
+   * @param {number} target
+   * @param {function(number):string} format
+   * @param {number} [duration=700] - milliseconds
+   */
+  function animateNumber(el, target, format, duration) {
+    if (!isFinite(target)) target = 0;
+    const from = typeof el._value === 'number' ? el._value : 0;
+    el._value = target;
+    if (from === target || prefersReducedMotion()) {
+      el.textContent = format(target);
+      return;
+    }
+    let start = null;
+    duration = duration || 700;
+    function tick(ts) {
+      if (start === null) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      el.textContent = format(from + (target - from) * (1 - Math.pow(1 - p, 3))); // ease-out cubic
+      if (p < 1 && el._value === target) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ============================================================================
+     DERIVED FIGURES
+     The single source of every number shown on the page.
+     ============================================================================ */
+
+  /**
+   * Hourly income = yearly income ÷ hours worked per year.
+   * e.g. €1,500/month, 40 h/week, 52 weeks → 18,000 ÷ 2,080 = €8.65/hour.
+   * @returns {number} 0 if the profile is incomplete
+   */
+  function hourlyIncome() {
+    const p = state.profile;
+    const hours = p.hoursPerWeek * p.weeksPerYear;
+    return hours > 0 ? (p.monthlyIncome * 12) / hours : 0;
+  }
+
+  /** Hours in one working day: weekly hours spread over a 5-day week. */
+  function workDayHours() {
+    return state.profile.hoursPerWeek / 5;
+  }
+
+  /**
+   * Converts a price into time.
+   * @param {number} price
+   * @returns {{hours:number, days:number}|null} null when no hourly rate is available
+   */
+  function timePrice(price) {
+    const hi = hourlyIncome();
+    if (hi <= 0) return null;
+    const hours = price / hi;
+    return { hours, days: hours / workDayHours() };
+  }
+
+  /** Total of all monthly expenses. */
+  function monthlyCost() {
+    return state.expenses.reduce((sum, e) => sum + e.monthly, 0);
+  }
+
+  /** Income minus expenses, per month (negative when spending more than earning). */
+  function monthlySurplus() {
+    return state.profile.monthlyIncome - monthlyCost();
+  }
+
+  /**
+   * The target an expense is dragged to in What If, never above the expense
+   * itself (the user may have lowered the expense since setting the target).
+   * @param {object} e - expense
+   * @returns {number}
+   */
+  function whatIfTarget(e) {
+    const t = state.whatIfTargets[e.id];
+    return t == null || t > e.monthly ? e.monthly : t;
+  }
+
+  /** Monthly savings used by the projection: the user's choice, or their surplus by default. */
+  function projectionSavings() {
+    const f = state.future.monthlySavings;
+    return f == null ? Math.max(0, Math.round(monthlySurplus())) : f;
+  }
+
+  /* ============================================================================
+     RENDER: PROFILE
+     ============================================================================ */
+
+  /** Updates the live hourly-income card under the profile form. */
+  function renderHourlyPreview() {
+    const p = state.profile,
+      h = hourlyIncome();
+    $('hourlyPreview').textContent = h > 0 ? `${fmtMoney(h, 2)} / hour` : '—';
+    $('hourlyFormula').textContent =
+      h > 0
+        ? `${fmtMoney(p.monthlyIncome * 12)} ÷ ${fmtInt(p.hoursPerWeek * p.weeksPerYear)} hours a year`
+        : '';
+  }
+
+  /* ============================================================================
+     RENDER: YOUR LIFE COST
+     ============================================================================ */
+
+  /** Rebuilds the list of expense rows (only when an item is added or removed). */
+  function renderExpenses() {
+    $('expenseList').innerHTML =
+      state.expenses
+        .map(
+          (e) =>
+            `<div class="item-row">` +
+            `<input type="text" class="item-name" value="${escapeHtml(e.name)}" data-id="${e.id}" maxlength="${BOUNDS.nameLength}" placeholder="Category name" aria-label="Category name">` +
+            `<div class="item-amount-wrap">` +
+            `<span class="curr" aria-hidden="true">${escapeHtml(cur())}</span>` +
+            `<input type="number" class="item-amount" value="${e.monthly}" min="0" step="1" inputmode="decimal" data-id="${e.id}" aria-label="Monthly amount for ${escapeHtml(e.name || 'this category')}"></div>` +
+            `<button class="item-remove" type="button" data-id="${e.id}" aria-label="Remove ${escapeHtml(e.name || 'category')}">×</button></div>`
+        )
+        .join('') || '<p class="list-empty">No categories yet. Add your first one below.</p>';
+  }
+
+  /** Monthly / yearly / daily / hourly cost of living. */
+  function renderExpenseTotals() {
+    const monthly = monthlyCost(),
+      yearly = monthly * 12;
+    const money0 = (v) => fmtMoney(v),
+      money2 = (v) => fmtMoney(v, 2);
+    animateNumber($('monthlyCostNum'), monthly, money0);
+    animateNumber($('yearlyCostNum'), yearly, money0);
+    animateNumber($('dailyCostNum'), yearly / 365, money2);
+    animateNumber($('hourlyCostNum'), yearly / 365 / 24, money2);
+  }
+
+  /* ============================================================================
+     RENDER: THE TIME PRICE
+     ============================================================================ */
+
+  /** The big dark readout that converts the typed price into hours, live. */
+  function renderTimePriceReadout() {
+    const name = $('tpName').value.trim();
+    const price = num($('tpPrice').value, 0, BOUNDS.amount[1], 0);
+    const tp = timePrice(price);
+    $('tprPrice').textContent = (name ? `${name} — ` : '') + fmtMoney(price);
+    animateNumber($('tprHours'), tp ? tp.hours : 0, fmt1, 400);
+    $('tprDays').textContent = tp && price > 0 ? `${fmt1(tp.days)} working days` : '—';
+    $('addPurchase').disabled = !(name && price > 0);
+  }
+
+  /** The saved shopping list: price → hours → working days, newest first. */
+  function renderPurchases() {
+    const list = $('purchaseList');
+    if (state.purchases.length === 0) {
+      list.innerHTML = '';
+      return;
+    }
+    list.innerHTML =
+      `<div class="purchase-head" aria-hidden="true">` +
+      `<span>Item</span>` +
+      `<span>Hours</span>` +
+      `<span>Days</span>` +
+      `<span></span></div>` +
+      state.purchases
+        .slice()
+        .reverse()
+        .map((p) => {
+          const tp = timePrice(p.price);
+          return (
+            `<div class="purchase-row">` +
+            `<span class="purchase-name">${escapeHtml(p.name)}<small>${fmtMoney(p.price)}</small></span>` +
+            `<span class="purchase-metric">${tp ? `${fmt1(tp.hours)} hrs` : '—'}</span>` +
+            `<span class="purchase-metric">${tp ? `${fmt1(tp.days)} days` : '—'}</span>` +
+            `<button class="item-remove" type="button" data-id="${p.id}" aria-label="Remove ${escapeHtml(p.name)}">×</button></div>`
+          );
+        })
+        .join('');
+  }
+
+  /* ============================================================================
+     RENDER: DREAMS
+     ============================================================================ */
+
+  /**
+   * Dream cards: price, hours and working days it represents, and — when a
+   * monthly saving amount is set — how long it takes to afford.
+   */
+  function renderDreams() {
+    const wrap = $('dreamsList');
+    const save = state.dreamMonthlySavings;
+    const input = $('dreamSavings');
+    if (document.activeElement !== input) input.value = save || '';
+    const surplus = monthlySurplus();
+    $('dreamSavingsHint').textContent =
+      surplus > 0
+        ? `Your current surplus is ${fmtMoney(surplus)} a month (income minus expenses).`
+        : 'Right now your expenses use up all of your income.';
+
+    if (state.dreams.length === 0) {
+      wrap.innerHTML = '<p class="list-empty">No dreams added yet. What are you working toward?</p>';
+      return;
+    }
+    wrap.innerHTML = state.dreams
+      .slice()
+      .reverse()
+      .map((d) => {
+        const tp = timePrice(d.price);
+        const months = save > 0 ? Math.ceil(d.price / save) : null;
+        return (
+          `<div class="dream-card">` +
+          `<div class="dream-top">` +
+          `<span class="dream-name">${escapeHtml(d.name)}</span>` +
+          `<span class="dream-price">${fmtMoney(d.price)}</span></div>` +
+          `<div class="dream-metrics">` +
+          `<span>Hours of work<b>${tp ? fmtInt(tp.hours) : '—'}</b></span>` +
+          `<span>Working days<b>${tp ? fmtInt(tp.days) : '—'}</b></span>` +
+          `<span>Time to afford<b>${months ? fmtDuration(months) : 'Set a monthly amount'}</b></span>` +
+          `<button class="item-remove" type="button" data-id="${d.id}" aria-label="Remove ${escapeHtml(d.name)}">×</button></div></div>`
+        );
+      })
+      .join('');
+  }
+
+  /* ============================================================================
+     RENDER: WHAT IF
+     ============================================================================ */
+
+  /** Rebuilds one slider per expense (only when the list of expenses changes). */
+  function renderWhatIf() {
+    const wrap = $('whatIfList');
+    const items = state.expenses.filter((e) => e.monthly > 0);
+    if (items.length === 0) {
+      wrap.innerHTML = '<p class="list-empty">Add some expenses above first.</p>';
+    } else {
+      wrap.innerHTML = items
+        .map((e) => {
+          const label = e.name || 'Unnamed category';
+          return (
+            `<div class="whatif-row">` +
+            `<div class="whatif-top">` +
+            `<span class="whatif-name">${escapeHtml(label)}</span>` +
+            `<span class="whatif-values" id="wif-${e.id}"></span></div>` +
+            `<input type="range" class="whatif-slider" data-id="${e.id}" min="0" max="${e.monthly}" step="1" value="${whatIfTarget(e)}" aria-label="New monthly target for ${escapeHtml(label)}"></div>`
+          );
+        })
+        .join('');
+    }
+    updateWhatIf();
+  }
+
+  /**
+   * Updates the "€250 → €100" labels and the savings summary without
+   * rebuilding the sliders — safe to call on every drag event.
+   */
+  function updateWhatIf() {
+    let monthlySaved = 0;
+    state.expenses.forEach((e) => {
+      const t = whatIfTarget(e);
+      monthlySaved += e.monthly - t;
+      const label = $(`wif-${e.id}`);
+      if (label) label.innerHTML = `${fmtMoney(e.monthly)} <span class="to">→ ${fmtMoney(t)}</span>`;
+    });
+    const yearly = monthlySaved * 12;
+    const hi = hourlyIncome();
+    const hours = hi > 0 ? yearly / hi : 0;
+    $('wifMonthly').textContent = `${fmtMoney(monthlySaved)} / month`;
+    $('wifYearly').textContent = `${fmtMoney(yearly)} a year`;
+    $('wifHours').textContent = `${fmtInt(hours)} hours of work saved every year`;
+    $('wifTenYear').textContent =
+      monthlySaved > 0
+        ? `Kept for 10 years: ${fmtMoney(yearly * 10)} — ${fmtInt(hours * 10)} hours of your life back.`
+        : 'Move a slider to see what ten years of that change would give back.';
+    Array.prototype.forEach.call(document.querySelectorAll('.whatif-slider'), paintRange);
+  }
+
+  /* ============================================================================
+     RENDER: LIFESTYLE MODES
+     ============================================================================ */
+
+  /** Three cards (Minimal / Current / Luxury) computed from the user's own spending. */
+  function renderLifestyle() {
+    const current = monthlyCost(),
+      hi = hourlyIncome();
+    $('lifestyleSentence').innerHTML =
+      `Your current lifestyle requires approximately <b>${fmtMoney(current * 12)}</b> a year.`;
+    $('lifestyleGrid').innerHTML = LIFESTYLE_MODES.map((m) => {
+      const monthly = current * m.factor,
+        yearly = monthly * 12;
+      const required = yearly / INCOME_MARGIN;
+      return (
+        `<div class="lifestyle-card${m.factor === 1 ? ' current' : ''}">` +
+        `<div class="lifestyle-mode">${m.name} <small>· ${m.note}</small></div>` +
+        `<div class="lifestyle-monthly">${fmtMoney(monthly)}<span> / mo</span></div>` +
+        `<div class="lifestyle-detail">` +
+        `<span>Yearly cost</span>` +
+        `<b>${fmtMoney(yearly)}</b></div>` +
+        `<div class="lifestyle-detail">` +
+        `<span>Required income / yr</span>` +
+        `<b>${fmtMoney(required)}</b></div>` +
+        `<div class="lifestyle-detail">` +
+        `<span>Hours of work / yr</span>` +
+        `<b>${hi > 0 ? fmtInt(required / hi) : '—'}</b></div></div>`
+      );
+    }).join('');
+  }
+
+  /* ============================================================================
+     RENDER: FINANCIAL FUTURE
+     ============================================================================ */
+
+  /**
+   * The ages shown on the timeline: today, then the brief's milestones
+   * (25, 30, 40, 50, 60…) that are still ahead. Someone aged 28 sees
+   * 28 → 30 → 40 → 50 → 60 → 70.
+   * @returns {number[]}
+   */
+  function timelineAges() {
+    const age = state.profile.age;
+    return [age].concat(TIMELINE_AGES.filter((a) => a > age)).slice(0, TIMELINE_POINTS);
+  }
+
+  /**
+   * Runs the projection year by year, from today to the last timeline age.
+   * Each year: spending grows by (1 + inflation) × (1 + lifestyle growth),
+   * income by salary growth, and the monthly savings are added to the
+   * savings balance (no interest — deliberately simple and transparent).
+   *
+   * @returns {{years:object[], milestones:object[], crossoverAge:(number|null)}}
+   *   years: one entry per year with cumulative spent and saved;
+   *   milestones: the entries at the timeline ages;
+   *   crossoverAge: first age at which yearly spending exceeds yearly income.
+   */
+  function projectFuture() {
+    const f = state.future,
+      p = state.profile;
+    const ages = timelineAges();
+    const spendGrowth = (1 + f.inflation / 100) * (1 + f.expenseGrowth / 100);
+    const incomeGrowth = 1 + f.salaryGrowth / 100;
+    const yearlyCost = monthlyCost() * 12,
+      yearlyIncome = p.monthlyIncome * 12;
+    const yearlySave = projectionSavings() * 12;
+
+    let spent = 0;
+    let saved = p.savings;
+    let crossoverAge = null;
+    const years = [];
+    const last = ages[ages.length - 1] - p.age;
+    for (let y = 0; y <= last; y++) {
+      years.push({ age: p.age + y, spent, saved });
+      const cost = yearlyCost * Math.pow(spendGrowth, y);
+      const income = yearlyIncome * Math.pow(incomeGrowth, y);
+      if (crossoverAge === null && cost > income) crossoverAge = p.age + y;
+      spent += cost;
+      saved += yearlySave;
+    }
+    const milestones = ages.map((a) => years[a - p.age]);
+    return { years, milestones, crossoverAge };
+  }
+
+  /** Compact money label for chart axes: €1.2M, €340k, €900. */
+  function fmtShort(v) {
+    if (v >= 1e6) return fmtMoney(v / 1e6, 1).replace(/(\.0)?( CHF)?$/, 'M$2');
+    if (v >= 1e3) return fmtMoney(v / 1e3).replace(/( CHF)?$/, 'k$1');
+    return fmtMoney(v);
+  }
+
+  /**
+   * Draws the projection chart in SVG: two lines (spent, saved) over age,
+   * with gridlines, axis labels and a dashed marker where spending would
+   * overtake income. Colours come from CSS classes, not hardcoded values.
+   * @param {object} proj - result of projectFuture()
+   */
+  function renderFutureChart(proj) {
+    // The drawing is sized to the chart's real width on screen (not a fixed
+    // 600 units scaled down), so axis labels stay legible on a phone.
+    const svgEl = $('futureChart');
+    const W = Math.round(Math.max(300, Math.min(760, svgEl.parentNode.clientWidth - 24 || 600)));
+    const H = Math.round(Math.max(200, W * 0.4)),
+      L = 54,
+      R = 12,
+      T = 12,
+      B = 28;
+    svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const ys = proj.years;
+    const a0 = ys[0].age,
+      a1 = ys[ys.length - 1].age;
+    const yMax = Math.max(1, d3max(ys, 'spent'), d3max(ys, 'saved')) * 1.08;
+    const x = (age) => L + (a1 === a0 ? 0 : (age - a0) / (a1 - a0)) * (W - L - R);
+    const y = (v) => H - B - (v / yMax) * (H - T - B);
+    const line = (key) => ys.map((p) => `${x(p.age).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
+
+    let svg = '';
+    for (let i = 0; i <= 4; i++) {
+      // horizontal gridlines with value labels
+      const v = (yMax / 4) * i;
+      svg +=
+        `<line class="grid-line" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>` +
+        `<text class="axis-label" x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${escapeHtml(fmtShort(v))}</text>`;
+    }
+    let lastLabelX = -Infinity;
+    proj.milestones.forEach((m) => {
+      // age labels, skipping any that would overlap the previous one
+      if (x(m.age) - lastLabelX < 24) return;
+      lastLabelX = x(m.age);
+      svg += `<text class="axis-label" x="${x(m.age)}" y="${H - 8}" text-anchor="middle">${m.age}</text>`;
+    });
+    if (proj.crossoverAge !== null && proj.crossoverAge > a0) {
+      svg += `<line class="crossover-line" x1="${x(proj.crossoverAge)}" x2="${x(proj.crossoverAge)}" y1="${T}" y2="${H - B}"/>`;
+    }
+    svg +=
+      `<polygon class="area-spent" points="${x(a0)},${y(0)} ${line('spent')} ${x(a1)},${y(0)}"/>` +
+      `<polyline class="line-spent" points="${line('spent')}"/>` +
+      `<polyline class="line-saved" points="${line('saved')}"/>`;
+    proj.milestones.forEach((m) => {
+      svg +=
+        `<circle class="dot-spent" cx="${x(m.age)}" cy="${y(m.spent)}" r="4"/>` +
+        `<circle class="dot-saved" cx="${x(m.age)}" cy="${y(m.saved)}" r="3.5"/>`;
+    });
+    svgEl.innerHTML = svg;
+  }
+
+  /** Largest value of `key` in a list of objects. */
+  function d3max(list, key) {
+    return list.reduce((m, o) => Math.max(m, o[key]), 0);
+  }
+
+  /** Sliders, chart, milestone cells and the plain-language summary under the chart. */
+  function renderFuture() {
+    const f = state.future;
+    const save = projectionSavings();
+    $('fInflationVal').textContent = `${f.inflation}%`;
+    $('fSalaryGrowthVal').textContent = `${f.salaryGrowth}%`;
+    $('fExpenseGrowthVal').textContent = `${f.expenseGrowth}%`;
+    $('fMonthlySavingsVal').textContent =
+      fmtMoney(save) + (f.monthlySavings == null ? ' (your surplus)' : '');
+    const slider = $('fMonthlySavings');
+    slider.max = Math.max(3000, Math.ceil(state.profile.monthlyIncome / 100) * 100, save);
+    if (document.activeElement !== slider) slider.value = save;
+    ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth'].forEach((id) => {
+      const el = $(id);
+      if (document.activeElement !== el)
+        el.value =
+          f[{ fInflation: 'inflation', fSalaryGrowth: 'salaryGrowth', fExpenseGrowth: 'expenseGrowth' }[id]];
+    });
+    ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth', 'fMonthlySavings'].forEach((id) => {
+      paintRange($(id));
+    });
+
+    const proj = projectFuture();
+    renderFutureChart(proj);
+    $('milestoneTable').innerHTML = proj.milestones
+      .map(
+        (m, i) =>
+          `<div class="milestone-cell">` +
+          `<div class="milestone-age">${i === 0 ? 'TODAY · ' : 'AGE '}${m.age}</div>` +
+          `<div class="milestone-val" title="Spent so far">${fmtShort(m.spent)}</div>` +
+          `<div class="milestone-val saved" title="Saved so far">${fmtShort(m.saved)} saved</div></div>`
+      )
+      .join('');
+
+    const end = proj.milestones[proj.milestones.length - 1];
+    const note = $('futureNote');
+    if (proj.crossoverAge !== null) {
+      note.className = 'future-note';
+      note.textContent =
+        proj.crossoverAge === state.profile.age
+          ? 'Right now your expenses are higher than your income.'
+          : `At these rates, your yearly expenses would overtake your income around age ${proj.crossoverAge}.`;
+    } else {
+      note.className = 'future-note good';
+      note.textContent = `By ${end.age}, this lifestyle would have cost about ${fmtMoney(end.spent)}, and your income stays ahead of your expenses the whole way.`;
+    }
+  }
+
+  /* ============================================================================
+     RENDER: WORTH SCORE
+     ============================================================================ */
+
+  /** Clamps a number to the 0–1 range. */
+  function clamp01(v) {
+    return Math.max(0, Math.min(1, v));
+  }
+
+  /**
+   * The WORTH score (0–100), from three factors, each scored 0–100:
+   *  - Savings rate (55%): share of income left after expenses; 100 = saving it all.
+   *  - Emergency runway (25%): savings ÷ 6 months of expenses; 100 = six months covered.
+   *  - Income / cost ratio (20%): (income ÷ expenses) − 1; 100 = earning twice what you spend.
+   * Weights favour the habit (saving) over the stock (savings) on purpose:
+   * the app is about how you trade time for money every month.
+   */
+  function renderScore() {
+    const income = state.profile.monthlyIncome,
+      cost = monthlyCost(),
+      savings = state.profile.savings;
+    const factors = [
+      {
+        label: 'Savings rate',
+        weight: 0.55,
+        val: income > 0 ? clamp01((income - cost) / income) * 100 : 0,
+        hint:
+          income > 0
+            ? `${fmtInt(Math.max(0, ((income - cost) / income) * 100))}% of your income is left after expenses.`
+            : 'Add an income to calculate this.'
+      },
+      {
+        label: 'Emergency runway',
+        weight: 0.25,
+        val: cost > 0 ? clamp01(savings / (cost * 6)) * 100 : savings > 0 ? 100 : 0,
+        hint:
+          cost > 0
+            ? `Your savings cover ${fmt1(savings / cost)} months of expenses (target: 6).`
+            : 'No expenses entered.'
+      },
+      {
+        label: 'Income / cost ratio',
+        weight: 0.2,
+        val: cost > 0 ? clamp01(income / cost - 1) * 100 : income > 0 ? 100 : 0,
+        hint:
+          cost > 0
+            ? `You earn ${(income / cost).toFixed(2)}× what you spend (100 points at 2×).`
+            : 'No expenses entered.'
+      }
+    ];
+    const score = Math.round(factors.reduce((s, f) => s + f.val * f.weight, 0));
+    animateNumber($('scoreNum'), score, fmtInt, 1000);
+
+    const wrap = $('scoreFactors');
+    const oldWidths = Array.prototype.map.call(
+      wrap.querySelectorAll('.score-bar-fill'),
+      (el) => el.style.width
+    );
+    wrap.innerHTML = factors
+      .map(
+        (f, i) =>
+          `<div>` +
+          `<div class="score-factor-label">` +
+          `<span>${f.label} <small>· ${Math.round(f.weight * 100)}%</small></span>` +
+          `<b>${Math.round(f.val)}</b></div>` +
+          `<div class="score-bar-track">` +
+          `<div class="score-bar-fill" style="width:${oldWidths[i] || '0%'}"></div></div>` +
+          `<div class="score-factor-hint">${escapeHtml(f.hint)}</div></div>`
+      )
+      .join('');
+    const fills = wrap.querySelectorAll('.score-bar-fill');
+    requestAnimationFrame(() => {
+      Array.prototype.forEach.call(fills, (el, i) => {
+        el.style.width = `${factors[i].val}%`;
+      });
+    });
+  }
+
+  /* ============================================================================
+     RENDER: THE BIG NUMBER
+     ============================================================================ */
+
+  /** The closing screen: monthly cost, yearly cost, and the hours of work it takes. */
+  function renderFinale() {
+    const monthly = monthlyCost(),
+      yearly = monthly * 12,
+      hi = hourlyIncome();
+    animateNumber($('finaleMonthly'), monthly, (v) => fmtMoney(v), 900);
+    $('finaleYearly').textContent = `${fmtMoney(yearly)} / year`;
+    $('finaleHours').textContent = hi > 0 ? `${fmtInt(yearly / hi)} hours of work / year` : '';
+  }
+
+  /* ============================================================================
+     FLOW
+     ============================================================================ */
+
+  const RESULT_SECTIONS = [
+    'lifeCost',
+    'timePrice',
+    'dreams',
+    'whatIf',
+    'lifestyle',
+    'future',
+    'worthScore',
+    'finale'
+  ];
+
+  /** Every section that depends on totals — called whenever a number changes. */
+  function renderDependents() {
+    renderHourlyPreview();
+    renderExpenseTotals();
+    renderTimePriceReadout();
+    renderPurchases();
+    renderDreams();
+    updateWhatIf();
+    renderLifestyle();
+    renderFuture();
+    renderScore();
+    renderFinale();
+  }
+
+  /** Full render, including lists whose structure may have changed. */
+  function renderAll() {
+    renderExpenses();
+    renderWhatIf();
+    renderDependents();
+  }
+
+  /**
+   * Shows the result sections (hidden until the profile is submitted once).
+   * @param {boolean} scroll - scroll to the first result
+   */
+  function revealResults(scroll) {
+    renderAll();
+    RESULT_SECTIONS.forEach((id) => {
+      $(id).hidden = false;
+    });
+    revealed = true;
+    setupReveal();
+    if (scroll)
+      $('lifeCost').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  /** The profile fields and their bounds, in one place for reading and validation. */
+  const PROFILE_FIELDS = [
+    { id: 'ageInput', key: 'age', bounds: BOUNDS.age, int: true },
+    { id: 'incomeInput', key: 'monthlyIncome', bounds: BOUNDS.income },
+    { id: 'savingsInput', key: 'savings', bounds: BOUNDS.savings },
+    { id: 'hoursWeekInput', key: 'hoursPerWeek', bounds: BOUNDS.hoursPerWeek },
+    { id: 'weeksYearInput', key: 'weeksPerYear', bounds: BOUNDS.weeksPerYear }
+  ];
+
+  /**
+   * Reads the profile form into state. Values out of range are flagged on
+   * the field (aria-invalid) and clamped for the maths, so a half-typed
+   * number never produces nonsense elsewhere on the page.
+   * @returns {string|null} an error message for the first invalid field, or null
+   */
+  function readProfile() {
+    let error = null;
+    state.profile.currency =
+      CURRENCIES.indexOf($('currencySelect').value) !== -1 ? $('currencySelect').value : '€';
+    PROFILE_FIELDS.forEach((f) => {
+      const el = $(f.id),
+        raw = parseFloat(el.value);
+      const bad =
+        !isFinite(raw) || raw < f.bounds[0] || raw > f.bounds[1] || (f.key === 'monthlyIncome' && raw <= 0);
+      el.setAttribute('aria-invalid', String(bad));
+      if (bad && !error) {
+        error =
+          f.key === 'monthlyIncome'
+            ? 'Enter a monthly income greater than zero.'
+            : `Enter a value between ${f.bounds[0]} and ${fmtInt(f.bounds[1])} for “${el.labels[0].textContent}”.`;
+      }
+      const v = num(raw, f.bounds[0], f.bounds[1], state.profile[f.key]);
+      state.profile[f.key] = f.int ? Math.round(v) : v;
+    });
+    return error;
+  }
+
+  /** "Show my worth": validate, save, reveal the results. */
+  function handleCalc() {
+    const error = readProfile();
+    const box = $('profileError');
+    if (error) {
+      box.textContent = error;
+      box.hidden = false;
+      return;
+    }
+    box.hidden = true;
+    saveState();
+    revealResults(true);
+  }
+
+  /* ============================================================================
+     EVENTS
+     One delegated listener per list: rows are rebuilt from state, so
+     listening on the stable container avoids re-attaching handlers.
+     ============================================================================ */
+
+  /** Finds the item with `id` in one of the state lists. */
+  function findItem(list, id) {
+    return list.filter((x) => x.id === id)[0];
+  }
+
+  /**
+   * Adds an item from a name + price pair of inputs (Time Price and Dreams).
+   * @param {string} nameId
+   * @param {string} priceId
+   * @param {object[]} list - state list to add to
+   * @param {string} prefix - id prefix
+   * @returns {boolean} true if something was added
+   */
+  function addFromInputs(nameId, priceId, list, prefix) {
+    const name = cleanName($(nameId).value.trim());
+    const price = num($(priceId).value, 0, BOUNDS.amount[1], 0);
+    if (!name || price <= 0 || list.length >= BOUNDS.listLength) return false;
+    list.push({ id: uid(prefix), name, price });
+    $(nameId).value = '';
+    $(priceId).value = '';
+    $(nameId).focus();
+    saveState();
+    return true;
+  }
+
+  /** Wires every control on the page to state changes and re-renders. Called once at start-up. */
+  function bindEvents() {
+    $('ctaStart').addEventListener('click', () => {
+      $('profile').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+      setTimeout(() => {
+        $('incomeInput').focus({ preventScroll: true });
+      }, 600);
+    });
+    $('ctaCalc').addEventListener('click', handleCalc);
+
+    // Profile: live hourly preview while typing; full update once results are visible.
+    ['ageInput', 'currencySelect', 'incomeInput', 'savingsInput', 'hoursWeekInput', 'weeksYearInput'].forEach(
+      (id) => {
+        $(id).addEventListener('input', () => {
+          readProfile();
+          renderHourlyPreview();
+          if (!revealed) return;
+          saveState();
+          if (id === 'currencySelect') renderExpenses(); // the currency symbol lives inside each row
+          renderDependents();
+        });
+      }
+    );
+
+    // Expenses: typing updates totals only; adding/removing rebuilds the list.
+    $('expenseList').addEventListener('input', (e) => {
+      const item = findItem(state.expenses, e.target.dataset.id);
+      if (!item) return;
+      if (e.target.classList.contains('item-name')) item.name = cleanName(e.target.value);
+      else item.monthly = num(e.target.value, BOUNDS.amount[0], BOUNDS.amount[1], 0);
       saveState();
-      if(id === 'currencySelect') renderExpenses();   // the currency symbol lives inside each row
       renderDependents();
     });
-  });
-
-  // Expenses: typing updates totals only; adding/removing rebuilds the list.
-  $('expenseList').addEventListener('input', function(e){
-    var item = findItem(state.expenses, e.target.dataset.id);
-    if(!item) return;
-    if(e.target.classList.contains('item-name')) item.name = cleanName(e.target.value);
-    else item.monthly = num(e.target.value, BOUNDS.amount[0], BOUNDS.amount[1], 0);
-    saveState();
-    renderDependents();
-  });
-  $('expenseList').addEventListener('change', function(e){
-    // When the user leaves an amount field, show the cleaned value and refresh the sliders.
-    var item = findItem(state.expenses, e.target.dataset.id);
-    if(!item) return;
-    if(e.target.classList.contains('item-amount')) e.target.value = item.monthly;
-    renderWhatIf();
-  });
-  $('expenseList').addEventListener('click', function(e){
-    var btn = e.target.closest('.item-remove'); if(!btn) return;
-    var id = btn.dataset.id;
-    leave(btn.closest('.item-row'), function(){
-      state.expenses = state.expenses.filter(function(x){ return x.id !== id; });
-      delete state.whatIfTargets[id];
-      saveState(); renderAll();
+    $('expenseList').addEventListener('change', (e) => {
+      // When the user leaves an amount field, show the cleaned value and refresh the sliders.
+      const item = findItem(state.expenses, e.target.dataset.id);
+      if (!item) return;
+      if (e.target.classList.contains('item-amount')) e.target.value = item.monthly;
+      renderWhatIf();
     });
-  });
-  $('addExpense').addEventListener('click', function(){
-    if(state.expenses.length >= BOUNDS.listLength) return;
-    state.expenses.push({ id:uid('e'), name:'', monthly:0 });
-    saveState(); renderExpenses();
-    var rows = document.querySelectorAll('#expenseList .item-row');
-    if(rows.length) rows[rows.length - 1].classList.add('enter');
-    var names = document.querySelectorAll('#expenseList .item-name');
-    if(names.length) names[names.length - 1].focus();
-  });
-
-  // Time price
-  ['tpName','tpPrice'].forEach(function(id){
-    $(id).addEventListener('input', renderTimePriceReadout);
-    $(id).addEventListener('keydown', function(e){
-      if(e.key !== 'Enter') return;
-      e.preventDefault();
-      if(id === 'tpName') $('tpPrice').focus(); else $('addPurchase').click();
+    $('expenseList').addEventListener('click', (e) => {
+      const btn = e.target.closest('.item-remove');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      leave(btn.closest('.item-row'), () => {
+        state.expenses = state.expenses.filter((x) => x.id !== id);
+        delete state.whatIfTargets[id];
+        saveState();
+        renderAll();
+      });
     });
-  });
-  $('addPurchase').addEventListener('click', function(){
-    if(addFromInputs('tpName', 'tpPrice', state.purchases, 'p')){
-      renderPurchases(); renderTimePriceReadout();
-      var first = document.querySelector('#purchaseList .purchase-row');      // newest first
-      if(first) first.classList.add('enter');
-    }
-  });
-  $('purchaseList').addEventListener('click', function(e){
-    var btn = e.target.closest('.item-remove'); if(!btn) return;
-    var id = btn.dataset.id;
-    leave(btn.closest('.purchase-row'), function(){
-      state.purchases = state.purchases.filter(function(x){ return x.id !== id; });
-      saveState(); renderPurchases();
+    $('addExpense').addEventListener('click', () => {
+      if (state.expenses.length >= BOUNDS.listLength) return;
+      state.expenses.push({ id: uid('e'), name: '', monthly: 0 });
+      saveState();
+      renderExpenses();
+      const rows = document.querySelectorAll('#expenseList .item-row');
+      if (rows.length) rows[rows.length - 1].classList.add('enter');
+      const names = document.querySelectorAll('#expenseList .item-name');
+      if (names.length) names[names.length - 1].focus();
     });
-  });
 
-  // Dreams
-  function updateDreamButton(){ $('addDream').disabled = !($('dreamName').value.trim() && num($('dreamPrice').value, 0, BOUNDS.amount[1], 0) > 0); }
-  ['dreamName','dreamPrice'].forEach(function(id){
-    $(id).addEventListener('input', updateDreamButton);
-    $(id).addEventListener('keydown', function(e){
-      if(e.key !== 'Enter') return;
-      e.preventDefault();
-      if(id === 'dreamName') $('dreamPrice').focus(); else $('addDream').click();
+    // Time price
+    ['tpName', 'tpPrice'].forEach((id) => {
+      $(id).addEventListener('input', renderTimePriceReadout);
+      $(id).addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        if (id === 'tpName') $('tpPrice').focus();
+        else $('addPurchase').click();
+      });
     });
-  });
-  $('addDream').addEventListener('click', function(){
-    if(addFromInputs('dreamName', 'dreamPrice', state.dreams, 'd')){
-      renderDreams(); updateDreamButton();
-      var first = document.querySelector('#dreamsList .dream-card');          // newest first
-      if(first) first.classList.add('enter');
-    }
-  });
-  $('dreamSavings').addEventListener('input', function(e){
-    state.dreamMonthlySavings = num(e.target.value, 0, BOUNDS.amount[1], 0);
-    saveState(); renderDreams();
-  });
-  $('dreamsList').addEventListener('click', function(e){
-    var btn = e.target.closest('.item-remove'); if(!btn) return;
-    var id = btn.dataset.id;
-    leave(btn.closest('.dream-card'), function(){
-      state.dreams = state.dreams.filter(function(x){ return x.id !== id; });
-      saveState(); renderDreams();
+    $('addPurchase').addEventListener('click', () => {
+      if (addFromInputs('tpName', 'tpPrice', state.purchases, 'p')) {
+        renderPurchases();
+        renderTimePriceReadout();
+        const first = document.querySelector('#purchaseList .purchase-row'); // newest first
+        if (first) first.classList.add('enter');
+      }
     });
-  });
-
-  // What if: dragging updates numbers only — the slider itself is never rebuilt mid-drag.
-  $('whatIfList').addEventListener('input', function(e){
-    if(!e.target.classList.contains('whatif-slider')) return;
-    state.whatIfTargets[e.target.dataset.id] = num(e.target.value, 0, BOUNDS.amount[1], 0);
-    saveState();
-    updateWhatIf();
-  });
-  $('whatIfReset').addEventListener('click', function(){
-    state.whatIfTargets = {};
-    saveState(); renderWhatIf();
-  });
-
-  // Financial future sliders
-  $('future').addEventListener('input', function(e){
-    var f = state.future, v = parseFloat(e.target.value);
-    switch(e.target.id){
-      case 'fInflation': f.inflation = num(v, 0, 10, 3); break;
-      case 'fSalaryGrowth': f.salaryGrowth = num(v, 0, 10, 3); break;
-      case 'fExpenseGrowth': f.expenseGrowth = num(v, 0, 10, 2); break;
-      case 'fMonthlySavings': f.monthlySavings = num(v, 0, BOUNDS.amount[1], 0); break;
-      default: return;
-    }
-    saveState();
-    renderFuture();
-  });
-
-  $('resetBtn').addEventListener('click', function(){
-    if(!confirm('Erase all your WORTH data? This can’t be undone.')) return;
-    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage unavailable: nothing to erase */ }
-    location.reload();
-  });
-}
-
-/** Thin bar at the top of the screen showing how far down the page you are. */
-function setupScrollProgress(){
-  var bar = $('progressBar'), ticking = false;
-  window.addEventListener('scroll', function(){
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(function(){          // at most one layout read per frame
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = (max > 0 ? window.scrollY / max * 100 : 0) + '%';
-      ticking = false;
+    $('purchaseList').addEventListener('click', (e) => {
+      const btn = e.target.closest('.item-remove');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      leave(btn.closest('.purchase-row'), () => {
+        state.purchases = state.purchases.filter((x) => x.id !== id);
+        saveState();
+        renderPurchases();
+      });
     });
-  }, { passive:true });
-}
 
-/** Cards that a warm light follows across (see "Card stock" and "Ink panels" in the stylesheet). */
-var LIGHT_SELECTOR = '.hourly-preview, .stat-card, .item-row, .purchase-row, .dream-card, .whatif-row, .lifestyle-card, .chart-wrap, .future-note, .time-price-readout, .whatif-summary';
-/** Cards that also lean towards the mouse in 3D. */
-var TILT_SELECTOR = '.time-price-readout';
-/** Buttons that lean a few pixels towards the cursor. */
-var MAGNET_SELECTOR = '.btn-primary';
-
-/**
- * Pointer effects, for mouse users only: on touch screens there is no hover,
- * and the effects would only get in the way. A single listener for the whole
- * page; on each animation frame it finds the card, tilting card and button
- * under the pointer and writes the pointer's position into their CSS
- * variables:
- *  - --px / --py: where the light is drawn on a card;
- *  - --rx / --ry: the tilt, a few degrees at most;
- *  - --mx / --my: the pull on a button.
- * When the pointer leaves an element its variables are removed and CSS eases
- * it back. Tilt and pull are skipped with reduced motion.
- */
-function setupPointerEffects(){
-  if(!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  var still = prefersReducedMotion();
-  var last = null, queued = false, tilted = null, pulled = null;
-
-  function clear(el, a, b){ if(el){ el.style.removeProperty(a); el.style.removeProperty(b); } }
-
-  function apply(){
-    queued = false;
-    var t = last.target && last.target.closest ? last.target : null;
-    var x = last.clientX, y = last.clientY;
-    var lit = t && t.closest(LIGHT_SELECTOR);
-    if(lit){
-      var r = lit.getBoundingClientRect();
-      lit.style.setProperty('--px', (x - r.left) + 'px');
-      lit.style.setProperty('--py', (y - r.top) + 'px');
+    // Dreams
+    function updateDreamButton() {
+      $('addDream').disabled = !(
+        $('dreamName').value.trim() && num($('dreamPrice').value, 0, BOUNDS.amount[1], 0) > 0
+      );
     }
-    if(still) return;
-    var tilt = t && t.closest(TILT_SELECTOR);
-    if(tilted !== tilt) clear(tilted, '--rx', '--ry');
-    tilted = tilt;
-    if(tilt){
-      var b = tilt.getBoundingClientRect();
-      tilt.style.setProperty('--rx', (((y - b.top) / b.height - 0.5) * -5).toFixed(2) + 'deg');
-      tilt.style.setProperty('--ry', (((x - b.left) / b.width - 0.5) * 6).toFixed(2) + 'deg');
-    }
-    var btn = t && t.closest(MAGNET_SELECTOR);
-    if(btn && btn.disabled) btn = null;
-    if(pulled !== btn) clear(pulled, '--mx', '--my');
-    pulled = btn;
-    if(btn){
-      var c = btn.getBoundingClientRect();
-      btn.style.setProperty('--mx', (((x - c.left) / c.width - 0.5) * 8).toFixed(1) + 'px');
-      btn.style.setProperty('--my', (((y - c.top) / c.height - 0.5) * 6).toFixed(1) + 'px');
-    }
+    ['dreamName', 'dreamPrice'].forEach((id) => {
+      $(id).addEventListener('input', updateDreamButton);
+      $(id).addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        if (id === 'dreamName') $('dreamPrice').focus();
+        else $('addDream').click();
+      });
+    });
+    $('addDream').addEventListener('click', () => {
+      if (addFromInputs('dreamName', 'dreamPrice', state.dreams, 'd')) {
+        renderDreams();
+        updateDreamButton();
+        const first = document.querySelector('#dreamsList .dream-card'); // newest first
+        if (first) first.classList.add('enter');
+      }
+    });
+    $('dreamSavings').addEventListener('input', (e) => {
+      state.dreamMonthlySavings = num(e.target.value, 0, BOUNDS.amount[1], 0);
+      saveState();
+      renderDreams();
+    });
+    $('dreamsList').addEventListener('click', (e) => {
+      const btn = e.target.closest('.item-remove');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      leave(btn.closest('.dream-card'), () => {
+        state.dreams = state.dreams.filter((x) => x.id !== id);
+        saveState();
+        renderDreams();
+      });
+    });
+
+    // What if: dragging updates numbers only — the slider itself is never rebuilt mid-drag.
+    $('whatIfList').addEventListener('input', (e) => {
+      if (!e.target.classList.contains('whatif-slider')) return;
+      state.whatIfTargets[e.target.dataset.id] = num(e.target.value, 0, BOUNDS.amount[1], 0);
+      saveState();
+      updateWhatIf();
+    });
+    $('whatIfReset').addEventListener('click', () => {
+      state.whatIfTargets = {};
+      saveState();
+      renderWhatIf();
+    });
+
+    // Financial future sliders
+    $('future').addEventListener('input', (e) => {
+      const f = state.future,
+        v = parseFloat(e.target.value);
+      switch (e.target.id) {
+        case 'fInflation':
+          f.inflation = num(v, 0, 10, 3);
+          break;
+        case 'fSalaryGrowth':
+          f.salaryGrowth = num(v, 0, 10, 3);
+          break;
+        case 'fExpenseGrowth':
+          f.expenseGrowth = num(v, 0, 10, 2);
+          break;
+        case 'fMonthlySavings':
+          f.monthlySavings = num(v, 0, BOUNDS.amount[1], 0);
+          break;
+        default:
+          return;
+      }
+      saveState();
+      renderFuture();
+    });
+
+    $('resetBtn').addEventListener('click', () => {
+      if (!confirm('Erase all your WORTH data? This can’t be undone.')) return;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        /* storage unavailable: nothing to erase */
+      }
+      location.reload();
+    });
   }
 
-  document.addEventListener('pointermove', function(e){
-    if(e.pointerType !== 'mouse') return;
-    last = e;
-    if(!queued){ queued = true; requestAnimationFrame(apply); }
-  }, { passive:true });
-  // The pointer left the window: let everything settle back.
-  document.documentElement.addEventListener('mouseleave', function(){
-    clear(tilted, '--rx', '--ry'); clear(pulled, '--mx', '--my');
-    tilted = pulled = null;
-  });
-}
-
-/** Fades sections in as they scroll into view; shows everything at once on browsers without IntersectionObserver. */
-function setupReveal(){
-  var els = document.querySelectorAll('.reveal:not(.is-visible)');
-  if(!('IntersectionObserver' in window)){
-    Array.prototype.forEach.call(els, function(el){ el.classList.add('is-visible'); });
-    return;
+  /** Thin bar at the top of the screen showing how far down the page you are. */
+  function setupScrollProgress() {
+    const bar = $('progressBar');
+    let ticking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          // at most one layout read per frame
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.width = `${max > 0 ? (window.scrollY / max) * 100 : 0}%`;
+          ticking = false;
+        });
+      },
+      { passive: true }
+    );
   }
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(en.isIntersecting){ en.target.classList.add('is-visible'); obs.unobserve(en.target); }
+
+  /** Cards that a warm light follows across (see "Card stock" and "Ink panels" in the stylesheet). */
+  const LIGHT_SELECTOR =
+    '.hourly-preview, .stat-card, .item-row, .purchase-row, .dream-card, .whatif-row, .lifestyle-card, .chart-wrap, .future-note, .time-price-readout, .whatif-summary';
+  /** Cards that also lean towards the mouse in 3D. */
+  const TILT_SELECTOR = '.time-price-readout';
+  /** Buttons that lean a few pixels towards the cursor. */
+  const MAGNET_SELECTOR = '.btn-primary';
+
+  /**
+   * Pointer effects, for mouse users only: on touch screens there is no hover,
+   * and the effects would only get in the way. A single listener for the whole
+   * page; on each animation frame it finds the card, tilting card and button
+   * under the pointer and writes the pointer's position into their CSS
+   * variables:
+   *  - --px / --py: where the light is drawn on a card;
+   *  - --rx / --ry: the tilt, a few degrees at most;
+   *  - --mx / --my: the pull on a button.
+   * When the pointer leaves an element its variables are removed and CSS eases
+   * it back. Tilt and pull are skipped with reduced motion.
+   */
+  function setupPointerEffects() {
+    if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const still = prefersReducedMotion();
+    let last = null,
+      queued = false,
+      tilted = null,
+      pulled = null;
+
+    function clear(el, a, b) {
+      if (el) {
+        el.style.removeProperty(a);
+        el.style.removeProperty(b);
+      }
+    }
+
+    function apply() {
+      queued = false;
+      const t = last.target && last.target.closest ? last.target : null;
+      const x = last.clientX,
+        y = last.clientY;
+      const lit = t && t.closest(LIGHT_SELECTOR);
+      if (lit) {
+        const r = lit.getBoundingClientRect();
+        lit.style.setProperty('--px', `${x - r.left}px`);
+        lit.style.setProperty('--py', `${y - r.top}px`);
+      }
+      if (still) return;
+      const tilt = t && t.closest(TILT_SELECTOR);
+      if (tilted !== tilt) clear(tilted, '--rx', '--ry');
+      tilted = tilt;
+      if (tilt) {
+        const b = tilt.getBoundingClientRect();
+        tilt.style.setProperty('--rx', `${(((y - b.top) / b.height - 0.5) * -5).toFixed(2)}deg`);
+        tilt.style.setProperty('--ry', `${(((x - b.left) / b.width - 0.5) * 6).toFixed(2)}deg`);
+      }
+      let btn = t && t.closest(MAGNET_SELECTOR);
+      if (btn && btn.disabled) btn = null;
+      if (pulled !== btn) clear(pulled, '--mx', '--my');
+      pulled = btn;
+      if (btn) {
+        const c = btn.getBoundingClientRect();
+        btn.style.setProperty('--mx', `${(((x - c.left) / c.width - 0.5) * 8).toFixed(1)}px`);
+        btn.style.setProperty('--my', `${(((y - c.top) / c.height - 0.5) * 6).toFixed(1)}px`);
+      }
+    }
+
+    document.addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType !== 'mouse') return;
+        last = e;
+        if (!queued) {
+          queued = true;
+          requestAnimationFrame(apply);
+        }
+      },
+      { passive: true }
+    );
+    // The pointer left the window: let everything settle back.
+    document.documentElement.addEventListener('mouseleave', () => {
+      clear(tilted, '--rx', '--ry');
+      clear(pulled, '--mx', '--my');
+      tilted = pulled = null;
     });
-  }, { threshold:0.08 });
-  Array.prototype.forEach.call(els, function(el){ obs.observe(el); });
-}
+  }
 
-/* ============================================================================
-   INIT
-   ============================================================================ */
+  /** Fades sections in as they scroll into view; shows everything at once on browsers without IntersectionObserver. */
+  function setupReveal() {
+    const els = document.querySelectorAll('.reveal:not(.is-visible)');
+    if (!('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(els, (el) => {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            en.target.classList.add('is-visible');
+            obs.unobserve(en.target);
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+    Array.prototype.forEach.call(els, (el) => {
+      obs.observe(el);
+    });
+  }
 
-/**
- * Start-up: fill the profile form from saved state, wire the events and,
- * for returning visitors, show their results straight away.
- */
-function init(){
-  var p = state.profile;
-  $('ageInput').value = p.age;
-  $('currencySelect').value = p.currency;
-  $('incomeInput').value = p.monthlyIncome;
-  $('savingsInput').value = p.savings;
-  $('hoursWeekInput').value = p.hoursPerWeek;
-  $('weeksYearInput').value = p.weeksPerYear;
-  renderHourlyPreview();
-  bindEvents();
-  setupScrollProgress();
-  setupPointerEffects();
-  // Redraw the chart at the new width when the screen rotates or the window is resized.
-  var resizeTimer = null;
-  window.addEventListener('resize', function(){
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function(){ if(revealed) renderFuture(); }, 150);
-  });
-  if(hasSavedData()) revealResults(false);
-}
+  /* ============================================================================
+     INIT
+     ============================================================================ */
 
-if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
+  /**
+   * Start-up: fill the profile form from saved state, wire the events and,
+   * for returning visitors, show their results straight away.
+   */
+  function init() {
+    const p = state.profile;
+    $('ageInput').value = p.age;
+    $('currencySelect').value = p.currency;
+    $('incomeInput').value = p.monthlyIncome;
+    $('savingsInput').value = p.savings;
+    $('hoursWeekInput').value = p.hoursPerWeek;
+    $('weeksYearInput').value = p.weeksPerYear;
+    renderHourlyPreview();
+    bindEvents();
+    setupScrollProgress();
+    setupPointerEffects();
+    // Redraw the chart at the new width when the screen rotates or the window is resized.
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (revealed) renderFuture();
+      }, 150);
+    });
+    if (hasSavedData()) revealResults(false);
+  }
 
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 
 /*
-  Service worker: makes the app installable and lets it open offline once
-  visited. Only registered over http(s) — browsers don't allow service
-  workers on file:// pages, where the app still works normally.
+   Service worker: makes the app installable and lets it open offline once
+   visited. Only registered over http(s) — browsers don't allow service
+   workers on file:// pages, where the app still works normally.
 */
-if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('service-worker.js').catch(function(){ /* offline mode unavailable; the app still works online */ });
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {
+      /* offline mode unavailable; the app still works online */
+    });
   });
 }
 </script>
