@@ -328,6 +328,7 @@
    */
   function leave(el, done) {
     let finished = false;
+    // Calls `done` only once, whether the animation ends or the timer fires first.
     function finish() {
       if (!finished) {
         finished = true;
@@ -362,6 +363,7 @@
     }
     let start = null;
     duration = duration || 700;
+    // One frame: the eased value for the time elapsed, until the target is reached.
     function tick(ts) {
       if (start === null) start = ts;
       const p = Math.min((ts - start) / duration, 1);
@@ -1249,16 +1251,10 @@
   const MAGNET_SELECTOR = '.btn-primary';
 
   /**
-   * Pointer effects, for mouse users only: on touch screens there is no hover,
-   * and the effects would only get in the way. A single listener for the whole
-   * page; on each animation frame it finds the card, tilting card and button
-   * under the pointer and writes the pointer's position into their CSS
-   * variables:
-   *  - --px / --py: where the light is drawn on a card;
-   *  - --rx / --ry: the tilt, a few degrees at most;
-   *  - --mx / --my: the pull on a button.
-   * When the pointer leaves an element its variables are removed and CSS eases
-   * it back. Tilt and pull are skipped with reduced motion.
+   * Pointer effects, for mouse users only. One listener for the page writes the
+   * pointer position into CSS variables on the element under it: --px / --py (the
+   * light on a card), --rx / --ry (a slight tilt), --mx / --my (a button's pull).
+   * Tilt and pull are skipped when reduced motion is on.
    */
   function setupPointerEffects() {
     if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -1268,6 +1264,7 @@
       tilted = null,
       pulled = null;
 
+    // Drops a pair of CSS variables, so the element eases back to rest.
     function clear(el, a, b) {
       if (el) {
         el.style.removeProperty(a);
@@ -1275,6 +1272,7 @@
       }
     }
 
+    // Once per frame: light, tilt and pull for whatever is under the pointer now.
     function apply() {
       queued = false;
       const t = last.target && last.target.closest ? last.target : null;

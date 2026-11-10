@@ -1,16 +1,17 @@
 /* =============================================================
    WORTH — styles
-   Contents: Tokens · Reset & base · Atmosphere · Chrome (progress
-   bar, reset) · Layout · Buttons & fields · Surfaces · Hero ·
-   Profile · Stat grid · Expense rows · Time price · Dreams · What
-   if · Lifestyle modes · Financial future · WORTH score · Finale
+
+   Contents: Tokens · Reset & base · Atmosphere · Chrome (progress bar,
+   reset) · Layout · Buttons & fields · Surfaces · Hero · Profile ·
+   Stat grid · Expense rows · Time price · Dreams · What if · Lifestyle
+   modes · Financial future · WORTH score · Finale · Footer
    ============================================================= */
 
 /* =============================================================
    TOKENS
-   Every color, font and easing curve is defined once here and
-   referenced through var(--name) everywhere else — including the
-   projection chart, which is drawn in SVG but styled by CSS.
+   The palette, fonts and easing curve are defined once here as
+   custom properties and referenced through var(--name) below,
+   the projection chart included (its SVG is styled by CSS).
    Palette: warm paper, near-black ink, a deep bordeaux accent
    (money spent) and a muted green (money kept).
    ============================================================= */
@@ -177,6 +178,8 @@ body::after {
 }
 
 /* ============================= CHROME (progress bar, reset) ============================= */
+/* Reading progress: a thin bordeaux bar along the top edge, widened by the
+   scroll handler. */
 .progress-bar {
   position: fixed;
   top: 0;
@@ -187,6 +190,7 @@ body::after {
   z-index: 999;
   box-shadow: 0 1px 6px rgba(122, 39, 51, 0.35);
 }
+/* Round button in the bottom-left corner that clears every saved value. */
 .reset-btn {
   position: fixed;
   bottom: calc(20px + env(safe-area-inset-bottom));
@@ -213,6 +217,8 @@ body::after {
 }
 
 /* ============================= LAYOUT ============================= */
+/* Every section is at least one screen tall and centres its content
+   vertically. */
 .section {
   min-height: 100vh;
   padding: clamp(4.5rem, 11vh, 7.5rem) clamp(1.5rem, 7vw, 5rem);
@@ -285,6 +291,8 @@ body::after {
     filter: blur(3px);
   }
 }
+/* Section intro: a small monospaced label, the heading, then the lede.
+   .help-text is the small print under a control. */
 .eyebrow {
   display: inline-block;
   font-family: var(--font-mono);
@@ -306,6 +314,7 @@ body::after {
   max-width: 520px;
   line-height: 1.55;
 }
+/* Placeholder line shown while a list is still empty. */
 .list-empty {
   color: var(--ink-dimmer);
   font-size: 0.9rem;
@@ -313,6 +322,8 @@ body::after {
 }
 
 /* ============================= BUTTONS & FIELDS ============================= */
+/* Buttons. .btn-primary is the bordeaux call to action, .btn-ghost a button
+   made of card stock. */
 .btn {
   font-family: var(--font-sans);
   font-weight: 600;
@@ -351,6 +362,7 @@ body::after {
 .btn:hover:not(:disabled)::after {
   transform: translateX(115%);
 }
+/* A disabled button fades and stops reacting. */
 .btn:disabled {
   opacity: 0.45;
   cursor: default;
@@ -426,6 +438,7 @@ select {
 input::placeholder {
   color: var(--ink-dimmer);
 }
+/* Focus ring in the accent colour. */
 input:focus,
 select:focus {
   outline: none;
@@ -445,11 +458,14 @@ select {
     linear-gradient(135deg, var(--accent) 50%, transparent 50%) calc(100% - 15px) 52% / 5px 5px no-repeat,
     linear-gradient(180deg, #f7f4ed, var(--bg-card));
 }
+/* A field the validator rejected gets a bordeaux border and tint. */
 input[aria-invalid='true'] {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
 
+/* Range sliders: the track is filled up to the thumb (--fill, set by
+   paintRange); pan-y keeps vertical scrolling on phones. */
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
@@ -512,6 +528,8 @@ input[type='range']:focus-visible {
   outline-offset: 6px;
 }
 
+/* Form rows: label above the control; .field-row puts two fields side by
+   side (stacked on phones). */
 .field {
   margin: 1.4rem 0;
   max-width: 440px;
@@ -619,6 +637,7 @@ input[type='range']:focus-visible {
   animation: rise 1.2s var(--ease) backwards;
   animation-delay: calc(0.15s + var(--i, 0) * 100ms);
 }
+/* The WORTH. wordmark above the title. */
 .hero-logo {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -668,6 +687,8 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= PROFILE ============================= */
+/* Live result under the profile form: your hourly income and the formula
+   behind it. */
 .hourly-preview {
   margin-top: 2rem;
   padding: 1.6rem 1.8rem;
@@ -697,6 +718,7 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= STAT GRID ============================= */
+/* A grid of figures. Its background shows through the 1px gaps as dividers. */
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -735,6 +757,7 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= EXPENSE ROWS ============================= */
+/* Expense categories: an editable name and a monthly amount on each row. */
 .item-list {
   display: flex;
   flex-direction: column;
@@ -785,6 +808,7 @@ input[type='range']:focus-visible {
   text-align: right;
   box-shadow: inset 0 1px 2px rgba(24, 20, 15, 0.08);
 }
+/* The × button that removes a row. */
 .item-remove {
   background: none;
   border: none;
@@ -803,6 +827,7 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= TIME PRICE (signature) ============================= */
+/* What it is and what it costs, side by side. */
 .price-input-row {
   display: flex;
   gap: 0.8rem;
@@ -838,6 +863,7 @@ input[type='range']:focus-visible {
     --light 0.5s var(--ease),
     transform 0.15s linear;
 }
+/* A faint dot grid printed on the ink panel. */
 .time-price-readout::before {
   content: '';
   position: absolute;
@@ -897,6 +923,7 @@ input[type='range']:focus-visible {
   margin-top: 1.6rem;
   max-width: 640px;
 }
+/* Saved purchases, compared in hours and working days. */
 .purchase-list {
   margin-top: 2.6rem;
   max-width: 760px;
@@ -944,6 +971,7 @@ input[type='range']:focus-visible {
   color: var(--ink-dim);
   white-space: nowrap;
 }
+/* Phones: no column headings; each purchase becomes a small card. */
 @media (max-width: 600px) {
   .purchase-head {
     display: none;
@@ -961,6 +989,8 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= DREAMS ============================= */
+/* A goal with a price: the hours and working days it costs, and the months
+   of saving it takes. */
 .dream-card {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -1005,24 +1035,14 @@ input[type='range']:focus-visible {
 .dream-metrics .item-remove {
   margin-left: auto;
 }
-.dream-progress {
-  height: 5px;
-  border-radius: 3px;
-  background: var(--bg-card-alt);
-  border: 1px solid var(--border);
-  margin-top: 1rem;
-  overflow: hidden;
-}
-.dream-progress div {
-  height: 100%;
-  background: var(--gain);
-}
+/* How much you can put aside each month, which sets the months above. */
 .savings-rate-field {
   max-width: 340px;
   margin: 1.6rem 0 1.8rem;
 }
 
 /* ============================= WHAT IF ============================= */
+/* One row per spending category, each with a slider down to a new target. */
 .whatif-row {
   display: flex;
   flex-direction: column;
@@ -1051,6 +1071,8 @@ input[type='range']:focus-visible {
   color: var(--gain);
   font-weight: 600;
 }
+/* Ink panel with what you'd get back: per month, per year and over ten
+   years, in money and in hours. */
 .whatif-summary {
   margin-top: 2.4rem;
   padding: 2rem;
@@ -1089,6 +1111,7 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= LIFESTYLE MODES ============================= */
+/* The yearly cost of your current lifestyle, in one sentence. */
 .lifestyle-sentence {
   font-family: var(--font-display);
   font-size: clamp(1.2rem, 3vw, 1.6rem);
@@ -1100,6 +1123,8 @@ input[type='range']:focus-visible {
   color: var(--accent);
   font-weight: 600;
 }
+/* Minimal, current and luxury: one card each, your current one outlined in
+   the accent colour. */
 .lifestyle-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1159,6 +1184,7 @@ input[type='range']:focus-visible {
 }
 
 /* ============================= FINANCIAL FUTURE ============================= */
+/* The assumptions behind the projection, as sliders. */
 .future-sliders {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1177,6 +1203,8 @@ input[type='range']:focus-visible {
   color: var(--accent);
   font-weight: 600;
 }
+/* The projection chart. renderFutureChart draws the SVG; every colour and
+   line style comes from here. */
 .chart-wrap {
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -1212,9 +1240,6 @@ input[type='range']:focus-visible {
 }
 .chart-legend .saved {
   color: var(--gain);
-}
-.chart-legend .lbl {
-  color: var(--ink-dim);
 }
 .line-spent {
   fill: none;
@@ -1253,6 +1278,7 @@ input[type='range']:focus-visible {
   stroke-width: 1;
   stroke-dasharray: 4 4;
 }
+/* Spent and saved at each milestone age, under the chart. */
 .milestone-table {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -1285,6 +1311,8 @@ input[type='range']:focus-visible {
   color: var(--gain);
   font-weight: 500;
 }
+/* Whether, and when, spending would overtake income (a green border when it
+   never does). */
 .future-note {
   margin-top: 1.2rem;
   max-width: 820px;
@@ -1305,6 +1333,7 @@ input[type='range']:focus-visible {
   align-items: center;
   margin-top: 1rem;
 }
+/* The score in a round seal with a dashed inner ring. */
 .score-seal {
   width: 170px;
   height: 170px;
@@ -1342,6 +1371,8 @@ input[type='range']:focus-visible {
   color: var(--ink-dimmer);
   margin-top: -0.3rem;
 }
+/* The three factors behind the score, each with a bar and a short
+   explanation. */
 .score-factors {
   flex: 1;
   min-width: 240px;
@@ -1397,6 +1428,8 @@ input[type='range']:focus-visible {
   color: var(--ink-dim);
   text-transform: uppercase;
 }
+/* The big number: what your life costs per month, per year and in hours of
+   work. */
 .finale-numbers {
   display: flex;
   flex-direction: column;
@@ -1435,6 +1468,8 @@ input[type='range']:focus-visible {
   max-width: 480px;
 }
 
+/* ============================= FOOTER ============================= */
+/* Copyright and privacy line at the bottom of the page. */
 footer {
   text-align: center;
   padding: 3rem 1.5rem calc(5rem + env(safe-area-inset-bottom));
