@@ -3,7 +3,7 @@
  *
  * Architecture
  * ------------
- * - Three plain files: index.html (markup), style.css and this script.
+ * - Three plain files: index.html (markup), css/style.css and this script.
  *   No build step, no framework, no backend.
  * - All user data lives in one `state` object, saved to localStorage after
  *   every change. Render functions only ever READ from `state` and rebuild
