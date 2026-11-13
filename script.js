@@ -367,7 +367,7 @@
     function tick(ts) {
       if (start === null) start = ts;
       const p = Math.min((ts - start) / duration, 1);
-      el.textContent = format(from + (target - from) * (1 - Math.pow(1 - p, 3))); // ease-out cubic
+      el.textContent = format(from + (target - from) * (1 - (1 - p) ** 3)); // ease-out cubic
       if (p < 1 && el._value === target) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -694,8 +694,8 @@
     const last = ages[ages.length - 1] - p.age;
     for (let y = 0; y <= last; y++) {
       years.push({ age: p.age + y, spent, saved });
-      const cost = yearlyCost * Math.pow(spendGrowth, y);
-      const income = yearlyIncome * Math.pow(incomeGrowth, y);
+      const cost = yearlyCost * spendGrowth ** y;
+      const income = yearlyIncome * incomeGrowth ** y;
       if (crossoverAge === null && cost > income) crossoverAge = p.age + y;
       spent += cost;
       saved += yearlySave;
