@@ -166,19 +166,22 @@
   function loadState() {
     const s = clone(DEFAULT_STATE);
     try {
+      // 1. Read what was saved; a first visit keeps the defaults.
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return s;
       const p = JSON.parse(raw) || {};
+      // 2. Profile: every number clamped to a sensible range, the currency checked against the list.
       const pr = p.profile || {},
         d = s.profile;
       s.profile = {
         age: Math.round(num(pr.age, BOUNDS.age[0], BOUNDS.age[1], d.age)),
         monthlyIncome: num(pr.monthlyIncome, BOUNDS.income[0], BOUNDS.income[1], d.monthlyIncome),
-        currency: CURRENCIES.indexOf(pr.currency) !== -1 ? pr.currency : d.currency,
+        currency: CURRENCIES.includes(pr.currency) ? pr.currency : d.currency,
         savings: num(pr.savings, BOUNDS.savings[0], BOUNDS.savings[1], d.savings),
         hoursPerWeek: num(pr.hoursPerWeek, BOUNDS.hoursPerWeek[0], BOUNDS.hoursPerWeek[1], d.hoursPerWeek),
         weeksPerYear: num(pr.weeksPerYear, BOUNDS.weeksPerYear[0], BOUNDS.weeksPerYear[1], d.weeksPerYear)
       };
+      // 3. Lists, the monthly savings for dreams and the What If targets.
       s.expenses = sanitizeList(p.expenses, 'monthly', 'e') || s.expenses;
       s.purchases = sanitizeList(p.purchases, 'price', 'p') || [];
       s.dreams = sanitizeList(p.dreams, 'price', 'd') || [];
@@ -188,6 +191,7 @@
           s.whatIfTargets[id] = num(p.whatIfTargets[id], 0, BOUNDS.amount[1], 0);
         });
       }
+      // 4. The assumptions behind the projection.
       const f = p.future || {};
       s.future = {
         inflation: num(f.inflation, 0, 10, 3),
@@ -535,6 +539,7 @@
   function renderDreams() {
     const wrap = $('dreamsList');
     const save = state.dreamMonthlySavings;
+    // 1. The monthly savings field (left alone while you type in it) and a hint with your surplus.
     const input = $('dreamSavings');
     if (document.activeElement !== input) input.value = save || '';
     const surplus = monthlySurplus();
@@ -543,10 +548,12 @@
         ? `Your current surplus is ${fmtMoney(surplus)} a month (income minus expenses).`
         : 'Right now your expenses use up all of your income.';
 
+    // 2. No dreams yet: a placeholder.
     if (state.dreams.length === 0) {
       wrap.innerHTML = '<p class="list-empty">No dreams added yet. What are you working toward?</p>';
       return;
     }
+    // 3. One card per dream, newest first: hours, working days and months of saving.
     wrap.innerHTML = state.dreams
       .slice()
       .reverse()
@@ -617,7 +624,7 @@
       monthlySaved > 0
         ? `Kept for 10 years: ${fmtMoney(yearly * 10)} — ${fmtInt(hours * 10)} hours of your life back.`
         : 'Move a slider to see what ten years of that change would give back.';
-    Array.prototype.forEach.call(document.querySelectorAll('.whatif-slider'), paintRange);
+    document.querySelectorAll('.whatif-slider').forEach(paintRange);
   }
 
   /* ============================================================================
@@ -775,6 +782,7 @@
   function renderFuture() {
     const f = state.future;
     const save = projectionSavings();
+    // 1. Slider labels and positions (a slider being dragged is left alone).
     $('fInflationVal').textContent = `${f.inflation}%`;
     $('fSalaryGrowthVal').textContent = `${f.salaryGrowth}%`;
     $('fExpenseGrowthVal').textContent = `${f.expenseGrowth}%`;
@@ -783,16 +791,20 @@
     const slider = $('fMonthlySavings');
     slider.max = Math.max(3000, Math.ceil(state.profile.monthlyIncome / 100) * 100, save);
     if (document.activeElement !== slider) slider.value = save;
-    ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth'].forEach((id) => {
+    const fields = {
+      fInflation: 'inflation',
+      fSalaryGrowth: 'salaryGrowth',
+      fExpenseGrowth: 'expenseGrowth'
+    };
+    Object.entries(fields).forEach(([id, key]) => {
       const el = $(id);
-      if (document.activeElement !== el)
-        el.value =
-          f[{ fInflation: 'inflation', fSalaryGrowth: 'salaryGrowth', fExpenseGrowth: 'expenseGrowth' }[id]];
+      if (document.activeElement !== el) el.value = f[key];
     });
     ['fInflation', 'fSalaryGrowth', 'fExpenseGrowth', 'fMonthlySavings'].forEach((id) => {
       paintRange($(id));
     });
 
+    // 2. The projection: the chart, then spent and saved at each milestone age.
     const proj = projectFuture();
     renderFutureChart(proj);
     $('milestoneTable').innerHTML = proj.milestones
@@ -805,6 +817,7 @@
       )
       .join('');
 
+    // 3. The note: when spending would overtake income, or what it costs by the end.
     const end = proj.milestones[proj.milestones.length - 1];
     const note = $('futureNote');
     if (proj.crossoverAge !== null) {
@@ -840,6 +853,7 @@
     const income = state.profile.monthlyIncome,
       cost = monthlyCost(),
       savings = state.profile.savings;
+    // 1. Three factors, each worth 0–100 points, with its weight and a hint.
     const factors = [
       {
         label: 'Savings rate',
@@ -869,14 +883,13 @@
             : 'No expenses entered.'
       }
     ];
+    // 2. The score is their weighted sum.
     const score = Math.round(factors.reduce((s, f) => s + f.val * f.weight, 0));
     animateNumber($('scoreNum'), score, fmtInt, 1000);
 
+    // 3. Redraw the bars at their old widths, then grow them to the new ones on the next frame.
     const wrap = $('scoreFactors');
-    const oldWidths = Array.prototype.map.call(
-      wrap.querySelectorAll('.score-bar-fill'),
-      (el) => el.style.width
-    );
+    const oldWidths = [...wrap.querySelectorAll('.score-bar-fill')].map((el) => el.style.width);
     wrap.innerHTML = factors
       .map(
         (f, i) =>
@@ -891,7 +904,7 @@
       .join('');
     const fills = wrap.querySelectorAll('.score-bar-fill');
     requestAnimationFrame(() => {
-      Array.prototype.forEach.call(fills, (el, i) => {
+      fills.forEach((el, i) => {
         el.style.width = `${factors[i].val}%`;
       });
     });
@@ -979,8 +992,7 @@
    */
   function readProfile() {
     let error = null;
-    state.profile.currency =
-      CURRENCIES.indexOf($('currencySelect').value) !== -1 ? $('currencySelect').value : '€';
+    state.profile.currency = CURRENCIES.includes($('currencySelect').value) ? $('currencySelect').value : '€';
     PROFILE_FIELDS.forEach((f) => {
       const el = $(f.id),
         raw = parseFloat(el.value);
@@ -1046,6 +1058,7 @@
 
   /** Wires every control on the page to state changes and re-renders. Called once at start-up. */
   function bindEvents() {
+    // Hero: jump to the profile form; the button there calculates everything.
     $('ctaStart').addEventListener('click', () => {
       $('profile').scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
       setTimeout(() => {
@@ -1211,6 +1224,7 @@
       renderFuture();
     });
 
+    // Reset: erase everything after a confirmation.
     $('resetBtn').addEventListener('click', () => {
       if (!confirm('Erase all your WORTH data? This can’t be undone.')) return;
       try {
@@ -1328,7 +1342,7 @@
   function setupReveal() {
     const els = document.querySelectorAll('.reveal:not(.is-visible)');
     if (!('IntersectionObserver' in window)) {
-      Array.prototype.forEach.call(els, (el) => {
+      els.forEach((el) => {
         el.classList.add('is-visible');
       });
       return;
@@ -1344,7 +1358,7 @@
       },
       { threshold: 0.08 }
     );
-    Array.prototype.forEach.call(els, (el) => {
+    els.forEach((el) => {
       obs.observe(el);
     });
   }
